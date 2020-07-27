@@ -1,13 +1,8 @@
 import React from 'react'
 import { Text, View, TextInput, TouchableOpacity, CheckBox} from 'react-native'
-import strings from '../config/strings'
-import styles from '../config/styles'
-import colors from '../config/colors'
-import firebase from '../config/firebase'
 import SearchableDropdown from 'react-native-searchable-dropdown';
 
 export default class JoinChapterScreen extends React.Component {
-
 
     state = {
       action:'',

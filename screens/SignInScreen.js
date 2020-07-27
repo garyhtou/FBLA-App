@@ -3,10 +3,8 @@
  */
 
 import React from 'react'
-import { Text, View, TextInput, TouchableOpacity } from 'react-native'
-import strings from '../config/strings'
-import styles from '../config/styles'
-import colors from '../config/colors'
+import {Text, View, TextInput, TouchableOpacity, StyleSheet} from 'react-native'
+import {colors, strings} from '../config/styles'
 import firebase from '../config/firebase'
 
 export default class SignInScreen extends React.Component {
@@ -24,7 +22,7 @@ export default class SignInScreen extends React.Component {
 
     render() {
         return(
-            <View style={styles.authContainer}>
+            <View style={styles.flexBox}>
 
                 <Text style={styles.heading}>Welcome to {strings.appName}</Text>
 
@@ -60,7 +58,7 @@ export default class SignInScreen extends React.Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.signUpHere} onPress={() => this.props.navigation.navigate("SignUp")}>
-                    <Text style={styles.authRedirectText}>
+                    <Text style={styles.redirectText}>
                         New to {strings.appName}? <Text style={{color: colors.accent}}>Sign Up</Text>
                     </Text>
                 </TouchableOpacity>
@@ -70,3 +68,66 @@ export default class SignInScreen extends React.Component {
     }
 }
 
+const styles = StyleSheet.create ({
+
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    flexBox: {
+        flex: 1
+    },
+    heading: {
+        marginTop: 32,
+        fontSize: 24,
+        textAlign: "center"
+    },
+    errorContainer: {
+        height: 72,
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: 30
+    },
+    errorText: {
+        color: colors.complementAccent,
+        fontSize: 13,
+        textAlign: "center"
+    },
+    form: {
+        marginBottom: 48,
+        marginHorizontal: 30
+    },
+    authLabelText: {
+        color: colors.lightText,
+        fontSize: 11,
+        textTransform: "uppercase"
+    },
+    authButtonText: {
+        color: colors.white,
+        fontSize: 16
+    },
+    authInput: {
+        borderBottomColor: colors.lightText,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        height: 40,
+        fontSize: 15
+    },
+    authButton: {
+        marginHorizontal: 30,
+        backgroundColor: colors.complementAccent,
+        borderRadius: 4,
+        height: 52,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    signUpHere: {
+        alignSelf: "center",
+        marginTop: 32
+    },
+    redirectText: {
+        color: colors.mediumText,
+        fontSize: 13
+    },
+
+});

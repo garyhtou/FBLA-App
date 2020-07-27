@@ -3,9 +3,9 @@
  */
 
 import React from 'react'
-import { Text, View, TouchableOpacity} from 'react-native'
-import styles from '../config/styles'
+import {Text, View, TouchableOpacity, StyleSheet} from 'react-native'
 import firebase from '../config/firebase'
+import {colors} from "../config/styles";
 
 export default class MainScreen extends React.Component {
 
@@ -30,11 +30,26 @@ export default class MainScreen extends React.Component {
 
                 <Text>Hello {this.state.displayName}!</Text>
 
-                <TouchableOpacity style={{marginTop: 32}} onPress={this.signOutUser}>
-                    <Text style={styles.authRedirectText}>SignOut</Text>
+                <TouchableOpacity style={styles.button} onPress={this.signOutUser}>
+                    <Text style={styles.redirectText}>SignOut</Text>
                 </TouchableOpacity>
 
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create ({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    button: {
+        marginTop: 32
+    },
+    redirectText: {
+        color: colors.mediumText,
+        fontSize: 13
+    },
+});
