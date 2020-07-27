@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import {Text, View, TextInput, TouchableOpacity, StyleSheet} from 'react-native'
+import {Text, View, TextInput, TouchableOpacity, StyleSheet, TouchableWithoutFeedback, Keyboard} from 'react-native'
 import {colors, strings} from '../config/styles'
 import firebase from '../config/firebase'
 
@@ -22,48 +22,51 @@ export default class SignInScreen extends React.Component {
 
     render() {
         return(
-            <View style={styles.flexBox}>
 
-                <Text style={styles.heading}>Welcome to {strings.appName}</Text>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View style={styles.flexBox}>
 
-                <View style={styles.errorContainer}>
-                    {this.state.errorMessage && <Text style={styles.errorText}>{this.state.errorMessage}</Text>}
-                </View>
+                    <Text style={styles.heading}>Welcome to {strings.appName}</Text>
 
-                <View style={styles.form}>
-
-                    <View>
-                        <Text style={styles.authLabelText}>Email Address</Text>
-                        <TextInput
-                            style={styles.authInput}
-                            autoCapitalize="none"
-                            onChangeText={email => this.setState({email})}
-                            value={this.state.email}/>
+                    <View style={styles.errorContainer}>
+                        {this.state.errorMessage && <Text style={styles.errorText}>{this.state.errorMessage}</Text>}
                     </View>
 
-                    <View style={{marginTop: 32}}>
-                        <Text style={styles.authLabelText}>Password</Text>
-                        <TextInput
-                            style={styles.authInput}
-                            secureTextEntry
-                            autoCapitalize="none"
-                            onChangeText={password => this.setState({password})}
-                            value={this.state.password}/>
+                    <View style={styles.form}>
+
+                        <View>
+                            <Text style={styles.authLabelText}>Email Address</Text>
+                            <TextInput
+                                style={styles.authInput}
+                                autoCapitalize="none"
+                                onChangeText={email => this.setState({email})}
+                                value={this.state.email}/>
+                        </View>
+
+                        <View style={{marginTop: 32}}>
+                            <Text style={styles.authLabelText}>Password</Text>
+                            <TextInput
+                                style={styles.authInput}
+                                secureTextEntry
+                                autoCapitalize="none"
+                                onChangeText={password => this.setState({password})}
+                                value={this.state.password}/>
+                        </View>
+
                     </View>
 
+                    <TouchableOpacity style={styles.authButton} onPress={this.handleSignIn}>
+                        <Text style={styles.authButtonText}>Sign In</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.signUpHere} onPress={() => this.props.navigation.navigate("SignUp")}>
+                        <Text style={styles.redirectText}>
+                            New to {strings.appName}? <Text style={{color: colors.accent}}>Sign Up</Text>
+                        </Text>
+                    </TouchableOpacity>
+
                 </View>
-
-                <TouchableOpacity style={styles.authButton} onPress={this.handleSignIn}>
-                    <Text style={styles.authButtonText}>Sign In</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.signUpHere} onPress={() => this.props.navigation.navigate("SignUp")}>
-                    <Text style={styles.redirectText}>
-                        New to {strings.appName}? <Text style={{color: colors.accent}}>Sign Up</Text>
-                    </Text>
-                </TouchableOpacity>
-
-            </View>
+            </TouchableWithoutFeedback>
         );
     }
 }
