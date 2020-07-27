@@ -26,7 +26,7 @@ export default class SignUpScreen extends React.Component {
                   displayName: name
                 })
             })
-            .catch(error => this.setState({errorMessage: error.message()}))
+            .catch(error => this.setState({errorMessage: error.message}))
 
     }
 
