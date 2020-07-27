@@ -9,7 +9,7 @@ const colors = {
     // Text colors
     complement: "#BE2C37",
     complementAccent: "#cb565e",
-    /*accent: "#E9446A",
+    /*`accent: "#E9446A",
     lightText: "#8A8F9E",
     mediumText: "#414959",*/
     white: "#FFFFFF",
