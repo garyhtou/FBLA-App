@@ -9,7 +9,6 @@ import SignInScreen from './screens/SignInScreen'
 import SignUpScreen from './screens/SignUpScreen'
 import MainScreen from './screens/MainScreen'
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
 
 const AppStack = createStackNavigator({
@@ -44,21 +43,3 @@ export default createAppContainer(
       }
   )
 );
-
-const Stack = createStackNavigator();
-const myStack = () => {
-    return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen
-                    name="Home"
-                    component={HomeScreen}
-                    options={{ title: 'Welcome' }}
-                />
-                <Stack.Screen name="Chapter" component={screens/chapter}/>
-                <Stack.Screen name="Opportunities" component={screens/opportunities}/>
-                <Stack.Screen name="Profile" component={screens/ProfileScreen} />
-   \        </Stack.Navigator>
-        </NavigationContainer>
-    );
-};
