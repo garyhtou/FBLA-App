@@ -1,100 +1,145 @@
 import React from 'react'
-import { Text, View, TextInput, TouchableOpacity, CheckBox} from 'react-native'
+import {
+    Text,
+    View,
+    TextInput,
+    TouchableOpacity,
+    CheckBox,
+    TouchableWithoutFeedback,
+    Keyboard,
+    StyleSheet
+} from 'react-native'
 import SearchableDropdown from 'react-native-searchable-dropdown';
+import {colors, strings} from "../config/styles";
+import * as firebase from "firebase";
 
 export default class JoinChapterScreen extends React.Component {
 
     state = {
-      action:'',
-      joinChapterName:'',
-      newChapterName:'',
-      selectedItems: []
+      code:"",
+      errorMessage:null
     };
 
     joinChapter = () => {
-      this.setState({action: 'Join Existing'})
+        const user = firebase.auth().currentUser;
+        const {code} = this.state;
+      firebase.database().collection("Chapter")
+          .where("code","==",code)
+          .get()
+          .then(function(querySnapshot){
+              if(querySnapshot.size===0){
+                  this.setState({errorMessage:"No chapter with code given"})
+              } else{
+                  const setChapter = firebase.database().collection("DatabaseUser").
+                      doc(user.uid).set({
+                      chapterName: querySnapshot[0].data().get("chapterName")
+                  }, {merge:true})
+
+              }
+          })
 
     }
 
-    createChapter = () => {
-      this.setState({action: 'Create New'})
-    }
 
     render() {
-
         return(
-          <View style = {styles.container}>
-            <Text style={styles.heading}>Join a Chapter!</Text>
-            <CheckBox
-                title='Join Existing Chapter'
-                checkedIcon='dot-circle-o'
-                uncheckedIcon='circle-o'
-                checked={this.state.action === 'Join Existing'}
-                onPress={this.joinChapter}
-            />
-            <CheckBox
-                title='Create New Chapter'
-                checkedIcon='dot-circle-o'
-                uncheckedIcon='circle-o'
-                checked={this.state.action === 'Create New'}
-                onPress={this.createChapter}
-            />
-            <View style={{marginTop: 32}}>
-                <Text style={styles.authLabelText}>Chapter Name</Text>
-                <TextInput
-                    style={styles.authInput}
-                    autoCapitalize="none"
-                    onChangeText={newChapterName => this.setState({newChapterName})}
-                    value={this.state.newChapterName}/>
-            </View>
 
-              <SearchableDropdown
-                onItemSelect={(item) => {
-                  const items = this.state.selectedItems;
-                  items.push(item)
-                  this.setState({ joinChapter:item.name, selectedItems: items });
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View style={styles.flexBox}>
 
-                }}
-                containerStyle={{ padding: 5 }}
-                onRemoveItem={(item, index) => {
-                  const items = this.state.selectedItems.filter((sitem) => sitem.id !== item.id);
-                  this.setState({ selectedItems: items });
-                }}
-                itemStyle={{
-                  padding: 10,
-                  marginTop: 2,
-                  backgroundColor: '#ddd',
-                  borderColor: '#bbb',
-                  borderWidth: 1,
-                  borderRadius: 5,
-                }}
-                itemTextStyle={{ color: '#222' }}
-                itemsContainerStyle={{ maxHeight: 140 }}
-                items={items}
-                defaultIndex={2}
-                resetValue={false}
-                textInputProps={
-                  {
-                    placeholder: "placeholder",
-                    underlineColorAndroid: "transparent",
-                    style: {
-                        padding: 12,
-                        borderWidth: 1,
-                        borderColor: '#ccc',
-                        borderRadius: 5,
-                    },
-                    onTextChange: text => alert(text)
-                  }
-                }
-                listProps={
-                  {
-                    nestedScrollEnabled: true,
-                  }
-                }
-          />
+                    <Text style={styles.heading}>Join a Chapter!</Text>
 
+                    <View style={styles.errorContainer}>
+                        {this.state.errorMessage && <Text style={styles.errorText}>{this.state.errorMessage}</Text>}
+                    </View>
 
-          </View>
-        )
+                    <View style={styles.form}>
+
+                        <View>
+                            <TextInput
+                                placeholder = "Enter Chapter Code"
+                                style={styles.codeInput}
+                                autoCapitalize="none"
+                                onChangeText={code => this.setState({code})}
+                                value={this.state.code}/>
+                        </View>
+
+                    </View>
+
+                    <TouchableOpacity style={styles.codeButton} onPress={this.joinChapter}>
+                        <Text style={styles.authButtonText}>Join</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.createChapter} onPress={() => this.props.navigation.navigate("CreateChapter")}>
+                        <Text style={styles.redirectText}>
+                            <Text style={{color: colors.accent}}>Create a Chapter</Text>
+                        </Text>
+                    </TouchableOpacity>
+
+                </View>
+            </TouchableWithoutFeedback>
+        );
     }
 }
+
+
+
+const styles = StyleSheet.create ({
+
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    flexBox: {
+        flex: 1
+    },
+    heading: {
+        marginTop: 32,
+        fontSize: 24,
+        textAlign: "center"
+    },
+    errorContainer: {
+        height: 72,
+        alignItems: "center",
+        justifyContent: "center",
+        marginHorizontal: 30
+    },
+    errorText: {
+        color: colors.complementAccent,
+        fontSize: 13,
+        textAlign: "center"
+    },
+    form: {
+        marginBottom: 48,
+        marginHorizontal: 30
+    },
+
+    codeButtonText: {
+        color: colors.white,
+        fontSize: 16
+    },
+    codeInput: {
+        borderBottomColor: colors.lightText,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        height: 40,
+        fontSize: 15
+    },
+    codeButton: {
+        marginHorizontal: 30,
+        backgroundColor: colors.complementAccent,
+        borderRadius: 4,
+        height: 52,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    createChapter: {
+        alignSelf: "center",
+        marginTop: 32
+    },
+    redirectText: {
+        color: colors.mediumText,
+        fontSize: 13
+    },
+
+});
