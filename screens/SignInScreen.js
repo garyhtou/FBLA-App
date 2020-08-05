@@ -11,7 +11,7 @@ import {
    TouchableWithoutFeedback,
    Keyboard,
 } from "react-native";
-import { Title, Text } from "native-base";
+import { Text } from "native-base";
 import { colors, strings } from "../config/styles";
 import firebase from "../config/firebase";
 
@@ -37,9 +37,9 @@ export default class SignInScreen extends React.Component {
             accessible={false}
          >
             <View style={styles.flexBox}>
-               <Title style={styles.heading}>
+               <Text style={styles.heading}>
                   Welcome to {strings.appName}
-               </Title>
+               </Text>
 
                <View style={styles.errorContainer}>
                   {this.state.errorMessage && (
@@ -83,12 +83,13 @@ export default class SignInScreen extends React.Component {
 
                <TouchableOpacity
                   style={styles.footer}
-                  onPress={() => this.props.navigation.navigate("SignUp")}
-               >
+                  onPress={() => this.props.navigation.navigate("SignUp")}>
+
                   <Text style={styles.redirectText}>
                      New to {strings.appName}?{" "}
-                     <Text style={{ color: colors.accent }}>Sign Up</Text>
+                     <Text style={{ color: colors.complementAccent }}>Sign Up</Text>
                   </Text>
+
                </TouchableOpacity>
             </View>
          </TouchableWithoutFeedback>
