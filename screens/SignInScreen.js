@@ -51,23 +51,25 @@ export default class SignInScreen extends React.Component {
 
                <View style={styles.form}>
                   <View>
-                     <Text style={styles.authLabelText}>Email Address</Text>
+                     {/* <Text style={styles.authLabelText}>Email Address</Text> */}
                      <TextInput
                         style={styles.authInput}
                         autoCapitalize="none"
                         onChangeText={(email) => this.setState({ email })}
                         value={this.state.email}
+                        placeholder="Email Address"
                      />
                   </View>
 
                   <View>
-                     <Text style={styles.authLabelText}>Password</Text>
+                     {/* <Text style={styles.authLabelText}>Password</Text> */}
                      <TextInput
                         style={styles.authInput}
                         secureTextEntry
                         autoCapitalize="none"
                         onChangeText={(password) => this.setState({ password })}
                         value={this.state.password}
+                        placeholder="Password"
                      />
                   </View>
                </View>
