@@ -1,3 +1,8 @@
 # FBLA-App
+
 Language: React Native
-Libraries Used: NativeBase
+
+**Libraries Used:**
+
+-  NativeBase
+-  Firebase

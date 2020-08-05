@@ -2,54 +2,51 @@
  *
  */
 
-import React from 'react'
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native'
-import firebase from '../config/firebase'
-import {colors} from "../config/styles";
+import React from "react";
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import firebase from "../config/firebase";
+import { colors } from "../config/styles";
 
 export default class MainScreen extends React.Component {
+   state = {
+      email: "",
+      displayName: "",
+   };
 
-    state = {
-        email: "",
-        displayName: ""
-    }
+   componentDidMount() {
+      const { email, displayName } = firebase.auth().currentUser;
+      this.setState({ email, displayName });
+   }
 
-    componentDidMount(){
-        const {email, displayName} = firebase.auth().currentUser;
-        this.setState({email, displayName});
-    }
+   signOutUser = () => {
+      firebase.auth().signOut();
+      this.props.navigation.navigate("SignIn");
+   };
 
-    signOutUser = () => {
-        firebase.auth().signOut();
-        this.props.navigation.navigate("SignIn");
-    }
+   render() {
+      return (
+         <View style={styles.container}>
+            <Text>Hello {this.state.displayName}!</Text>
 
-    render() {
-        return (
-            <View style={styles.container}>
-
-                <Text>Hello {this.state.displayName}!</Text>
-
-                <TouchableOpacity style={styles.button} onPress={this.signOutUser}>
-                    <Text style={styles.redirectText}>SignOut</Text>
-                </TouchableOpacity>
-
-            </View>
-        )
-    }
+            <TouchableOpacity style={styles.button} onPress={this.signOutUser}>
+               <Text style={styles.redirectText}>SignOut</Text>
+            </TouchableOpacity>
+         </View>
+      );
+   }
 }
 
-const styles = StyleSheet.create ({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    button: {
-        marginTop: 32
-    },
-    redirectText: {
-        color: colors.mediumText,
-        fontSize: 13
-    },
+const styles = StyleSheet.create({
+   container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+   },
+   button: {
+      marginTop: 32,
+   },
+   redirectText: {
+      color: colors.mediumText,
+      fontSize: 13,
+   },
 });
