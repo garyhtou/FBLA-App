@@ -53,7 +53,7 @@ export default class SignUpScreen extends React.Component {
                                 value={this.state.name}/>
                         </View>
 
-                        <View style={styles.marginTop}>
+                        <View>
                             <Text style={styles.authLabelText}>Email Address</Text>
                             <TextInput
                                 style={styles.authInput}
@@ -78,7 +78,7 @@ export default class SignUpScreen extends React.Component {
                         <Text style={styles.authButtonText}>Sign Up</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.signUpHere}  onPress={() => this.props.navigation.navigate("SignIn")}>
+                    <TouchableOpacity style={styles.footer} onPress={() => this.props.navigation.navigate("SignIn")}>
                         <Text style={styles.redirectText}>
                             Already have an account? <Text style={{color: colors.complementAccent}}>Sign In</Text>
                         </Text>
@@ -98,18 +98,17 @@ const styles = StyleSheet.create ({
         alignItems: "center"
     },
     flexBox: {
-        flex: 1
+        flex: 1,
+        justifyContent: "center",
     },
     heading: {
-        marginTop: 32,
         fontSize: 24,
-        textAlign: "center"
+        textAlign: "center",
     },
     errorContainer: {
-        height: 72,
+        marginTop: 15,
         alignItems: "center",
         justifyContent: "center",
-        marginHorizontal: 30
     },
     errorText: {
         color: colors.complementAccent,
@@ -117,7 +116,8 @@ const styles = StyleSheet.create ({
         textAlign: "center"
     },
     form: {
-        marginBottom: 48,
+        marginBottom: 15,
+        marginTop: 15,
         marginHorizontal: 30
     },
     authLabelText: {
@@ -133,7 +133,8 @@ const styles = StyleSheet.create ({
         borderBottomColor: colors.lightText,
         borderBottomWidth: StyleSheet.hairlineWidth,
         height: 40,
-        fontSize: 15
+        fontSize: 15,
+        marginBottom: 30
     },
     authButton: {
         marginHorizontal: 30,
@@ -141,7 +142,8 @@ const styles = StyleSheet.create ({
         borderRadius: 4,
         height: 52,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        marginBottom: 50
     },
     signUpHere: {
         alignSelf: "center",
@@ -151,8 +153,15 @@ const styles = StyleSheet.create ({
         color: colors.mediumText,
         fontSize: 13
     },
-    marginTop: {
-        marginTop: 32
+    footer:{
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        alignItems: "center",
+        justifyContent: "center",
+        height: 60,
+        borderTopWidth: 1,
+        borderTopColor: "#d5d5d5"
     }
-
 });
