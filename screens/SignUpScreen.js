@@ -116,7 +116,6 @@ const styles = StyleSheet.create ({
         textAlign: "center"
     },
     form: {
-        marginBottom: 15,
         marginTop: 15,
         marginHorizontal: 30
     },
