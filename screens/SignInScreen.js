@@ -72,14 +72,6 @@ export default class SignInScreen extends React.Component {
 						<Content contentContainerStyle={styles.content}>
 							<Text style={styles.heading}>Welcome to {strings.appName}</Text>
 
-							<View style={styles.errorContainer}>
-								{this.state.errorMessage && (
-									<Text style={styles.errorText}>
-										{this.state.errorMessage}
-									</Text>
-								)}
-							</View>
-
 							<Form style={styles.form}>
 								<Item floatingLabel>
 									<Label style={styles.authLabelText}>Email Address</Label>
@@ -123,19 +115,28 @@ export default class SignInScreen extends React.Component {
 									)}
 								</Button> */}
 							</Form>
+
+							<View style={styles.errorContainer}>
+								<Text style={styles.errorText}>
+									{this.state.errorMessage}
+								</Text>
+							</View>
+
 						</Content>
+
+						<TouchableWithoutFeedback
+							onPress={() => this.props.navigation.navigate("SignUp")}
+						>
 						<Footer style={styles.footer}>
-							<TouchableOpacity
-								onPress={() => this.props.navigation.navigate("SignUp")}
-							>
 								<Text style={styles.redirectText}>
 									New to {strings.appName}?{" "}
 									<Text style={{ color: colors.complementAccent }}>
 										Sign Up
 									</Text>
 								</Text>
-							</TouchableOpacity>
 						</Footer>
+
+						</TouchableWithoutFeedback>
 					</Container>
 				</TouchableWithoutFeedback>
 			);
@@ -152,7 +153,6 @@ const styles = StyleSheet.create({
 	heading: {
 		fontSize: 24,
 		textAlign: "center",
-		marginBottom: 10,
 	},
 	errorContainer: {
 		marginTop: 15,
@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	form: {
-		marginTop: 15,
 	},
 	authLabelText: {
 		color: colors.lightText,
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
 	authButton: {
 		backgroundColor: colors.complementAccent,
 		borderRadius: 4,
-		marginTop: 20,
+		marginTop: 30,
 	},
 	redirectText: {
 		color: colors.mediumText,
@@ -190,6 +189,9 @@ const styles = StyleSheet.create({
 	},
 	footer: {
 		alignItems: "center",
+		backgroundColor: colors.white,
+		borderTopWidth: 1,
+		borderTopColor: "#d3d3d3"
 	},
 	loading: {
 		color: colors.white,

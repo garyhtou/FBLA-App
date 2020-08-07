@@ -134,16 +134,16 @@ export default class SignUpScreen extends React.Component {
 							</Button>
 						</Form>
 					</Content>
+					<TouchableWithoutFeedback
+						onPress={() => this.props.navigation.navigate("SignIn")}
+					>
 					<Footer style={styles.footer}>
-						<TouchableOpacity
-							onPress={() => this.props.navigation.navigate("SignIn")}
-						>
 							<Text style={styles.redirectText}>
 								Already have an account?{" "}
 								<Text style={{ color: colors.complementAccent }}>Sign In</Text>
 							</Text>
-						</TouchableOpacity>
 					</Footer>
+					</TouchableWithoutFeedback>
 				</Container>
 			</TouchableWithoutFeedback>
 		);
@@ -159,7 +159,6 @@ const styles = StyleSheet.create({
 	heading: {
 		fontSize: 24,
 		textAlign: "center",
-		marginBottom: 10,
 	},
 	errorContainer: {
 		marginTop: 15,
@@ -172,7 +171,6 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	form: {
-		marginTop: 15,
 	},
 	authLabelText: {
 		color: colors.lightText,
@@ -189,7 +187,7 @@ const styles = StyleSheet.create({
 	authButton: {
 		backgroundColor: colors.complementAccent,
 		borderRadius: 4,
-		marginTop: 20,
+		marginTop: 30,
 	},
 	redirectText: {
 		color: colors.mediumText,
@@ -197,6 +195,9 @@ const styles = StyleSheet.create({
 	},
 	footer: {
 		alignItems: "center",
+		backgroundColor: colors.white,
+		borderTopWidth: 1,
+		borderTopColor: "#d3d3d3"
 	},
 	loading: {
 		color: colors.white,
