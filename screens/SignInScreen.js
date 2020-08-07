@@ -182,7 +182,4 @@ const styles = StyleSheet.create({
       borderTopWidth: 1,
       borderTopColor: "#d5d5d5",
    },
-   loading: {
-      color: colors.white,
-   }
 });
