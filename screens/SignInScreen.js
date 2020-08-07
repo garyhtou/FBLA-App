@@ -10,6 +10,7 @@ import {
    StyleSheet,
    TouchableWithoutFeedback,
    Keyboard,
+   ActivityIndicator
 } from "react-native";
 import { Text } from "native-base";
 import { colors, strings } from "../config/styles";
@@ -20,14 +21,20 @@ export default class SignInScreen extends React.Component {
       email: "",
       password: "",
       errorMessage: null,
+      loading: false
    };
 
    handleSignIn = () => {
+      this.setState({errorMessage: null, loading: true})
       const { email, password } = this.state;
-      firebase
+      return firebase
          .auth()
          .signInWithEmailAndPassword(email, password)
-         .catch((error) => this.setState({ errorMessage: error.message }));
+         .then( () => {
+            this.setState({loading: false});
+            this.props.navigation.navigate("App");
+         })
+         .catch((error) => this.setState({ loading: false, errorMessage: error.message }));
    };
 
    render() {
@@ -78,7 +85,13 @@ export default class SignInScreen extends React.Component {
                   style={styles.authButton}
                   onPress={this.handleSignIn}
                >
-                  <Text style={styles.authButtonText}>Sign In</Text>
+                  {this.state.loading ?
+                      (<ActivityIndicator
+                        size="large"
+                        color={colors.white}/>)
+                      :
+                      <Text style={styles.authButtonText}>Sign In</Text>
+                  }
                </TouchableOpacity>
 
                <TouchableOpacity
@@ -169,4 +182,7 @@ const styles = StyleSheet.create({
       borderTopWidth: 1,
       borderTopColor: "#d5d5d5",
    },
+   loading: {
+      color: colors.white,
+   }
 });

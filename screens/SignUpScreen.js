@@ -10,6 +10,7 @@ import {
     StyleSheet,
     TouchableWithoutFeedback,
     Keyboard,
+    ActivityIndicator
 } from "react-native";
 import { Text } from "native-base";
 import { colors } from "../config/styles";
@@ -21,19 +22,24 @@ export default class SignUpScreen extends React.Component {
       email: "",
       password: "",
       errorMessage: null,
+      loading: false
    };
 
    handleSignUp = () => {
+      this.setState({errorMessage: null, loading: true});
       const { name, email, password } = this.state;
       firebase
          .auth()
          .createUserWithEmailAndPassword(email, password)
          .then((userCredentials) => {
-            return userCredentials.user.updateProfile({
-               displayName: name,
-            });
+             this.setState({loading: false});
+             return userCredentials.user.updateProfile({
+                 displayName: name
+             }).then(() => {
+                 this.props.navigation.navigate("App");
+             })
          })
-         .catch((error) => this.setState({ errorMessage: error.message }));
+         .catch((error) => this.setState({loading: false, errorMessage: error.message }));
    };
 
    render() {
@@ -90,19 +96,29 @@ export default class SignUpScreen extends React.Component {
                   style={styles.authButton}
                   onPress={this.handleSignUp}
                >
-                  <Text style={styles.authButtonText}>Sign Up</Text>
+                  {this.state.loading ?
+                      (<ActivityIndicator
+                          size="large"
+                          color={colors.white}/>)
+                  :
+                      (<Text style={styles.authButtonText}>Sign Up</Text>)
+                  }
+
                </TouchableOpacity>
 
                <TouchableOpacity
                   style={styles.footer}
                   onPress={() => this.props.navigation.navigate("SignIn")}
                >
+
+
                   <Text style={styles.redirectText}>
-                     Already have an account?{" "}
-                     <Text style={{ color: colors.complementAccent }}>
-                        Sign In
-                     </Text>
+                      Already have an account?{" "}
+                      <Text style={{ color: colors.complementAccent }}>
+                          Sign In
+                      </Text>
                   </Text>
+
                </TouchableOpacity>
             </View>
          </TouchableWithoutFeedback>
