@@ -12,16 +12,18 @@ export default class LoadingScreen extends React.Component {
       firebase.auth().onAuthStateChanged((user) => {
          if (user !== null) {
             if (user.displayName !== null) {
-               firebase.firestore().collection("DatabaseUser")
+                let inChapter = false;
+                firebase.firestore().collection("DatabaseUser")
                    .doc(user.uid).get()
                    .then(function (DocSnapshot) {
+                        inChapter = DocSnapshot.get("inChapter")
 
-                      if(DocSnapshot.get("inChapter")===false){
-                         this.props.navigation.navigate("InitChap");
-                      } else{
-                         this.props.navigation.navigate("App");
-                      }
                    });
+                if(inChapter ===false){
+                    this.props.navigation.navigate("InitChap");
+                } else{
+                    this.props.navigation.navigate("App");
+                }
             }
          } else {
             this.props.navigation.navigate("Auth");

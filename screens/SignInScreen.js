@@ -33,18 +33,18 @@ export default class SignInScreen extends React.Component {
          .signInWithEmailAndPassword(email, password)
          .then( (userCredentials) => {
             this.setState({loading: false});
-            this.props.navigation.navigate("InitChap");
-
+            let inChapter = false;
             firebase.firestore().collection("DatabaseUser")
                 .doc(userCredentials.user.uid).get()
                 .then(function (DocSnapshot) {
+                   inChapter = DocSnapshot.get("inChapter")
 
-                     if(DocSnapshot.get("inChapter")===false){
-
-                     } else{
-                        this.props.navigation.navigate("InitChap");
-                     }
                });
+            if(inChapter===false){
+               this.props.navigation.navigate("InitChap");
+            } else{
+               this.props.navigation.navigate("App");
+            }
 
 
          })

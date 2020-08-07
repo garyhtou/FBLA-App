@@ -52,7 +52,7 @@ export default createAppContainer(
          Loading: LoadingScreen,
          Auth: AuthSwitch,
          InitChap: InitChapSwitch,
-         //App: AppStack,
+         App: AppStack,
       },
       {
          initialRouteName: "Loading",

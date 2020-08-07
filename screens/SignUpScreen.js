@@ -57,7 +57,7 @@ export default class SignUpScreen extends React.Component {
                  displayName: name
              }).then(() => {
                  this.initUser(userCredentials);
-                 //this.props.navigation.navigate("App");
+                 this.props.navigation.navigate("App");
              })
          })
          .catch((error) => this.setState({loading: false, errorMessage: error.message }));
