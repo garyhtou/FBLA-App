@@ -12,8 +12,9 @@ import {
 import SearchableDropdown from "react-native-searchable-dropdown";
 import { colors, strings } from "../config/styles";
 import * as firebase from "firebase";
+import firestore from '@react-native-firebase/firestore';
 
-export default class JoinChapterScreen extends React.Component {
+export default class JoinChapScreen extends React.Component {
    state = {
       code: "",
       errorMessage: null,
@@ -22,8 +23,7 @@ export default class JoinChapterScreen extends React.Component {
    joinChapter = () => {
       const user = firebase.auth().currentUser;
       const { code } = this.state;
-      firebase
-         .database()
+      firestore()
          .collection("Chapter")
          .where("code", "==", code)
          .get()
@@ -31,8 +31,8 @@ export default class JoinChapterScreen extends React.Component {
             if (querySnapshot.size === 0) {
                this.setState({ errorMessage: "No chapter with code given" });
             } else {
-               const setChapter = firebase
-                  .database()
+               const setChapter =
+                   firestore()
                   .collection("DatabaseUser")
                   .doc(user.uid)
                   .set(

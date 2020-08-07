@@ -15,6 +15,7 @@ import {
 import { Text } from "native-base";
 import { colors, strings } from "../config/styles";
 import firebase from "../config/firebase";
+import 'firebase/firestore';
 
 export default class SignInScreen extends React.Component {
    state = {
@@ -30,9 +31,22 @@ export default class SignInScreen extends React.Component {
       return firebase
          .auth()
          .signInWithEmailAndPassword(email, password)
-         .then( () => {
+         .then( (userCredentials) => {
             this.setState({loading: false});
-            this.props.navigation.navigate("App");
+            this.props.navigation.navigate("InitChap");
+
+            firebase.firestore().collection("DatabaseUser")
+                .doc(userCredentials.user.uid).get()
+                .then(function (DocSnapshot) {
+
+                     if(DocSnapshot.get("inChapter")===false){
+
+                     } else{
+                        this.props.navigation.navigate("InitChap");
+                     }
+               });
+
+
          })
          .catch((error) => this.setState({ loading: false, errorMessage: error.message }));
    };

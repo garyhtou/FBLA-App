@@ -15,6 +15,7 @@ import {
 import { Text } from "native-base";
 import { colors } from "../config/styles";
 import firebase from "../config/firebase";
+import 'firebase/firestore';
 
 export default class SignUpScreen extends React.Component {
    state = {
@@ -25,6 +26,24 @@ export default class SignUpScreen extends React.Component {
       loading: false
    };
 
+
+   initUser(userCredentials){
+       const {name} = this.state;
+       firebase.firestore().collection("DatabaseUser")
+           .doc(userCredentials.user.uid)
+           .set(
+               {
+                   chapterName: "",
+                   inChapter: false,
+                   isAdmin: false,
+                   name: name,
+                   chapterEvents: {},
+                   compEvents: {},
+               },
+               { merge: false }
+           );
+   }
+
    handleSignUp = () => {
       this.setState({errorMessage: null, loading: true});
       const { name, email, password } = this.state;
@@ -32,11 +51,13 @@ export default class SignUpScreen extends React.Component {
          .auth()
          .createUserWithEmailAndPassword(email, password)
          .then((userCredentials) => {
+
              this.setState({loading: false});
              return userCredentials.user.updateProfile({
                  displayName: name
              }).then(() => {
-                 this.props.navigation.navigate("App");
+                 this.initUser(userCredentials);
+                 //this.props.navigation.navigate("App");
              })
          })
          .catch((error) => this.setState({loading: false, errorMessage: error.message }));
