@@ -24,29 +24,41 @@ import {
 } from "native-base";
 import { colors, strings } from "../config/styles";
 import firebase from "../config/firebase";
+import 'firebase/firestore';
 
 export default class SignInScreen extends React.Component {
-	state = {
-		email: "",
-		password: "",
-		errorMessage: null,
-		loading: false,
-	};
+   state = {
+      email: "",
+      password: "",
+      errorMessage: null,
+      loading: false
+   };
 
-	handleSignInWithEmail = () => {
-		this.setState({ errorMessage: null, loading: true });
-		const { email, password } = this.state;
-		return firebase
-			.auth()
-			.signInWithEmailAndPassword(email, password)
-			.then(() => {
-				this.setState({ loading: false });
-				this.props.navigation.navigate("App");
-			})
-			.catch((error) =>
-				this.setState({ loading: false, errorMessage: error.message })
-			);
-	};
+   handleSignIn = () => {
+      this.setState({errorMessage: null, loading: true})
+      const { email, password } = this.state;
+      return firebase
+         .auth()
+         .signInWithEmailAndPassword(email, password)
+         .then( (userCredentials) => {
+            this.setState({loading: false});
+            let inChapter = false;
+            firebase.firestore().collection("DatabaseUser")
+                .doc(userCredentials.user.uid).get()
+                .then(function (DocSnapshot) {
+                   inChapter = DocSnapshot.get("inChapter")
+
+               });
+            if(inChapter===false){
+               this.props.navigation.navigate("InitChap");
+            } else{
+               this.props.navigation.navigate("App");
+            }
+
+
+         })
+         .catch((error) => this.setState({ loading: false, errorMessage: error.message }));
+   };
 
 	handleSignInWithGoogle = async () => {
 		//can't find anything that works
@@ -91,7 +103,7 @@ export default class SignInScreen extends React.Component {
 								<Button
 									block
 									style={styles.authButton}
-									onPress={this.handleSignInWithEmail}
+									onPress={this.handleSignIn}
 								>
 									{this.state.loading ? (
 										<Spinner color={colors.white} />

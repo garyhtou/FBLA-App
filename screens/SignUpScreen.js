@@ -24,6 +24,7 @@ import {
 } from "native-base";
 import { colors } from "../config/styles";
 import firebase from "../config/firebase";
+import "firebase/firestore";
 
 export default class SignUpScreen extends React.Component {
 	state = {
@@ -33,6 +34,25 @@ export default class SignUpScreen extends React.Component {
 		errorMessage: null,
 		loading: false,
 	};
+
+	initUser(userCredentials) {
+		const { name } = this.state;
+		firebase
+			.firestore()
+			.collection("DatabaseUser")
+			.doc(userCredentials.user.uid)
+			.set(
+				{
+					chapterName: "",
+					inChapter: false,
+					isAdmin: false,
+					name: name,
+					chapterEvents: {},
+					compEvents: {},
+				},
+				{ merge: false }
+			);
+	}
 
 	handleSignUp = () => {
 		this.setState({ errorMessage: null, loading: true });
@@ -47,6 +67,7 @@ export default class SignUpScreen extends React.Component {
 						displayName: name,
 					})
 					.then(() => {
+						this.initUser(userCredentials);
 						this.props.navigation.navigate("App");
 					});
 			})
