@@ -73,7 +73,7 @@ export default class SignInScreen extends React.Component {
 							<Text style={styles.heading}>Welcome to {strings.appName}</Text>
 
 							<Form style={styles.form}>
-								<Item floatingLabel>
+								<Item floatingLabel style={styles.noLeftMargin}>
 									<Label style={styles.authLabelText}>Email Address</Label>
 									<Input
 										style={styles.authInput}
@@ -82,7 +82,7 @@ export default class SignInScreen extends React.Component {
 										value={this.state.email}
 									/>
 								</Item>
-								<Item floatingLabel>
+								<Item floatingLabel style={styles.noLeftMargin}>
 									<Label style={styles.authLabelText}>Password</Label>
 									<Input
 										style={styles.authInput}
@@ -196,4 +196,7 @@ const styles = StyleSheet.create({
 	loading: {
 		color: colors.white,
 	},
+	noLeftMargin: {
+		marginLeft: 0
+	}
 });

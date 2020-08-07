@@ -83,14 +83,8 @@ export default class SignUpScreen extends React.Component {
 					<Content contentContainerStyle={styles.content}>
 						<Text style={styles.heading}>Sign up to get started!</Text>
 
-						<View style={styles.errorContainer}>
-							{this.state.errorMessage && (
-								<Text style={styles.errorText}>{this.state.errorMessage}</Text>
-							)}
-						</View>
-
 						<Form style={styles.form}>
-							<Item floatingLabel>
+							<Item floatingLabel style={styles.noLeftMargin}>
 								<Label style={styles.authLabelText}>Full Name</Label>
 								<Input
 									style={styles.authInput}
@@ -100,7 +94,7 @@ export default class SignUpScreen extends React.Component {
 								/>
 							</Item>
 
-							<Item floatingLabel>
+							<Item floatingLabel style={styles.noLeftMargin}>
 								<Label style={styles.authLabelText}>Email</Label>
 								<Input
 									style={styles.authInput}
@@ -110,7 +104,7 @@ export default class SignUpScreen extends React.Component {
 								/>
 							</Item>
 
-							<Item floatingLabel style={styles.marginTop}>
+							<Item floatingLabel style={styles.noLeftMargin}>
 								<Label style={styles.authLabelText}>Password</Label>
 								<Input
 									style={styles.authInput}
@@ -133,6 +127,11 @@ export default class SignUpScreen extends React.Component {
 								)}
 							</Button>
 						</Form>
+
+						<View style={styles.errorContainer}>
+							<Text style={styles.errorText}>{this.state.errorMessage}</Text>
+						</View>
+
 					</Content>
 					<TouchableWithoutFeedback
 						onPress={() => this.props.navigation.navigate("SignIn")}
@@ -202,4 +201,7 @@ const styles = StyleSheet.create({
 	loading: {
 		color: colors.white,
 	},
+	noLeftMargin: {
+		marginLeft: 0
+	}
 });
