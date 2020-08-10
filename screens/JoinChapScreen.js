@@ -53,14 +53,6 @@ export default class JoinChapScreen extends React.Component {
             <View style={styles.flexBox}>
                <Text style={styles.heading}>Join a Chapter!</Text>
 
-               <View style={styles.errorContainer}>
-                  {this.state.errorMessage && (
-                     <Text style={styles.errorText}>
-                        {this.state.errorMessage}
-                     </Text>
-                  )}
-               </View>
-
                <View style={styles.form}>
                   <View>
                      <TextInput
@@ -83,15 +75,34 @@ export default class JoinChapScreen extends React.Component {
                <TouchableOpacity
                   style={styles.createChapter}
                   onPress={() =>
-                     this.props.navigation.navigate("CreateChapter")
+                     this.props.navigation.navigate("CreateChap")
                   }
                >
-                  <Text style={styles.redirectText}>
-                     <Text style={{ color: colors.accent }}>
+                  <Text>
                         Create a Chapter
-                     </Text>
                   </Text>
                </TouchableOpacity>
+
+               <TouchableOpacity
+                   style={styles.createChapter}
+                   onPress={() => {
+                      firebase.auth().signOut();
+                   }}
+               >
+                  <Text>
+                     Sign Out
+                  </Text>
+
+               </TouchableOpacity>
+
+               <View style={styles.errorContainer}>
+                  {this.state.errorMessage && (
+                      <Text style={styles.errorText}>
+                         {this.state.errorMessage}
+                      </Text>
+                  )}
+               </View>
+
             </View>
          </TouchableWithoutFeedback>
       );
@@ -127,7 +138,6 @@ const styles = StyleSheet.create({
       marginHorizontal: 50,
 
    },
-
    codeButtonText: {
       color: colors.white,
       fontSize: 16,
@@ -150,9 +160,5 @@ const styles = StyleSheet.create({
    createChapter: {
       alignSelf: "center",
       marginTop: 32,
-   },
-   redirectText: {
-      color: colors.mediumText,
-      fontSize: 13,
    },
 });

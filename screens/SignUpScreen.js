@@ -4,7 +4,6 @@
 
 import React from "react";
 import {
-	TouchableOpacity,
 	StyleSheet,
 	TouchableWithoutFeedback,
 	Keyboard,
@@ -51,7 +50,10 @@ export default class SignUpScreen extends React.Component {
 					compEvents: {},
 				},
 				{ merge: false }
-			);
+			).then(() => {
+				this.setState({ loading: false });
+				this.props.navigation.navigate("Chap");
+			});
 	}
 
 	handleSignUp = () => {
@@ -61,14 +63,14 @@ export default class SignUpScreen extends React.Component {
 			.auth()
 			.createUserWithEmailAndPassword(email, password)
 			.then((userCredentials) => {
-				this.setState({ loading: false });
 				return userCredentials.user
 					.updateProfile({
 						displayName: name,
 					})
 					.then(() => {
+
+						// Create the profile then navigate (handled separately from loading screen listener
 						this.initUser(userCredentials);
-						this.props.navigation.navigate("App");
 					});
 			})
 			.catch((error) =>

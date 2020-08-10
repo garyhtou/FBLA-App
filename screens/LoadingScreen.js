@@ -3,7 +3,6 @@
  */
 
 import React from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import firebase from "../config/firebase";
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,23 +17,39 @@ export default class LoadingScreen extends React.Component {
            ...Ionicons.font,
        });
 
+      // When firebase user loads
       firebase.auth().onAuthStateChanged((user) => {
+
+         // If the a user is signed in
          if (user !== null) {
+
+            // If it's not the signup flow (that's handled in SignupScreen)
             if (user.displayName !== null) {
+
                 let inChapter = false;
+
+                // Get in chapter status
                 firebase.firestore().collection("DatabaseUser")
                    .doc(user.uid).get()
-                   .then(function (DocSnapshot) {
-                        inChapter = DocSnapshot.get("inChapter")
+                   .then((DocSnapshot) => {
+                       inChapter = DocSnapshot.get("inChapter")
 
+                       // If not in chapter - go to chapter selection/creation
+                       if(inChapter ===false){
+                           this.props.navigation.navigate("Chap");
+                       }
+
+                       // If in chapter - go to app screen
+                       else{
+                           this.props.navigation.navigate("App");
+                       }
                    });
-                if(inChapter ===false){
-                    this.props.navigation.navigate("InitChap");
-                } else{
-                    this.props.navigation.navigate("App");
-                }
+
             }
-         } else {
+         }
+
+         // If the a user is not signed in - go to sign in screen
+         else {
             this.props.navigation.navigate("Auth");
          }
       });

@@ -9,6 +9,7 @@ import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import MainScreen from "./screens/MainScreen";
 import JoinChapScreen from "./screens/JoinChapScreen";
+import CreateChapScreen from "./screens/CreateChapScreen";
 
 const AppStack = createStackNavigator(
    {
@@ -34,12 +35,13 @@ const AuthSwitch = createSwitchNavigator(
    }
 );
 
-const InitChapSwitch = createSwitchNavigator(
+const ChapSwitch = createSwitchNavigator(
     {
-        JoinChap:JoinChapScreen,
+        JoinChap: JoinChapScreen,
+        CreateChap: CreateChapScreen,
     },
     {
-        initialRouteName:"JoinChap",
+        initialRouteName: "JoinChap",
         defaultNavigationOptions: {
             cardStyle: { backgroundColor: "white" },
         },
@@ -51,7 +53,7 @@ export default createAppContainer(
       {
          Loading: LoadingScreen,
          Auth: AuthSwitch,
-         InitChap: InitChapSwitch,
+         Chap: ChapSwitch,
          App: AppStack,
       },
       {

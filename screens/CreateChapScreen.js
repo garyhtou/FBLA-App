@@ -12,7 +12,7 @@ import {
 import SearchableDropdown from "react-native-searchable-dropdown";
 import { colors, strings } from "../config/styles";
 import * as firebase from "firebase";
-import firestore from '@react-native-firebase/firestore';
+let firestore = firebase.firestore();
 
 export default class JoinChapScreen extends React.Component {
    state = {
@@ -23,7 +23,7 @@ export default class JoinChapScreen extends React.Component {
    joinChapter = () => {
       const user = firebase.auth().currentUser;
       const { code } = this.state;
-      firestore()
+      firestore
          .collection("Chapter")
          .where("code", "==", code)
          .get()
@@ -32,7 +32,7 @@ export default class JoinChapScreen extends React.Component {
                this.setState({ errorMessage: "No chapter with code given" });
             } else {
                const setChapter =
-                   firestore()
+                   firestore
                   .collection("DatabaseUser")
                   .doc(user.uid)
                   .set(
@@ -52,20 +52,12 @@ export default class JoinChapScreen extends React.Component {
             accessible={false}
          >
             <View style={styles.flexBox}>
-               <Text style={styles.heading}>Join a Chapter!</Text>
-
-               <View style={styles.errorContainer}>
-                  {this.state.errorMessage && (
-                     <Text style={styles.errorText}>
-                        {this.state.errorMessage}
-                     </Text>
-                  )}
-               </View>
+               <Text style={styles.heading}>Create a Chapter!</Text>
 
                <View style={styles.form}>
                   <View>
                      <TextInput
-                        placeholder="Enter Chapter Code"
+                        placeholder="Enter Chapter Name"
                         style={styles.codeInput}
                         autoCapitalize="none"
                         onChangeText={(code) => this.setState({ code })}
@@ -78,21 +70,41 @@ export default class JoinChapScreen extends React.Component {
                   style={styles.codeButton}
                   onPress={this.joinChapter}
                >
-                  <Text style={styles.authButtonText}>Join</Text>
+                  <Text style={styles.codeButtonText}>Create</Text>
                </TouchableOpacity>
 
                <TouchableOpacity
                   style={styles.createChapter}
                   onPress={() =>
-                     this.props.navigation.navigate("CreateChapter")
+                     this.props.navigation.navigate("JoinChap")
                   }
                >
-                  <Text style={styles.redirectText}>
-                     <Text style={{ color: colors.accent }}>
-                        Create a Chapter
-                     </Text>
+                  <Text>
+                     Join a Chapter
                   </Text>
+
                </TouchableOpacity>
+
+               <TouchableOpacity
+                   style={styles.createChapter}
+                   onPress={() => {
+                       firebase.auth().signOut();
+                   }}
+               >
+                  <Text>
+                     Sign Out
+                  </Text>
+
+               </TouchableOpacity>
+
+               <View style={styles.errorContainer}>
+                  {this.state.errorMessage && (
+                      <Text style={styles.errorText}>
+                         {this.state.errorMessage}
+                      </Text>
+                  )}
+               </View>
+
             </View>
          </TouchableWithoutFeedback>
       );
@@ -107,14 +119,13 @@ const styles = StyleSheet.create({
    },
    flexBox: {
       flex: 1,
+      justifyContent: "center",
    },
    heading: {
-      marginTop: 32,
       fontSize: 24,
       textAlign: "center",
    },
    errorContainer: {
-      height: 72,
       alignItems: "center",
       justifyContent: "center",
       marginHorizontal: 30,
@@ -125,10 +136,10 @@ const styles = StyleSheet.create({
       textAlign: "center",
    },
    form: {
-      marginBottom: 48,
-      marginHorizontal: 30,
-   },
+      marginTop: 15,
+      marginHorizontal: 50,
 
+   },
    codeButtonText: {
       color: colors.white,
       fontSize: 16,
@@ -138,6 +149,7 @@ const styles = StyleSheet.create({
       borderBottomWidth: StyleSheet.hairlineWidth,
       height: 40,
       fontSize: 15,
+      marginBottom: 30,
    },
    codeButton: {
       marginHorizontal: 30,
@@ -150,9 +162,5 @@ const styles = StyleSheet.create({
    createChapter: {
       alignSelf: "center",
       marginTop: 32,
-   },
-   redirectText: {
-      color: colors.mediumText,
-      fontSize: 13,
    },
 });

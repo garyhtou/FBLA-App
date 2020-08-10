@@ -4,7 +4,6 @@
 
 import React from "react";
 import {
-	TouchableOpacity,
 	StyleSheet,
 	TouchableWithoutFeedback,
 	Keyboard,
@@ -31,7 +30,7 @@ export default class SignInScreen extends React.Component {
       email: "",
       password: "",
       errorMessage: null,
-      loading: false
+      loading: false,
    };
 
    handleSignIn = () => {
@@ -41,21 +40,7 @@ export default class SignInScreen extends React.Component {
          .auth()
          .signInWithEmailAndPassword(email, password)
          .then( (userCredentials) => {
-            this.setState({loading: false});
-            let inChapter = false;
-            firebase.firestore().collection("DatabaseUser")
-                .doc(userCredentials.user.uid).get()
-                .then(function (DocSnapshot) {
-                   inChapter = DocSnapshot.get("inChapter")
-
-               });
-            if(inChapter===false){
-               this.props.navigation.navigate("InitChap");
-            } else{
-               this.props.navigation.navigate("App");
-            }
-
-
+			 this.setState({loading: false});
          })
          .catch((error) => this.setState({ loading: false, errorMessage: error.message }));
    };
@@ -65,82 +50,80 @@ export default class SignInScreen extends React.Component {
 	};
 
 	render() {
-		if (true) {
-			return (
-				<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-					<Container>
-						<Content contentContainerStyle={styles.content}>
-							<Text style={styles.heading}>Welcome to {strings.appName}</Text>
+		return (
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+				<Container>
+					<Content contentContainerStyle={styles.content}>
+						<Text style={styles.heading}>Welcome to {strings.appName}</Text>
 
-							<Form style={styles.form}>
-								<Item floatingLabel style={styles.noLeftMargin}>
-									<Label style={styles.authLabelText}>Email Address</Label>
-									<Input
-										style={styles.authInput}
-										autoCapitalize="none"
-										onChangeText={(email) => this.setState({ email })}
-										value={this.state.email}
-									/>
-								</Item>
-								<Item floatingLabel style={styles.noLeftMargin}>
-									<Label style={styles.authLabelText}>Password</Label>
-									<Input
-										style={styles.authInput}
-										secureTextEntry
-										autoCapitalize="none"
-										onChangeText={(password) => this.setState({ password })}
-										value={this.state.password}
-									/>
-								</Item>
-								<Button
-									block
-									style={styles.authButton}
-									onPress={this.handleSignIn}
-								>
-									{this.state.loading ? (
-										<Spinner color={colors.white} />
-									) : (
-										<Text style={styles.authButtonText}>Sign In</Text>
-									)}
-								</Button>
-								{/* <Button full style={styles.authButton}>
-									{this.state.loading ? (
-										<Spinner color="white" />
-									) : (
-										<TouchableOpacity onPress={this.handleSignInWithGoogle}>
-											<Text style={styles.authButtonText}>
-												Sign In with Google
-											</Text>
-										</TouchableOpacity>
-									)}
-								</Button> */}
-							</Form>
+						<Form style={styles.form}>
+							<Item floatingLabel style={styles.noLeftMargin}>
+								<Label style={styles.authLabelText}>Email Address</Label>
+								<Input
+									style={styles.authInput}
+									autoCapitalize="none"
+									onChangeText={(email) => this.setState({ email })}
+									value={this.state.email}
+								/>
+							</Item>
+							<Item floatingLabel style={styles.noLeftMargin}>
+								<Label style={styles.authLabelText}>Password</Label>
+								<Input
+									style={styles.authInput}
+									secureTextEntry
+									autoCapitalize="none"
+									onChangeText={(password) => this.setState({ password })}
+									value={this.state.password}
+								/>
+							</Item>
+							<Button
+								block
+								style={styles.authButton}
+								onPress={this.handleSignIn}
+							>
+								{this.state.loading ? (
+									<Spinner color={colors.white} />
+								) : (
+									<Text style={styles.authButtonText}>Sign In</Text>
+								)}
+							</Button>
+							{/* <Button full style={styles.authButton}>
+								{this.state.loading ? (
+									<Spinner color="white" />
+								) : (
+									<TouchableOpacity onPress={this.handleSignInWithGoogle}>
+										<Text style={styles.authButtonText}>
+											Sign In with Google
+										</Text>
+									</TouchableOpacity>
+								)}
+							</Button> */}
+						</Form>
 
-							<View style={styles.errorContainer}>
-								<Text style={styles.errorText}>
-									{this.state.errorMessage}
+						<View style={styles.errorContainer}>
+							<Text style={styles.errorText}>
+								{this.state.errorMessage}
+							</Text>
+						</View>
+
+					</Content>
+
+					<TouchableWithoutFeedback
+						onPress={() => this.props.navigation.navigate("SignUp")}
+					>
+					<Footer style={styles.footer}>
+							<Text style={styles.redirectText}>
+								New to {strings.appName}?{" "}
+								<Text style={{ color: colors.complementAccent }}>
+									Sign Up
 								</Text>
-							</View>
+							</Text>
+					</Footer>
 
-						</Content>
-
-						<TouchableWithoutFeedback
-							onPress={() => this.props.navigation.navigate("SignUp")}
-						>
-						<Footer style={styles.footer}>
-								<Text style={styles.redirectText}>
-									New to {strings.appName}?{" "}
-									<Text style={{ color: colors.complementAccent }}>
-										Sign Up
-									</Text>
-								</Text>
-						</Footer>
-
-						</TouchableWithoutFeedback>
-					</Container>
-				</TouchableWithoutFeedback>
-			);
-		}
+					</TouchableWithoutFeedback>
+				</Container>
+			</TouchableWithoutFeedback>
+		);
 	}
 }
 
