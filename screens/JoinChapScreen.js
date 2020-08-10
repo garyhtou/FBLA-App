@@ -13,11 +13,13 @@ import SearchableDropdown from "react-native-searchable-dropdown";
 import { colors, strings } from "../config/styles";
 import * as firebase from "firebase";
 import 'firebase/firestore';
+import {Button, Content, Spinner} from "native-base";
 
 export default class JoinChapScreen extends React.Component {
    state = {
       code: "",
       errorMessage: null,
+      loading: false,
    };
 
    joinChapter = () => {
@@ -69,7 +71,11 @@ export default class JoinChapScreen extends React.Component {
                   style={styles.codeButton}
                   onPress={this.joinChapter}
                >
-                  <Text style={styles.codeButtonText}>Join</Text>
+                  {this.state.loading ? (
+                      <Spinner color={colors.white} />
+                  ) : (
+                      <Text style={styles.codeButtonText}>Join</Text>
+                  )}
                </TouchableOpacity>
 
                <TouchableOpacity
@@ -78,7 +84,7 @@ export default class JoinChapScreen extends React.Component {
                      this.props.navigation.navigate("CreateChap")
                   }
                >
-                  <Text>
+                  <Text style={styles.redirectText}>
                         Create a Chapter
                   </Text>
                </TouchableOpacity>
@@ -96,11 +102,9 @@ export default class JoinChapScreen extends React.Component {
                </TouchableOpacity>
 
                <View style={styles.errorContainer}>
-                  {this.state.errorMessage && (
-                      <Text style={styles.errorText}>
-                         {this.state.errorMessage}
-                      </Text>
-                  )}
+                  <Text style={styles.errorText}>
+                     {this.state.errorMessage}
+                  </Text>
                </View>
 
             </View>
@@ -160,5 +164,9 @@ const styles = StyleSheet.create({
    createChapter: {
       alignSelf: "center",
       marginTop: 32,
+   },
+   redirectText: {
+      color: colors.mediumText,
+      fontSize: 13,
    },
 });
