@@ -1,172 +1,171 @@
 import React from "react";
 import {
-   Text,
-   View,
-   TextInput,
-   TouchableOpacity,
-   CheckBox,
-   TouchableWithoutFeedback,
-   Keyboard,
-   StyleSheet,
+	TouchableOpacity,
+	TouchableWithoutFeedback,
+	Keyboard,
+	StyleSheet,
 } from "react-native";
-import SearchableDropdown from "react-native-searchable-dropdown";
 import { colors, strings } from "../config/styles";
 import * as firebase from "firebase";
-import 'firebase/firestore';
-import {Button, Content, Spinner} from "native-base";
+import "firebase/firestore";
+import {
+	Button,
+	Content,
+	Spinner,
+	Container,
+	Text,
+	View,
+	Form,
+	Item,
+	Label,
+	Input,
+	Footer,
+} from "native-base";
 
 export default class JoinChapScreen extends React.Component {
-   state = {
-      code: "",
-      errorMessage: null,
-      loading: false,
-   };
+	state = {
+		code: "",
+		errorMessage: null,
+		loading: false,
+	};
 
-   joinChapter = () => {
-      const user = firebase.auth().currentUser;
-      const { code } = this.state;
-      firebase.firestore().collection("Chapter")
-         .where("code", "==", code)
-         .get()
-         .then(function (querySnapshot) {
-            if (querySnapshot.size === 0) {
-               this.setState({ errorMessage: "No chapter with code given" });
-            } else {
-               const setChapter = firebase.firestore()
-                  .collection("DatabaseUser")
-                  .doc(user.uid)
-                  .set(
-                     {
-                        chapterName: querySnapshot[0].data().get("chapterName"),
-                        inChapter: true
-                     },
-                     { merge: true }
-                  );
-            }
-         });
-   };
+	joinChapter = () => {
+		const user = firebase.auth().currentUser;
+		const { code } = this.state;
+		firebase
+			.firestore()
+			.collection("Chapter")
+			.where("code", "==", code)
+			.get()
+			.then(function (querySnapshot) {
+				if (querySnapshot.size === 0) {
+					this.setState({ errorMessage: "No chapter with code given" });
+				} else {
+					const setChapter = firebase
+						.firestore()
+						.collection("DatabaseUser")
+						.doc(user.uid)
+						.set(
+							{
+								chapterName: querySnapshot[0].data().get("chapterName"),
+								inChapter: true,
+							},
+							{ merge: true }
+						);
+				}
+			});
+	};
 
-   render() {
-      return (
-         <TouchableWithoutFeedback
-            onPress={Keyboard.dismiss}
-            accessible={false}
-         >
-            <View style={styles.flexBox}>
-               <Text style={styles.heading}>Join a Chapter!</Text>
+	render() {
+		return (
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+				<Container>
+					<Content contentContainerStyle={styles.content}>
+						<Text style={styles.heading}>Join a Chapter!</Text>
 
-               <View style={styles.form}>
-                  <View>
-                     <TextInput
-                        placeholder="Enter Chapter Code"
-                        style={styles.codeInput}
-                        autoCapitalize="none"
-                        onChangeText={(code) => this.setState({ code })}
-                        value={this.state.code}
-                     />
-                  </View>
-               </View>
+						<View style={styles.errorContainer}>
+							<Text style={styles.errorText}>{this.state.errorMessage}</Text>
+						</View>
 
-               <TouchableOpacity
-                  style={styles.codeButton}
-                  onPress={this.joinChapter}
-               >
-                  {this.state.loading ? (
-                      <Spinner color={colors.white} />
-                  ) : (
-                      <Text style={styles.codeButtonText}>Join</Text>
-                  )}
-               </TouchableOpacity>
+						<Form>
+							<Item floatingLabel style={styles.noLeftMargin}>
+								<Label style={styles.codeLabelText}>Enter Chapter Code</Label>
+								<Input
+									style={styles.codeInput}
+									autoCapitalize="none"
+									onChangeText={(code) => this.setState({ code })}
+									value={this.state.code}
+								/>
+							</Item>
+							<Button
+								block
+								style={styles.codeButton}
+								onPress={this.joinChapter}
+							>
+								{this.state.loading ? (
+									<Spinner color={colors.white} />
+								) : (
+									<Text style={styles.codeButtonText}>Join</Text>
+								)}
+							</Button>
+						</Form>
 
-               <TouchableOpacity
-                  style={styles.createChapter}
-                  onPress={() =>
-                     this.props.navigation.navigate("CreateChap")
-                  }
-               >
-                  <Text style={styles.redirectText}>
-                        Create a Chapter
-                  </Text>
-               </TouchableOpacity>
+						<TouchableOpacity
+							style={styles.createChapter}
+							onPress={() => {
+								firebase.auth().signOut();
+							}}
+						>
+							<Text>Sign Out</Text>
+						</TouchableOpacity>
+					</Content>
 
-               <TouchableOpacity
-                   style={styles.createChapter}
-                   onPress={() => {
-                      firebase.auth().signOut();
-                   }}
-               >
-                  <Text>
-                     Sign Out
-                  </Text>
-
-               </TouchableOpacity>
-
-               <View style={styles.errorContainer}>
-                  <Text style={styles.errorText}>
-                     {this.state.errorMessage}
-                  </Text>
-               </View>
-
-            </View>
-         </TouchableWithoutFeedback>
-      );
-   }
+					<TouchableWithoutFeedback
+						style={styles.createChapter}
+						onPress={() => this.props.navigation.navigate("CreateChap")}
+					>
+						<Footer style={styles.footer}>
+							<Text style={styles.redirectText}>Create a Chapter</Text>
+						</Footer>
+					</TouchableWithoutFeedback>
+				</Container>
+			</TouchableWithoutFeedback>
+		);
+	}
 }
 
 const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-   },
-   flexBox: {
-      flex: 1,
-      justifyContent: "center",
-   },
-   heading: {
-      fontSize: 24,
-      textAlign: "center",
-   },
-   errorContainer: {
-      alignItems: "center",
-      justifyContent: "center",
-      marginHorizontal: 30,
-   },
-   errorText: {
-      color: colors.complementAccent,
-      fontSize: 13,
-      textAlign: "center",
-   },
-   form: {
-      marginTop: 15,
-      marginHorizontal: 50,
-
-   },
-   codeButtonText: {
-      color: colors.white,
-      fontSize: 16,
-   },
-   codeInput: {
-      borderBottomColor: colors.lightText,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      height: 40,
-      fontSize: 15,
-      marginBottom: 30,
-   },
-   codeButton: {
-      marginHorizontal: 30,
-      backgroundColor: colors.complementAccent,
-      borderRadius: 4,
-      height: 52,
-      alignItems: "center",
-      justifyContent: "center",
-   },
-   createChapter: {
-      alignSelf: "center",
-      marginTop: 32,
-   },
-   redirectText: {
-      color: colors.mediumText,
-      fontSize: 13,
-   },
+	content: {
+		flex: 1,
+		justifyContent: "center",
+		marginHorizontal: 50,
+	},
+	heading: {
+		fontSize: 24,
+		textAlign: "center",
+	},
+	errorContainer: {
+		alignItems: "center",
+		justifyContent: "center",
+		marginHorizontal: 30,
+	},
+	errorText: {
+		color: colors.complementAccent,
+		fontSize: 13,
+		textAlign: "center",
+	},
+	codeLabelText: {
+		color: colors.lightText,
+		fontSize: 15,
+		textTransform: "uppercase",
+	},
+	codeButtonText: {
+		color: colors.white,
+		fontSize: 16,
+	},
+	codeInput: {
+		fontSize: 20,
+	},
+	codeButton: {
+		backgroundColor: colors.complementAccent,
+		borderRadius: 4,
+		marginTop: 30,
+	},
+	createChapter: {
+		alignSelf: "center",
+		marginTop: 32,
+	},
+	redirectText: {
+		color: colors.mediumText,
+		fontSize: 13,
+	},
+	footer: {
+		alignItems: "center",
+		backgroundColor: colors.white,
+		borderTopWidth: 1,
+		borderTopColor: "#d3d3d3",
+	},
+	noLeftMargin: {
+		marginLeft: 0,
+	},
 });

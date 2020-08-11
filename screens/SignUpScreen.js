@@ -3,11 +3,7 @@
  */
 
 import React from "react";
-import {
-	StyleSheet,
-	TouchableWithoutFeedback,
-	Keyboard,
-} from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import {
 	Text,
 	Container,
@@ -50,7 +46,8 @@ export default class SignUpScreen extends React.Component {
 					compEvents: {},
 				},
 				{ merge: false }
-			).then(() => {
+			)
+			.then(() => {
 				this.setState({ loading: false });
 				this.props.navigation.navigate("Chap");
 			});
@@ -68,7 +65,6 @@ export default class SignUpScreen extends React.Component {
 						displayName: name,
 					})
 					.then(() => {
-
 						// Create the profile then navigate (handled separately from loading screen listener
 						this.initUser(userCredentials);
 					});
@@ -133,17 +129,16 @@ export default class SignUpScreen extends React.Component {
 						<View style={styles.errorContainer}>
 							<Text style={styles.errorText}>{this.state.errorMessage}</Text>
 						</View>
-
 					</Content>
 					<TouchableWithoutFeedback
 						onPress={() => this.props.navigation.navigate("SignIn")}
 					>
-					<Footer style={styles.footer}>
+						<Footer style={styles.footer}>
 							<Text style={styles.redirectText}>
 								Already have an account?{" "}
 								<Text style={{ color: colors.complementAccent }}>Sign In</Text>
 							</Text>
-					</Footer>
+						</Footer>
 					</TouchableWithoutFeedback>
 				</Container>
 			</TouchableWithoutFeedback>
@@ -171,8 +166,7 @@ const styles = StyleSheet.create({
 		fontSize: 13,
 		textAlign: "center",
 	},
-	form: {
-	},
+	form: {},
 	authLabelText: {
 		color: colors.lightText,
 		fontSize: 15,
@@ -198,12 +192,12 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		backgroundColor: colors.white,
 		borderTopWidth: 1,
-		borderTopColor: "#d3d3d3"
+		borderTopColor: "#d3d3d3",
 	},
 	loading: {
 		color: colors.white,
 	},
 	noLeftMargin: {
-		marginLeft: 0
-	}
+		marginLeft: 0,
+	},
 });

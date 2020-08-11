@@ -119,7 +119,6 @@ export default class SignInScreen extends React.Component {
 								</Text>
 							</Text>
 					</Footer>
-
 					</TouchableWithoutFeedback>
 				</Container>
 			</TouchableWithoutFeedback>
