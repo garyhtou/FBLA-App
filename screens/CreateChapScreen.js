@@ -93,7 +93,7 @@ export default class JoinChapScreen extends React.Component {
 								firebase.auth().signOut();
 							}}
 						>
-							<Text>Sign Out</Text>
+							<Text style={styles.redirectText}>Sign Out</Text>
 						</TouchableOpacity>
 					</Content>
 
