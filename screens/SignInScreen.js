@@ -24,6 +24,7 @@ import {
 import { colors, strings } from "../config/styles";
 import firebase from "../config/firebase";
 import 'firebase/firestore';
+import * as Google from "expo";
 
 export default class SignInScreen extends React.Component {
    state = {
