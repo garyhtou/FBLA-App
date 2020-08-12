@@ -49,7 +49,6 @@ export default class SignUpScreen extends React.Component {
 			)
 			.then(() => {
 				this.setState({ loading: false });
-				this.props.navigation.navigate("Chap");
 			});
 	}
 
@@ -65,7 +64,6 @@ export default class SignUpScreen extends React.Component {
 						displayName: name,
 					})
 					.then(() => {
-						// Create the profile then navigate (handled separately from loading screen listener
 						this.initUser(userCredentials);
 					});
 			})
