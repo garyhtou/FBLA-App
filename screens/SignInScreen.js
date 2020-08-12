@@ -55,7 +55,7 @@ export default class SignInScreen extends React.Component {
 				// 	})
 				// 	.catch(error => {
 				// 		console.log("firebase cred err:", error);
-				// 	});
+				// 	});jjkl
 				return result.accessToken;
 			} else {
 				return { cancelled: true };
