@@ -32,8 +32,26 @@ export default class SignInScreen extends React.Component {
       errorMessage: null,
       loading: false,
    };
+   signInWithGoogleAsync = async() => {
+		try {
+			const result = await Google.logInAsync({
+				behavior:'web',
+				androidClientId: '200356083068-cmspe2kthe9gis90nj73odthv0lvai3a.apps.googleusercontent.com',
+				iosClientId: '200356083068-v599qf4gh4u4gdv97bel5fr18o1fpp86.apps.googleusercontent.com',
+				scopes: ['profile', 'email'],
+			});
 
-   handleSignIn = () => {
+			if (result.type === 'success') {
+				return result.accessToken;
+			} else {
+				return { cancelled: true };
+			}
+		} catch (e) {
+			return { error: true };
+		}
+	};
+
+	handleSignIn = () => {
       this.setState({errorMessage: null, loading: true})
       const { email, password } = this.state;
       return firebase
@@ -44,10 +62,6 @@ export default class SignInScreen extends React.Component {
          })
          .catch((error) => this.setState({ loading: false, errorMessage: error.message }));
    };
-
-	handleSignInWithGoogle = async () => {
-		//can't find anything that works
-	};
 
 	render() {
 		return (
@@ -85,6 +99,17 @@ export default class SignInScreen extends React.Component {
 									<Spinner color={colors.white} />
 								) : (
 									<Text style={styles.authButtonText}>Sign In</Text>
+								)}
+							</Button>
+							<Button
+								block
+								style={styles.authButton}
+								onPress={() => this.signInWithGoogleAsync()}
+							>
+								{this.state.loading ? (
+									<Spinner color={colors.white} />
+								) : (
+									<Text style={styles.authButtonText}>Sign In With Google</Text>
 								)}
 							</Button>
 							{/* <Button full style={styles.authButton}>
