@@ -3,6 +3,8 @@
  */
 
 import React from "react";
+import Expo from "expo";
+import * as Google from 'expo-google-app-auth';
 import {
 	StyleSheet,
 	TouchableWithoutFeedback,
@@ -24,8 +26,6 @@ import {
 import { colors, strings } from "../config/styles";
 import firebase from "../config/firebase";
 import 'firebase/firestore';
-import * as Google from "expo";
-
 export default class SignInScreen extends React.Component {
    state = {
       email: "",
@@ -34,6 +34,7 @@ export default class SignInScreen extends React.Component {
       loading: false,
    };
    signInWithGoogleAsync = async() => {
+   		console.log("running");
 		try {
 			const result = await Google.logInAsync({
 				behavior:'web',
@@ -41,8 +42,20 @@ export default class SignInScreen extends React.Component {
 				iosClientId: '200356083068-v599qf4gh4u4gdv97bel5fr18o1fpp86.apps.googleusercontent.com',
 				scopes: ['profile', 'email'],
 			});
-
+			console.log(result);
 			if (result.type === 'success') {
+
+				// const { idToken, accessToken } = result;
+				// const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
+				// firebase
+				// 	.auth()
+				// 	.signInAndRetrieveDataWithCredential(credential)
+				// 	.then(res => {
+				// 		// user res, create your user, do whatever you want
+				// 	})
+				// 	.catch(error => {
+				// 		console.log("firebase cred err:", error);
+				// 	});
 				return result.accessToken;
 			} else {
 				return { cancelled: true };
