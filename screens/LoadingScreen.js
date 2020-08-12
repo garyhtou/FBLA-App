@@ -23,29 +23,24 @@ export default class LoadingScreen extends React.Component {
          // If the a user is signed in
          if (user !== null) {
 
-            // If it's not the signup flow (that's handled in SignupScreen)
-            if (user.displayName !== null) {
+            let inChapter = false;
 
-                let inChapter = false;
+            // Get in chapter status
+            firebase.firestore().collection("DatabaseUser")
+               .doc(user.uid).get()
+               .then((DocSnapshot) => {
+                   inChapter = DocSnapshot.get("inChapter")
 
-                // Get in chapter status
-                firebase.firestore().collection("DatabaseUser")
-                   .doc(user.uid).get()
-                   .then((DocSnapshot) => {
-                       inChapter = DocSnapshot.get("inChapter")
+                   // If not in chapter - go to chapter selection/creation
+                   if(inChapter ===false){
+                       this.props.navigation.navigate("Chap");
+                   }
 
-                       // If not in chapter - go to chapter selection/creation
-                       if(inChapter ===false){
-                           this.props.navigation.navigate("Chap");
-                       }
-
-                       // If in chapter - go to app screen
-                       else{
-                           this.props.navigation.navigate("App");
-                       }
+                   // If in chapter - go to app screen
+                   else{
+                       this.props.navigation.navigate("App");
+                   }
                    });
-
-            }
          }
 
          // If the a user is not signed in - go to sign in screen
