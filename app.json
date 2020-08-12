@@ -1,10 +1,11 @@
 {
   "expo": {
     "name": "FBLA-App",
-    "slug": "FBLA-App",
+    "slug": "fblaapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+	"privacy": "unlisted",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,7 +18,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.garytou.fblaapp",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.garytou.fblaapp",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
