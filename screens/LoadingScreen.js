@@ -7,9 +7,23 @@ import firebase from "../config/firebase";
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { AppLoading } from "expo";
+import {curUser, userListener, userInitialized} from "../config/user";
 
 export default class LoadingScreen extends React.Component {
 
+    checkLoaded() {
+        this.setState({action: 'Join Existing'})
+        if (!userInitialized) {
+            setTimeout("checkLoaded();", 1000);
+        } else {
+            if(curUser.inChapter ===false){
+                this.props.navigation.navigate("Chap");
+            }
+            else{
+                this.props.navigation.navigate("App");
+            }
+        }
+    }
    async componentDidMount() {
        await Font.loadAsync({
            Roboto: require('native-base/Fonts/Roboto.ttf'),
@@ -22,26 +36,11 @@ export default class LoadingScreen extends React.Component {
 
          // If the a user is signed in
          if (user !== null) {
-
-            let inChapter = false;
-
-            // Get in chapter status
-            firebase.firestore().collection("DatabaseUser")
-               .doc(user.uid).get()
-               .then((DocSnapshot) => {
-                   inChapter = DocSnapshot.get("inChapter")
-
-                   // If not in chapter - go to chapter selection/creation
-                   if(inChapter ===false){
-                       this.props.navigation.navigate("Chap");
-                   }
-
-                   // If in chapter - go to app screen
-                   else{
-                       this.props.navigation.navigate("App");
-                   }
-                   });
+             userListener.init(user);
+             console.log("ready");
+             this.checkLoaded();
          }
+
 
          // If the a user is not signed in - go to sign in screen
          else {

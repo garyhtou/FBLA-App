@@ -28,8 +28,8 @@ let userConverter = {
             competitiveEvents: user.competitiveEvents,
         }
     },
-    fromFirestore: function(snapshot, options){
-        const data = snapshot.data(options);
+    fromFirestore: function(snapshot){
+        const data = snapshot.data();
         return new User(data.name, data.chapterName, data.inChapter,data.isAdmin,
             data.chapterEvents, data.competitiveEvents);
     }
@@ -37,12 +37,25 @@ let userConverter = {
 
 
 let curUser;
-console.log(curUser);
+let userInitialized = false;
 
-firebase.firestore().collection("DatabaseUser")
-    .doc(firebase.auth().currentUser.uid)
-    .onSnapshot(function(doc) {
-        curUser = userConverter.fromFirestore(curUser);
-    });
+const userListener = {
+    init: function(user){
+        firebase.firestore().collection("DatabaseUser")
+            .doc(firebase.auth().currentUser.uid)
+            .onSnapshot(function(doc) {
+                curUser = userConverter.fromFirestore(doc);
+                userInitialized = true;
+                console.log("found");
+            });
+    }
 
-export default ()=>{return curUser};
+}
+
+
+export {
+    curUser,
+    userConverter,
+    userListener,
+    userInitialized
+};
