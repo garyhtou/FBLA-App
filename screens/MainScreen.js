@@ -4,6 +4,7 @@
 
 import React from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import {userConverter, userInitialized} from "../config/user";
 import firebase from "../config/firebase";
 import { colors } from "../config/styles";
 
@@ -19,7 +20,11 @@ export default class MainScreen extends React.Component {
    }
 
    signOutUser = () => {
-      firebase.auth().signOut().then(this.props.navigation.navigate("Auth"));
+      userConverter.setInit(false);
+      firebase.auth().signOut().then(
+
+          this.props.navigation.navigate("Auth")
+      );
    };
 
    render() {

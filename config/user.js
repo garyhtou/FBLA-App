@@ -18,6 +18,12 @@ class User {
 
 // Firestore data converter
 let userConverter = {
+    setCurUser:function(snapshot){
+        curUser = this.fromFirestore(snapshot);
+    },
+    setInit:function(initialized){
+        userInitialized = initialized
+    },
     toFirestore: function(user) {
         return {
             chapterName: user.chapterName,
@@ -39,23 +45,9 @@ let userConverter = {
 let curUser;
 let userInitialized = false;
 
-const userListener = {
-    init: function(user){
-        firebase.firestore().collection("DatabaseUser")
-            .doc(firebase.auth().currentUser.uid)
-            .onSnapshot(function(doc) {
-                curUser = userConverter.fromFirestore(doc);
-                userInitialized = true;
-                console.log("found");
-            });
-    }
-
-}
-
 
 export {
     curUser,
     userConverter,
-    userListener,
     userInitialized
 };
