@@ -21,36 +21,22 @@ import {
 	Footer,
 } from "native-base";
 let firestore = firebase.firestore();
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export default class JoinChapScreen extends React.Component {
 	state = {
-		code: "",
+		chapterName:"",
+		stateSelected:null,
 		errorMessage: null,
 		loading: false,
+
+
 	};
 
-	joinChapter = () => {
+	createChapter = () => {
 		const user = firebase.auth().currentUser;
 		const { code } = this.state;
-		firestore
-			.collection("Chapter")
-			.where("code", "==", code)
-			.get()
-			.then(function (querySnapshot) {
-				if (querySnapshot.size === 0) {
-					this.setState({ errorMessage: "No chapter with code given" });
-				} else {
-					const setChapter = firestore
-						.collection("DatabaseUser")
-						.doc(user.uid)
-						.set(
-							{
-								chapterName: querySnapshot[0].data().get("chapterName"),
-							},
-							{ merge: true }
-						);
-				}
-			});
+
 	};
 
 	render() {
@@ -74,6 +60,22 @@ export default class JoinChapScreen extends React.Component {
 									value={this.state.code}
 								/>
 							</Item>
+							<View style={{zIndex: 999}}>
+								<DropDownPicker
+									items={[
+										{label: 'WA', value: 'WA'},
+										{label: 'IA', value: 'IA'},
+									]}
+									containerStyle={styles.dropDownStyle}
+									dropDownStyle={styles.dropDownOverflow}
+									onChangeItem={(stateSelected) => this.setState({ stateSelected })}
+
+									defaultNull
+									placeholder="Select a state"
+								/>
+							</View>
+
+
 							<Button
 								block
 								style={styles.codeButton}
@@ -87,24 +89,27 @@ export default class JoinChapScreen extends React.Component {
 							</Button>
 						</Form>
 
+
+						<TouchableOpacity
+							style={styles.createChapter}
+							onPress={() => {
+								this.props.navigation.navigate("JoinChap");
+							}}
+						>
+							<Text style={styles.redirectText}>Want to join a chapter? Enter the code here.</Text>
+						</TouchableOpacity>
+
 						<TouchableOpacity
 							style={styles.createChapter}
 							onPress={() => {
 								firebase.auth().signOut();
 							}}
 						>
-							<Text style={styles.redirectText}>Sign Out</Text>
+							<Text style={styles.signOutText}>Sign Out</Text>
 						</TouchableOpacity>
 					</Content>
 
-					<TouchableWithoutFeedback
-						style={styles.createChapter}
-						onPress={() => this.props.navigation.navigate("JoinChap")}
-					>
-						<Footer style={styles.footer}>
-							<Text style={styles.redirectText}>Join a Chapter</Text>
-						</Footer>
-					</TouchableWithoutFeedback>
+
 				</Container>
 			</TouchableWithoutFeedback>
 		);
@@ -131,6 +136,17 @@ const styles = StyleSheet.create({
 		fontSize: 13,
 		textAlign: "center",
 	},
+	dropDownStyle:{
+		height: 40,
+		marginTop:30
+	},
+	dropDownItems:{
+		alignItems: "center"
+	},
+	dropDownOverflow:{
+		marginTop:2
+	},
+
 	codeLabelText: {
 		color: colors.lightText,
 		fontSize: 15,
@@ -153,6 +169,10 @@ const styles = StyleSheet.create({
 		marginTop: 32,
 	},
 	redirectText: {
+		color: colors.mainColor,
+		fontSize: 13,
+	},
+	signOutText: {
 		color: colors.mediumText,
 		fontSize: 13,
 	},

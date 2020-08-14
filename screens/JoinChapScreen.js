@@ -21,6 +21,7 @@ import {
 	Input,
 	Footer,
 } from "native-base";
+import {userConverter} from "../config/user";
 
 export default class JoinChapScreen extends React.Component {
 	state = {
@@ -92,22 +93,29 @@ export default class JoinChapScreen extends React.Component {
 
 						<TouchableOpacity
 							style={styles.createChapter}
+							onPress={() => this.props.navigation.navigate("CreateChap")}
+						>
+							<Text style={styles.redirectText}>Don't have a chapter? Create one.</Text>
+						</TouchableOpacity>
+
+
+						<TouchableOpacity
+							style={styles.createChapter}
 							onPress={() => {
-								firebase.auth().signOut();
+								userConverter.setInit(false);
+								firebase.auth().signOut().then(
+
+								);
 							}}
 						>
-							<Text style={styles.redirectText}>Sign Out</Text>
+							<Text style={styles.signOutText}>Sign Out</Text>
 						</TouchableOpacity>
+
+
+
 					</Content>
 
-					<TouchableWithoutFeedback
-						style={styles.createChapter}
-						onPress={() => this.props.navigation.navigate("CreateChap")}
-					>
-						<Footer style={styles.footer}>
-							<Text style={styles.redirectText}>Create a Chapter</Text>
-						</Footer>
-					</TouchableWithoutFeedback>
+
 				</Container>
 			</TouchableWithoutFeedback>
 		);
@@ -156,6 +164,10 @@ const styles = StyleSheet.create({
 		marginTop: 32,
 	},
 	redirectText: {
+		color: colors.mainColor,
+		fontSize: 13,
+	},
+	signOutText: {
 		color: colors.mediumText,
 		fontSize: 13,
 	},
