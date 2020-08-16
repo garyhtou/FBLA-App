@@ -26,7 +26,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 export default class JoinChapScreen extends React.Component {
 	state = {
 		chapterName:"",
-		stateSelected:null,
+		stateSelected:"",
+		chapterID:-1,
 		errorMessage: null,
 		loading: false,
 
@@ -60,33 +61,55 @@ export default class JoinChapScreen extends React.Component {
 									value={this.state.code}
 								/>
 							</Item>
-							<View style={{zIndex: 999}}>
-								<DropDownPicker
-									items={[
-										{label: 'WA', value: 'WA'},
-										{label: 'IA', value: 'IA'},
-									]}
-									containerStyle={styles.dropDownStyle}
-									dropDownStyle={styles.dropDownOverflow}
-									onChangeItem={(stateSelected) => this.setState({ stateSelected })}
 
-									defaultNull
-									placeholder="Select a state"
-								/>
+
+							<View style={styles.inputRow}>
+								<View style={{marginLeft:150, width: 100}}>
+									<Item floatingLabel>
+										<Label style={styles.codeLabelText}>Chapter ID</Label>
+										<Input
+											style={styles.codeInput}
+											autoCapitalize="none"
+											onChangeText={(code) => this.setState({ code })}
+											value={this.state.code}
+										/>
+									</Item>
+								</View>
+								<View style={{marginLeft:30, width: 100}}>
+									<DropDownPicker
+										items={[
+											{label: 'WA', value: 'WA'},
+											{label: 'IA', value: 'IA'}
+
+										]}
+										containerStyle={styles.dropDownStyle}
+										dropDownStyle={styles.dropDownOverflow}
+										itemStyle={{
+											justifyContent: 'flex-start'
+										}}
+										onChangeItem={(stateSelected) => this.setState({ stateSelected })}
+
+
+
+										defaultNull
+										placeholder="Select State"
+									/>
+								</View>
 							</View>
 
 
-							<Button
+
+							<TouchableOpacity
 								block
 								style={styles.codeButton}
-								onPress={this.joinChapter}
+								onPress={this.createChapter}
 							>
 								{this.state.loading ? (
 									<Spinner color={colors.white} />
 								) : (
-									<Text style={styles.codeButtonText}>Create</Text>
+									<Text style={styles.codeButtonText}>CREATE</Text>
 								)}
-							</Button>
+							</TouchableOpacity>
 						</Form>
 
 
@@ -138,13 +161,13 @@ const styles = StyleSheet.create({
 	},
 	dropDownStyle:{
 		height: 40,
-		marginTop:30
+
 	},
 	dropDownItems:{
-		alignItems: "center"
+		alignItems: "center",
 	},
 	dropDownOverflow:{
-		marginTop:2
+		marginTop:2,
 	},
 
 	codeLabelText: {
@@ -155,6 +178,7 @@ const styles = StyleSheet.create({
 	codeButtonText: {
 		color: colors.white,
 		fontSize: 16,
+		textAlign: "center"
 	},
 	codeInput: {
 		fontSize: 20,
@@ -162,11 +186,21 @@ const styles = StyleSheet.create({
 	codeButton: {
 		backgroundColor: colors.complementAccent,
 		borderRadius: 4,
-		marginTop: 30,
+		marginTop: 40,
+		padding:12
 	},
 	createChapter: {
 		alignSelf: "center",
 		marginTop: 32,
+	},
+	inputRow:{
+		width:100,
+		flex:1,
+		flexDirection:'row',
+		alignItems:'center',
+		justifyContent:'center',
+		marginTop: 40,
+
 	},
 	redirectText: {
 		color: colors.mainColor,

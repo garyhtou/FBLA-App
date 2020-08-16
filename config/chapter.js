@@ -2,16 +2,16 @@ import firebase from "../config/firebase";
 import "firebase/firestore";
 
 class Chapter {
-    constructor (chapterName, code, state, competitiveEvents, chapterEvents ) {
+    constructor (chapterName, code, state, chapterID, compEventLink, socMedia) {
         this.chapterName = chapterName;
         this.code = code;
         this.state = state;
-        this.competitiveEvents = competitiveEvents;
-        this.chapterEvents = chapterEvents;
+        this.chapterID  = chapterID;
+        this.compEventLink = compEventLink;
+        this.socMedia = socMedia;
     }
     toString() {
-        return this.chapterName + ', ' + this.code+ ', ' + this.state+', '+this.competitiveEvents+', '
-            +this.chapterEvents;
+        return this.chapterName + ', ' + this.code+ ', ' + this.state+', '+this.compEventLink+', '+this.socMedia
     }
 }
 
@@ -22,15 +22,16 @@ let chapterConverter = {
             chapterName: chapter.chapterName,
             code: chapter.code,
             state:chapter.state,
-            competitiveEvents:chapter.competitiveEvents,
-            chapterEvents:chapter.chapterEvents
+            chapterID: chapter.chapterID,
+            compEventLink: chapter.compEventLink,
+            socMedia: chapter.socMedia
 
         }
     },
     fromFirestore: function(snapshot){
         const data = snapshot.data();
-        return new Chapter(data.chapterName, data.code, data.state,
-            data.chapterEvents, data.competitiveEvents);
+        return new Chapter(data.chapterName, data.code, data.state,data.chapterID,
+            data.compEventLink, data.socMedia);
     }
 }
 
