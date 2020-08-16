@@ -20,11 +20,7 @@ export default class MainScreen extends React.Component {
    }
 
    signOutUser = () => {
-      userConverter.setInit(false);
-      firebase.auth().signOut().then(
-
-          this.props.navigation.navigate("Auth")
-      );
+      userConverter.signOut();
    };
 
    render() {

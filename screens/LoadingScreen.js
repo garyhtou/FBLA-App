@@ -18,37 +18,49 @@ export default class LoadingScreen extends React.Component {
            ...Ionicons.font,
        });
 
+
+       let userListener = null;
       // When firebase user loads
       firebase.auth().onAuthStateChanged((user) => {
-
          // If the a user is signed in
-         if (user !== null) {
-             console.log("ready");
 
-             firebase.firestore().collection("DatabaseUser")
-                 .doc(firebase.auth().currentUser.uid)
+
+         if (user !== null) {
+
+             let curID = firebase.auth().currentUser.uid;
+
+             console.log(curID);
+             console.log("Here");
+
+             userListener = firebase.firestore().collection("DatabaseUser")
+                 .doc(curID)
                  .onSnapshot((doc)=> {
                      userConverter.setCurUser(doc);
-                     if(userInitialized===false){
+                     if (userInitialized === false) {
                          userConverter.setInit(true);
-                         if(curUser.inChapter ===false){
+                         userConverter.addListener(userListener);
+                         if (curUser.inChapter === false) {
                              this.props.navigation.navigate("Chap");
-                         }
-                         else{
+                         } else {
                              this.props.navigation.navigate("App");
                          }
 
                      }
-                     console.log("found");
 
-
-
+                 }, ()=>{
+                     console.log("User Logged Out");
                  })
+
          }
 
 
          // If the a user is not signed in - go to sign in screen
          else {
+             console.log("Signed Out");
+             if(userListener!==null){
+                 userListener();
+             }
+             userConverter.setInit(false);
             this.props.navigation.navigate("Auth");
          }
       });
@@ -58,21 +70,3 @@ export default class LoadingScreen extends React.Component {
        return <AppLoading />;
    }
 }
-
-// render() {
-//     return (
-//         <View style={styles.container}>
-//             <Text>Loading</Text>
-//             <ActivityIndicator size="large" />
-//         </View>
-//     );
-// }
-// }
-//
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         justifyContent: "center",
-//         alignItems: "center",
-//     },
-// });

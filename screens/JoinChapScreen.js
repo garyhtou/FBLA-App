@@ -48,7 +48,7 @@ export default class JoinChapScreen extends React.Component {
 						.doc(user.uid)
 						.set(
 							{
-								chapterName: querySnapshot[0].data().get("chapterName"),
+								chapterID: querySnapshot[0].data().get("chapterID"),
 								inChapter: true,
 							},
 							{ merge: true }
@@ -102,10 +102,7 @@ export default class JoinChapScreen extends React.Component {
 						<TouchableOpacity
 							style={styles.createChapter}
 							onPress={() => {
-								userConverter.setInit(false);
-								firebase.auth().signOut().then(
-
-								);
+								userConverter.signOut();
 							}}
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>

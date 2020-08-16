@@ -35,20 +35,41 @@ export default class JoinChapScreen extends React.Component {
 
 	};
 
-	createChapter = () => {
+	addFirebaseChapter = () =>{
 		const { chapterName, stateSelected, chapterID } = this.state;
+		firebase.firestore().collection("DatabaseUser")
+			.doc(firebase.auth().currentUser.uid).set({
+			chapterID: chapterID,
+			inChapter: true,
+			isAdmin: true
+		}, { merge: true }).then(() => {
+
+		});
+
+
+		firebase.firestore().collection("Chapter")
+			.doc(chapterID).set({
+			chapterName: chapterName,
+			code:"",
+			state:stateSelected,
+			chapterID: chapterID,
+			compEventLink:"",
+			socMedia:{}
+		}, { merge: false }).then(() => {
+			console.log("done");
+			this.props.navigation.navigate("App")
+		});
+
+	}
+
+	createChapter = () => {
+		const { chapterID } = this.state;
 		if(chapterID!==-1){
-			firebase.firestore.collection("Chapter")
-				.where("chapterID","==", chapterID).then((
-					queryDocSnapshots
-				) => {
-					if(queryDocSnapshots.size==0){
-						firebase.firestore().collection("DatabaseUser")
-							.doc(firebase.auth().currentUser.uid).set({
-							chapterID: chapterID
-						}, { merge: true }).then(() => {
-							
-						});
+			firebase.firestore().collection("Chapter")
+				.where("chapterID","==", chapterID).get()
+				.then((queryDocSnapshots) => {
+					if(queryDocSnapshots.size===0) {
+						this.addFirebaseChapter();
 					}
 				}
 
@@ -77,8 +98,8 @@ export default class JoinChapScreen extends React.Component {
 								<Input
 									style={styles.codeInput}
 									autoCapitalize="none"
-									onChangeText={(code) => this.setState({ code })}
-									value={this.state.code}
+									onChangeText={(chapterName) => this.setState({ chapterName })}
+									value={this.state.chapterName}
 								/>
 							</Item>
 
@@ -91,7 +112,7 @@ export default class JoinChapScreen extends React.Component {
 											style={styles.codeInput}
 											autoCapitalize="none"
 											onChangeText={(chapterID) => this.setState({ chapterID })}
-											value={this.state.code}
+											value={this.state.chapterID}
 										/>
 									</Item>
 								</View>
@@ -145,7 +166,7 @@ export default class JoinChapScreen extends React.Component {
 						<TouchableOpacity
 							style={styles.createChapter}
 							onPress={() => {
-								firebase.auth().signOut();
+								userConverter.signOut();
 							}}
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>

@@ -38,7 +38,7 @@ export default class SignUpScreen extends React.Component {
 			.doc(userCredentials.user.uid)
 			.set(
 				{
-					chapterID: "",
+					chapterID: -1,
 					inChapter: false,
 					isAdmin: false,
 					name: name,

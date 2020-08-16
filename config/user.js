@@ -21,15 +21,32 @@ let userConverter = {
     setCurUser:function(snapshot){
         curUser = this.fromFirestore(snapshot);
     },
+    addListener:function (listener){
+        activeListeners.push(listener);
+        console.log("run");
+        console.log(activeListeners);
+    },
+    signOut:function(){
+        this.setInit(false);
+        let i = 0;
+        while(i<activeListeners.length) {
+            activeListeners[i]();
+            i++;
+        }
+
+
+        firebase.auth().signOut().then();
+    },
     setInit:function(initialized){
         userInitialized = initialized
     },
     toFirestore: function(user) {
         return {
+            name: user.name,
             chapterID: user.chapterID,
             inChapter: user.inChapter,
             isAdmin: user.isAdmin,
-            name: user.name,
+
             chapterEvents: user.chapterEvents,
             compEvents: user.compEvents,
         }
@@ -44,6 +61,7 @@ let userConverter = {
 
 let curUser;
 let userInitialized = false;
+let activeListeners= [];
 
 
 export {
