@@ -38,12 +38,12 @@ export default class SignUpScreen extends React.Component {
 			.doc(userCredentials.user.uid)
 			.set(
 				{
-					chapterName: "",
+					chapterID: "",
 					inChapter: false,
 					isAdmin: false,
 					name: name,
 					chapterEvents: {},
-					compEvents: {},
+					compEvents: "",
 				},
 				{ merge: false }
 			)

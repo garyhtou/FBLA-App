@@ -2,17 +2,17 @@ import firebase from "../config/firebase";
 import "firebase/firestore";
 
 class User {
-    constructor (name, chapterName, inChapter, isAdmin,chapterEvents, competitiveEvents ) {
+    constructor (name, chapterID, inChapter, isAdmin,chapterEvents, competitiveEvents ) {
         this.name = name;
-        this.chapterName = chapterName;
+        this.chapterID = chapterID;
         this.inChapter = inChapter;
         this.isAdmin = isAdmin;
         this.chapterEvents = chapterEvents;
-        this.competitiveEvents = competitiveEvents;
+        this.compEvents = competitiveEvents;
     }
     toString() {
         return this.name + ', ' + this.chapterName + ', ' + this.inChapter+', '+this.isAdmin+', '
-            +this.chapterEvents+', '+this.competitiveEvents;
+            +this.chapterEvents+', '+this.compEvents;
     }
 }
 
@@ -26,18 +26,18 @@ let userConverter = {
     },
     toFirestore: function(user) {
         return {
-            chapterName: user.chapterName,
+            chapterID: user.chapterID,
             inChapter: user.inChapter,
             isAdmin: user.isAdmin,
             name: user.name,
             chapterEvents: user.chapterEvents,
-            competitiveEvents: user.competitiveEvents,
+            compEvents: user.compEvents,
         }
     },
     fromFirestore: function(snapshot){
         const data = snapshot.data();
-        return new User(data.name, data.chapterName, data.inChapter,data.isAdmin,
-            data.chapterEvents, data.competitiveEvents);
+        return new User(data.name, data.chapterID, data.inChapter,data.isAdmin,
+            data.chapterEvents, data.compEvents);
     }
 }
 

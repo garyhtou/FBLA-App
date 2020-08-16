@@ -22,6 +22,7 @@ import {
 } from "native-base";
 let firestore = firebase.firestore();
 import DropDownPicker from 'react-native-dropdown-picker';
+import {curUser, userConverter} from '../config/user.js';
 
 export default class JoinChapScreen extends React.Component {
 	state = {
@@ -35,8 +36,27 @@ export default class JoinChapScreen extends React.Component {
 	};
 
 	createChapter = () => {
-		const user = firebase.auth().currentUser;
-		const { code } = this.state;
+		const { chapterName, stateSelected, chapterID } = this.state;
+		if(chapterID!==-1){
+			firebase.firestore.collection("Chapter")
+				.where("chapterID","==", chapterID).then((
+					queryDocSnapshots
+				) => {
+					if(queryDocSnapshots.size==0){
+						firebase.firestore().collection("DatabaseUser")
+							.doc(firebase.auth().currentUser.uid).set({
+							chapterID: chapterID
+						}, { merge: true }).then(() => {
+							
+						});
+					}
+				}
+
+			)
+
+
+		}
+
 
 	};
 
@@ -64,18 +84,18 @@ export default class JoinChapScreen extends React.Component {
 
 
 							<View style={styles.inputRow}>
-								<View style={{marginLeft:150, width: 100}}>
+								<View style={{marginLeft:185, width: 170, height:60}}>
 									<Item floatingLabel>
 										<Label style={styles.codeLabelText}>Chapter ID</Label>
 										<Input
 											style={styles.codeInput}
 											autoCapitalize="none"
-											onChangeText={(code) => this.setState({ code })}
+											onChangeText={(chapterID) => this.setState({ chapterID })}
 											value={this.state.code}
 										/>
 									</Item>
 								</View>
-								<View style={{marginLeft:30, width: 100}}>
+								<View style={{marginLeft:20, width: 100}}>
 									<DropDownPicker
 										items={[
 											{label: 'WA', value: 'WA'},
