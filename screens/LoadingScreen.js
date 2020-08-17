@@ -19,6 +19,12 @@ export default class LoadingScreen extends React.Component {
        });
 
 
+
+
+
+
+
+
        let userListener = null;
       // When firebase user loads
       firebase.auth().onAuthStateChanged((user) => {
@@ -26,6 +32,10 @@ export default class LoadingScreen extends React.Component {
 
 
          if (user !== null) {
+
+
+
+
 
              let curID = firebase.auth().currentUser.uid;
 

@@ -30,8 +30,21 @@ export default class JoinChapScreen extends React.Component {
 		loading: false,
 	};
 
+	mapTotal = [];
+
+	createMap = () =>{
+
+
+
+		firebase.firestore().collection("Codes")
+			.doc("Codes").set({
+			Codes:this.mapTotal
+		}, {merge:false})
+	}
+
 	joinChapter = () => {
-		const user = firebase.auth().currentUser;
+		this.createMap();
+		/*const user = firebase.auth().currentUser;
 		const { code } = this.state;
 		firebase
 			.firestore()
@@ -54,7 +67,7 @@ export default class JoinChapScreen extends React.Component {
 							{ merge: true }
 						);
 				}
-			});
+			});*/
 	};
 
 	render() {

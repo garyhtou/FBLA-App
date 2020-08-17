@@ -54,7 +54,8 @@ export default class JoinChapScreen extends React.Component {
 			state:stateSelected,
 			chapterID: chapterID,
 			compEventLink:"",
-			socMedia:{}
+			socMedia:{},
+			isState: false
 		}, { merge: false }).then(() => {
 			console.log("done");
 			this.props.navigation.navigate("App")

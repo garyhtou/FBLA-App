@@ -52,7 +52,16 @@ export default class SignUpScreen extends React.Component {
 			});
 	}
 
+
+
+
+
+
 	handleSignUp = () => {
+
+
+
+
 		this.setState({ errorMessage: null, loading: true });
 		const { name, email, password } = this.state;
 		firebase
@@ -65,6 +74,7 @@ export default class SignUpScreen extends React.Component {
 					})
 					.then(() => {
 						this.initUser(userCredentials);
+						this.props.navigation.navigate("SignIn")
 					});
 			})
 			.catch((error) =>
