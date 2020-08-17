@@ -64,13 +64,14 @@ export default class SignUpScreen extends React.Component {
 			.auth()
 			.createUserWithEmailAndPassword(email, password)
 			.then((userCredentials) => {
+				console.log("rEADY");
 				return userCredentials.user
 					.updateProfile({
 						displayName: name,
 					})
 					.then(() => {
 						this.initUser(userCredentials);
-						this.props.navigation.navigate("SignIn")
+						console.log("rund");
 					});
 			})
 			.catch((error) =>

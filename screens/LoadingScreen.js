@@ -36,7 +36,6 @@ export default class LoadingScreen extends React.Component {
 
 
 
-
              let curID = firebase.auth().currentUser.uid;
 
              console.log(curID);
@@ -45,17 +44,22 @@ export default class LoadingScreen extends React.Component {
              userListener = firebase.firestore().collection("DatabaseUser")
                  .doc(curID)
                  .onSnapshot((doc)=> {
-                     userConverter.setCurUser(doc);
-                     if (userInitialized === false) {
-                         userConverter.setInit(true);
-                         userConverter.addListener(userListener);
-                         if (curUser.inChapter === false) {
-                             this.props.navigation.navigate("Chap");
-                         } else {
-                             this.props.navigation.navigate("App");
-                         }
+                     console.log(doc.data());
+                     if(doc.data()!=null){
+                         userConverter.setCurUser(doc);
 
+                         if (userInitialized === false) {
+                             userConverter.setInit(true);
+                             userConverter.addListener(userListener);
+                             if (curUser.inChapter === false) {
+                                 this.props.navigation.navigate("Chap");
+                             } else {
+                                 this.props.navigation.navigate("App");
+                             }
+
+                         }
                      }
+
 
                  }, ()=>{
                      console.log("User Logged Out");
