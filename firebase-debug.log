@@ -1,0 +1,136 @@
+[debug] [2020-08-17T01:39:41.881Z] ----------------------------------------------------------------------
+[debug] [2020-08-17T01:39:41.883Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\zjjc1\Desktop\FBLA-App\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2020-08-17T01:39:41.883Z] CLI Version:   8.7.0
+[debug] [2020-08-17T01:39:41.883Z] Platform:      win32
+[debug] [2020-08-17T01:39:41.883Z] Node Version:  v12.18.2
+[debug] [2020-08-17T01:39:41.884Z] Time:          Sun Aug 16 2020 18:39:41 GMT-0700 (Pacific Daylight Time)
+[debug] [2020-08-17T01:39:41.885Z] ----------------------------------------------------------------------
+[debug] [2020-08-17T01:39:41.885Z] 
+[debug] [2020-08-17T01:39:41.893Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-08-17T01:39:41.893Z] > authorizing via signed-in user
+[debug] [2020-08-17T01:39:41.893Z] [iam] checking project mobile-app-development-15940 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]
+[debug] [2020-08-17T01:39:41.896Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/mobile-app-development-15940:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[debug] [2020-08-17T01:39:42.039Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:42 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=46","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:39:42.040Z] >>> HTTP REQUEST POST https://iam.googleapis.com/v1/projects/mobile-app-development-15940/serviceAccounts/mobile-app-development-15940@appspot.gserviceaccount.com:testIamPermissions  
+ {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2020-08-17T01:39:42.206Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:42 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Deploying to 'mobile-app-development-15940'...
+[info] 
+[info] i  deploying firestore, functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] +  functions: Finished running predeploy script. 
+[info] i  firestore: reading indexes from firestore.indexes.json... 
+[info] i  cloud.firestore: checking firestore.rules for compilation errors... 
+[debug] [2020-08-17T01:39:47.080Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/mobile-app-development-15940:test  
+ {"source":{"files":[{"name":"firestore.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if request.auth != null;\n    }\n  }\n}"}]}}
+[debug] [2020-08-17T01:39:47.379Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:47 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] +  cloud.firestore: rules file firestore.rules compiled successfully 
+[debug] [2020-08-17T01:39:47.381Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "8"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^8.10.0",
+    "firebase-functions": "^3.6.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "firebase-functions-test": "^0.2.0"
+  },
+  "private": true
+}
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[warn] 
+[warn] !  functions: The Node.js 8 runtime is deprecated and will be decommissioned on 2021-03-15. For more information, see: https://firebase.google.com/support/faq#functions-runtime 
+[warn] 
+[debug] [2020-08-17T01:39:49.056Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/mobile-app-development-15940/services/cloudfunctions.googleapis.com  
+ 
+[debug] [2020-08-17T01:39:49.056Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/mobile-app-development-15940/services/runtimeconfig.googleapis.com  
+ 
+[debug] [2020-08-17T01:39:49.454Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:49 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:39:49.498Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:49 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] +  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2020-08-17T01:39:49.499Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/mobile-app-development-15940/adminSdkConfig  
+ 
+[debug] [2020-08-17T01:39:49.718Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:49 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:39:49.720Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/mobile-app-development-15940/releases?pageSize=10&pageToken=  
+ 
+[debug] [2020-08-17T01:39:49.721Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1/projects/mobile-app-development-15940/databases/(default)/collectionGroups/-/indexes  
+ 
+[debug] [2020-08-17T01:39:50.141Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:50 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:39:50.142Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/mobile-app-development-15940/rulesets/d4c40858-3993-43eb-b9f5-abb042bdb3de  
+ 
+[debug] [2020-08-17T01:39:50.231Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:50 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:39:50.231Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1/projects/mobile-app-development-15940/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false  
+ 
+[debug] [2020-08-17T01:39:50.430Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:50 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  firestore: latest version of firestore.rules already up to date, skipping upload... 
+[debug] [2020-08-17T01:39:50.691Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:50 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:39:50.691Z] Skipping existing index: {"collectionGroup":"ChapterEvent","queryScope":"COLLECTION_GROUP","fields":[{"fieldPath":"date","order":"ASCENDING"},{"fieldPath":"lower","order":"ASCENDING"},{"fieldPath":"typeLower","order":"ASCENDING"}]}
+[debug] [2020-08-17T01:39:50.692Z] Skipping existing index: {"collectionGroup":"ChapterEvent","queryScope":"COLLECTION","fields":[{"fieldPath":"date","order":"ASCENDING"},{"fieldPath":"eventName","order":"ASCENDING"}]}
+[debug] [2020-08-17T01:39:50.692Z] Skipping existing index: {"collectionGroup":"ChapterEvent","queryScope":"COLLECTION","fields":[{"fieldPath":"date","order":"ASCENDING"},{"fieldPath":"lower","order":"ASCENDING"},{"fieldPath":"typeLower","order":"ASCENDING"}]}
+[debug] [2020-08-17T01:39:50.692Z] Skipping existing index: {"collectionGroup":"DatabaseUser","queryScope":"COLLECTION","fields":[{"fieldPath":"chapterName","order":"ASCENDING"},{"fieldPath":"name","order":"ASCENDING"}]}
+[info] +  firestore: deployed indexes in firestore.indexes.json successfully 
+[info] i  functions: preparing functions directory for uploading... 
+[debug] [2020-08-17T01:39:50.693Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/mobile-app-development-15940/configs  
+ 
+[debug] [2020-08-17T01:39:50.908Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:51 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  functions: packaged functions (39.46 KB) for uploading 
+[debug] [2020-08-17T01:39:51.065Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/mobile-app-development-15940/locations/-/functions  
+ 
+[debug] [2020-08-17T01:39:51.649Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:51 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:39:51.651Z] [functions] found 1 new HTTP functions, testing setIamPolicy permission...
+[debug] [2020-08-17T01:39:51.651Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/mobile-app-development-15940:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.setIamPolicy"]}
+[debug] [2020-08-17T01:39:51.746Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:39:51 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=42","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:39:51.747Z] [functions] found setIamPolicy permission, proceeding with deploy
+[debug] [2020-08-17T01:39:51.747Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/mobile-app-development-15940/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2020-08-17T01:40:00.061Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:40:00 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:40:00.062Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-b2f2cc1f-8f32-4352-8b40-d1ccd3b64bcc/deb1ce09-02b7-4126-9727-d2ac1bfb78c8.zip?GoogleAccessId=service-200356083068@gcf-admin-robot.iam.gserviceaccount.com&Expires=1597630199&Signature=RlX5g3oWW0tXKgaO4n18Zay0iJGNpnY4me23aZ6EXJis3aC0vvNcN3ZYwfYi6w8rX8Ou0XPRU4oYSrasNwGenb%2Bgd7D8qUduc8hj8okQD7UvJIsP0Q%2Fd1TwHa1MHvrxBkQlPe7vCCHDGSO8QAJdTCkhRLjSHFyDB016Ha9aMHCOUWeL%2FbaLBqGULuIjBWnW5OhddA48EkHH4a05xv8mVET0KYAbsIbY2r6ELQ0ZZFf9pw4mkblKYx%2BERk4mKUltZPPdvce7bWUEFgGPqLDWfCQLdYy%2F6DEtRWNQp6hbo8BCreZLoG81yeVf73UnQBwU%2FGKLIKaufmTeccw2jATuVJQ%3D%3D  
+ <request body omitted>
+[debug] [2020-08-17T01:40:00.351Z] <<< HTTP RESPONSE 200 {"x-guploader-uploadid":"AAANsUkeLJJyF5uuahH0NbvB7G5jPIUE937aOpnMhvhJA3rUL4jVAb3ZbosPWIKKsxxJJ7CXcZie95Sd21Hajp-_Cz_MCQd1LA","etag":"\"9a5a460183835430db9c121021239358\"","x-goog-generation":"1597628400421273","x-goog-metageneration":"1","x-goog-hash":"crc32c=jNFb6Q==, md5=mlpGAYODVDDbnBIQISOTWA==","x-goog-stored-content-length":"40412","x-goog-stored-content-encoding":"identity","vary":"Origin","content-length":"0","date":"Mon, 17 Aug 2020 01:40:00 GMT","server":"UploadServer","content-type":"text/html; charset=UTF-8","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\""}
+[info] +  functions: functions folder uploaded successfully 
+[debug] [2020-08-17T01:40:00.352Z] [rules] releasing cloud.firestore with ruleset projects/mobile-app-development-15940/rulesets/d4c40858-3993-43eb-b9f5-abb042bdb3de
+[debug] [2020-08-17T01:40:00.352Z] >>> HTTP REQUEST PATCH https://firebaserules.googleapis.com/v1/projects/mobile-app-development-15940/releases/cloud.firestore  
+ {"release":{"name":"projects/mobile-app-development-15940/releases/cloud.firestore","rulesetName":"projects/mobile-app-development-15940/rulesets/d4c40858-3993-43eb-b9f5-abb042bdb3de"}}
+[debug] [2020-08-17T01:40:00.671Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:40:00 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:40:00.672Z] [rules] updated release projects/mobile-app-development-15940/releases/cloud.firestore
+[info] +  firestore: released rules firestore.rules to cloud.firestore 
+[info] i  functions: creating Node.js 8 (Deprecated) function generateCode(us-central1)... 
+[debug] [2020-08-17T01:40:00.674Z] Trigger is:  {"httpsTrigger":{}}
+[debug] [2020-08-17T01:40:00.675Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/mobile-app-development-15940/locations/us-central1/functions  
+ {"sourceUploadUrl":"https://storage.googleapis.com/gcf-upload-us-central1-b2f2cc1f-8f32-4352-8b40-d1ccd3b64bcc/deb1ce09-02b7-4126-9727-d2ac1bfb78c8.zip?GoogleAccessId=service-200356083068@gcf-admin-robot.iam.gserviceaccount.com&Expires=1597630199&Signature=RlX5g3oWW0tXKgaO4n18Zay0iJGNpnY4me23aZ6EXJis3aC0vvNcN3ZYwfYi6w8rX8Ou0XPRU4oYSrasNwGenb%2Bgd7D8qUduc8hj8okQD7UvJIsP0Q%2Fd1TwHa1MHvrxBkQlPe7vCCHDGSO8QAJdTCkhRLjSHFyDB016Ha9aMHCOUWeL%2FbaLBqGULuIjBWnW5OhddA48EkHH4a05xv8mVET0KYAbsIbY2r6ELQ0ZZFf9pw4mkblKYx%2BERk4mKUltZPPdvce7bWUEFgGPqLDWfCQLdYy%2F6DEtRWNQp6hbo8BCreZLoG81yeVf73UnQBwU%2FGKLIKaufmTeccw2jATuVJQ%3D%3D","name":"projects/mobile-app-development-15940/locations/us-central1/functions/generateCode","entryPoint":"generateCode","labels":{"deployment-tool":"cli-firebase"},"runtime":"nodejs8","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"mobile-app-development-15940\",\"databaseURL\":\"https://mobile-app-development-15940.firebaseio.com\",\"storageBucket\":\"mobile-app-development-15940.appspot.com\",\"locationId\":\"us-central\"}"},"httpsTrigger":{}}
+[debug] [2020-08-17T01:40:01.396Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:40:01 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:40:01.397Z] Setting public policy for function generateCode
+[debug] [2020-08-17T01:40:01.397Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/mobile-app-development-15940/locations/us-central1/functions/generateCode:setIamPolicy  
+ {"policy":{"version":3,"bindings":[{"role":"roles/cloudfunctions.invoker","members":["allUsers"]}]},"updateMask":"version,bindings"}
+[debug] [2020-08-17T01:40:01.834Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:40:01 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:40:01.835Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/mobile-app-development-15940/locations/-/functions  
+ 
+[debug] [2020-08-17T01:40:02.265Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:40:02 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:40:02.267Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/bW9iaWxlLWFwcC1kZXZlbG9wbWVudC0xNTk0MC91cy1jZW50cmFsMS9nZW5lcmF0ZUNvZGUvNlk4WjZvQVdZcVE  
+ 
+[debug] [2020-08-17T01:40:02.514Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:40:02 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:40:04.517Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/bW9iaWxlLWFwcC1kZXZlbG9wbWVudC0xNTk0MC91cy1jZW50cmFsMS9nZW5lcmF0ZUNvZGUvNlk4WjZvQVdZcVE  
+ 
+[debug] [2020-08-17T01:40:04.749Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:40:04 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:40:06.750Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/bW9iaWxlLWFwcC1kZXZlbG9wbWVudC0xNTk0MC91cy1jZW50cmFsMS9nZW5lcmF0ZUNvZGUvNlk4WjZvQVdZcVE  
+ 
+[debug] [2020-08-17T01:40:06.977Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 17 Aug 2020 01:40:07 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-08-17T01:40:08.977Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/bW9iaWxlLWFwcC1kZXZlbG9wbWVudC0xNTk0MC91cy1jZW50cmFsMS9nZW5lcmF0ZUNvZGUvNlk4WjZvQVdZcVE  
+ 
