@@ -28,7 +28,7 @@ export default class JoinChapScreen extends React.Component {
 	state = {
 		chapterName:"",
 		stateSelected:"",
-		chapterID:-1,
+		chapterID:"",
 		errorMessage: null,
 		loading: false,
 
@@ -46,26 +46,50 @@ export default class JoinChapScreen extends React.Component {
 
 		});
 
+		let rand = Math.floor(Math.random()*90000);
 
-		firebase.firestore().collection("Chapter")
-			.doc(chapterID).set({
-			chapterName: chapterName,
-			code:"",
-			state:stateSelected,
-			chapterID: chapterID,
-			compEventLink:"",
-			socMedia:{},
-			isState: false
-		}, { merge: false }).then(() => {
-			console.log("done");
-			this.props.navigation.navigate("App")
-		});
+		firebase.firestore().collection("Codes")
+			.doc("Codes").get().then((doc)=>{
+				console.log(doc.data());
+				const codeList = doc.data().Codes;
+				while(codeList.includes(rand) ){
+					rand = ((rand+1)%90000);
+				}
+
+				rand = rand+10000;
+				codeList.push(rand);
+
+				firebase.firestore().collection("Codes")
+					.doc("Codes").set({
+					Codes:codeList
+				}, {merge:false})
+
+				firebase.firestore().collection("Chapter")
+					.doc(chapterID).set({
+					chapterName: chapterName,
+					code:rand,
+					state:stateSelected.label,
+					chapterID: chapterID,
+					compEventLink:"",
+					socMedia:{},
+					isState: false
+				}, { merge: false }).then(() => {
+					console.log("done");
+					this.props.navigation.navigate("App")
+				});
+
+			}
+
+		)
+
+
+
 
 	}
 
 	createChapter = () => {
 		const { chapterID } = this.state;
-		if(chapterID!==-1){
+		if(chapterID!==""){
 			firebase.firestore().collection("Chapter")
 				.where("chapterID","==", chapterID).get()
 				.then((queryDocSnapshots) => {

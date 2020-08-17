@@ -59,10 +59,6 @@ export default class SignUpScreen extends React.Component {
 
 	handleSignUp = () => {
 
-
-
-
-		this.setState({ errorMessage: null, loading: true });
 		const { name, email, password } = this.state;
 		firebase
 			.auth()
