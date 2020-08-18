@@ -5,6 +5,7 @@
 import React from "react";
 import Expo from "expo";
 import * as Google from 'expo-google-app-auth';
+import * as Facebook from 'expo-facebook';
 import {
 	StyleSheet,
 	TouchableWithoutFeedback,
@@ -87,6 +88,14 @@ export default class SignInScreen extends React.Component {
 			}
 		}.bind(this));
 	}
+	componentDidMount(){
+		firebase.auth().onAuthStateChanged((user) => {
+			if(user != null)
+			{
+				console.log(user);
+			}
+		})
+	}
    signInWithGoogleAsync = async() => {
    		console.log("running");
 		try {
@@ -120,7 +129,13 @@ export default class SignInScreen extends React.Component {
 			return { error: true };
 		}
 	};
-
+	async loginWithFacebook() {
+		const {type, token} = await Facebook.logInWithReadPermissionsAsync('684604582290429', {permissions: ['public_profile']})
+		if (type == 'success') {
+			const credential = firebase.auth.FacebookAuthProvider.credential(token)
+			firebase.auth().signInWithCredential(credential).catch((error) => {console.log(error)})
+		}
+	}
 	handleSignIn = () => {
       this.setState({errorMessage: null, loading: true})
       const { email, password } = this.state;
@@ -180,6 +195,17 @@ export default class SignInScreen extends React.Component {
 									<Spinner color={colors.white} />
 								) : (
 									<Text style={styles.authButtonText}>Sign In With Google</Text>
+								)}
+							</Button>
+							<Button
+								block
+								style={styles.authButton}
+								onPress={() => this.loginWithFacebook() }
+							>
+								{this.state.loading ? (
+									<Spinner color={colors.white} />
+								) : (
+									<Text style={styles.authButtonText}>Sign In With Facebook</Text>
 								)}
 							</Button>
 							{/* <Button full style={styles.authButton}>
