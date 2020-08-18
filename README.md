@@ -6,3 +6,5 @@ Language: React Native
 
 -  NativeBase
 -  Firebase
+-  expo-google
+-  expo-facebook
