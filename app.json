@@ -6,6 +6,8 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
 	"privacy": "unlisted",
+	"primaryColor": "#00539D",
+	"color": "#00539D",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -28,6 +30,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+	"githubUrl": "https://github.com/garytou2/FBLA-App",
+	"scheme": "fblaapp"
   }
 }
