@@ -36,23 +36,32 @@ export default class JoinChapScreen extends React.Component {
 		firebase
 			.firestore()
 			.collection("Chapter")
-			.where("code", "==", code)
+			.where("code", "==", parseInt(code))
 			.get()
-			.then(function (querySnapshot) {
+			.then((querySnapshot)=> {
+				console.log(code);
+				console.log(querySnapshot.size);
 				if (querySnapshot.size === 0) {
 					this.setState({ errorMessage: "No chapter with code given" });
 				} else {
-					const setChapter = firebase
-						.firestore()
-						.collection("DatabaseUser")
-						.doc(user.uid)
-						.set(
-							{
-								chapterID: querySnapshot[0].data().get("chapterID"),
-								inChapter: true,
-							},
-							{ merge: true }
-						);
+
+					querySnapshot.forEach((doc)=>{
+						 firebase.firestore()
+							.collection("DatabaseUser")
+							.doc(user.uid)
+							.set(
+								{
+									chapterID: doc.data().chapterID,
+									inChapter: true,
+								},
+								{ merge: true }
+							).then(()=>{
+									this.props.navigation.navigate("App")
+								}
+
+							);
+					})
+
 				}
 			});
 	};
