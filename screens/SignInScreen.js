@@ -27,6 +27,8 @@ import {
 import { colors, strings } from "../config/styles";
 import firebase from "../config/firebase";
 import 'firebase/firestore';
+import { AntDesign } from '@expo/vector-icons';
+
 export default class SignInScreen extends React.Component {
    state = {
       email: "",
@@ -179,7 +181,8 @@ export default class SignInScreen extends React.Component {
 								block
 								style={styles.authButton}
 								onPress={this.handleSignIn}
-							>
+
+								>
 								{this.state.loading ? (
 									<Spinner color={colors.white} />
 								) : (
@@ -188,9 +191,16 @@ export default class SignInScreen extends React.Component {
 							</Button>
 							<Button
 								block
-								style={styles.authButton}
+								style={styles.authButtonGoogle}
 								onPress={() => this.signInWithGoogleAsync()}
+								backgroundColor="blue"
 							>
+								<AntDesign
+									name="google"
+									size={26}
+									color="white"
+									verticalAlign="middle"
+								/>
 								{this.state.loading ? (
 									<Spinner color={colors.white} />
 								) : (
@@ -199,9 +209,14 @@ export default class SignInScreen extends React.Component {
 							</Button>
 							<Button
 								block
-								style={styles.authButton}
+								style={styles.authButtonFacebook}
 								onPress={() => this.loginWithFacebook() }
 							>
+								<AntDesign
+									name="facebook-square"
+									size={26}
+									color="white"
+									verticalAlign="middle"/>
 								{this.state.loading ? (
 									<Spinner color={colors.white} />
 								) : (
@@ -283,6 +298,16 @@ const styles = StyleSheet.create({
 	},
 	authButton: {
 		backgroundColor: colors.complementAccent,
+		borderRadius: 4,
+		marginTop: 30,
+	},
+	authButtonGoogle: {
+		backgroundColor: "#0F9D58",
+		borderRadius: 4,
+		marginTop: 30,
+	},
+	authButtonFacebook: {
+		backgroundColor: "#3b5998",
 		borderRadius: 4,
 		marginTop: 30,
 	},
