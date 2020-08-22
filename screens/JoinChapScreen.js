@@ -100,12 +100,7 @@ export default class JoinChapScreen extends React.Component {
 							</Button>
 						</Form>
 
-						<TouchableOpacity
-							style={styles.createChapter}
-							onPress={() => this.props.navigation.navigate("CreateChap")}
-						>
-							<Text style={styles.redirectText}>Don't have a chapter? Create one.</Text>
-						</TouchableOpacity>
+
 
 
 						<TouchableOpacity
@@ -117,9 +112,20 @@ export default class JoinChapScreen extends React.Component {
 							<Text style={styles.signOutText}>Sign Out</Text>
 						</TouchableOpacity>
 
-
-
 					</Content>
+
+                    <TouchableWithoutFeedback
+                        onPress={() => this.props.navigation.navigate("CreateChap")}
+                    >
+                        <Footer style={styles.footer}>
+                            <Text style={styles.redirectText}>
+                                Don't have a Chapter? {" "}
+                                <Text style={{ color: colors.complementAccent }}>
+                                    Create one.
+                                </Text>
+                            </Text>
+                        </Footer>
+                    </TouchableWithoutFeedback>
 
 
 				</Container>
@@ -170,7 +176,7 @@ const styles = StyleSheet.create({
 		marginTop: 32,
 	},
 	redirectText: {
-		color: colors.mainColor,
+		color: colors.mediumText,
 		fontSize: 13,
 	},
 	signOutText: {
