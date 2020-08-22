@@ -18,23 +18,12 @@ export default class LoadingScreen extends React.Component {
            ...Ionicons.font,
        });
 
-
-
-
-
-
-
-
        let userListener = null;
       // When firebase user loads
       firebase.auth().onAuthStateChanged((user) => {
-         // If the a user is signed in
 
-
+         // If a user is signed in
          if (user !== null) {
-
-
-
 
              let curID = firebase.auth().currentUser.uid;
 
@@ -51,22 +40,24 @@ export default class LoadingScreen extends React.Component {
                          if (userInitialized === false) {
                              userConverter.setInit(true);
                              userConverter.addListener(userListener);
+
+                             // If the user is not in a chapter - go to chapter screens
                              if (curUser.inChapter === false) {
                                  this.props.navigation.navigate("Chap");
-                             } else {
+                             }
+                             // Else - go to the app
+                             else {
                                  this.props.navigation.navigate("App");
                              }
 
                          }
                      }
 
-
                  }, ()=>{
                      console.log("User Logged Out");
                  })
 
          }
-
 
          // If the a user is not signed in - go to sign in screen
          else {

@@ -58,10 +58,8 @@ export default class JoinChapScreen extends React.Component {
 							).then(()=>{
 									this.props.navigation.navigate("App")
 								}
-
 							);
 					})
-
 				}
 			});
 	};
@@ -100,11 +98,8 @@ export default class JoinChapScreen extends React.Component {
 							</Button>
 						</Form>
 
-
-
-
 						<TouchableOpacity
-							style={styles.createChapter}
+							style={styles.signOutButton}
 							onPress={() => {
 								userConverter.signOut();
 							}}
@@ -126,7 +121,6 @@ export default class JoinChapScreen extends React.Component {
                             </Text>
                         </Footer>
                     </TouchableWithoutFeedback>
-
 
 				</Container>
 			</TouchableWithoutFeedback>
@@ -171,9 +165,9 @@ const styles = StyleSheet.create({
 		borderRadius: 4,
 		marginTop: 30,
 	},
-	createChapter: {
+	signOutButton: {
 		alignSelf: "center",
-		marginTop: 32,
+		marginTop: 20,
 	},
 	redirectText: {
 		color: colors.mediumText,

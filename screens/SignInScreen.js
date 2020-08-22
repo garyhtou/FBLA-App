@@ -36,10 +36,11 @@ export default class SignInScreen extends React.Component {
       errorMessage: null,
       loading: false,
    };
+
 	isUserEqual = (googleUser, firebaseUser) => {
 		if (firebaseUser) {
-			var providerData = firebaseUser.providerData;
-			for (var i = 0; i < providerData.length; i++) {
+			let providerData = firebaseUser.providerData;
+			for (let i = 0; i < providerData.length; i++) {
 				if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
 					providerData[i].uid === googleUser.getBasicProfile().getId()) {
 					// We don't need to reauth the Firebase connection.
@@ -49,18 +50,42 @@ export default class SignInScreen extends React.Component {
 		}
 		return false;
 	}
-	onSignIn = googleUser => {
+
+   signInWithGoogleAsync = async() => {
+   		console.log("running");
+		try {
+			const result = await Google.logInAsync({
+				behavior:'web',
+				androidClientId: '200356083068-cmspe2kthe9gis90nj73odthv0lvai3a.apps.googleusercontent.com',
+				iosClientId: '200356083068-v599qf4gh4u4gdv97bel5fr18o1fpp86.apps.googleusercontent.com',
+				scopes: ['profile', 'email'],
+			});
+			console.log(result);
+			if (result.type === 'success') {
+
+				this.onGoogleSignIn();
+				return result.accessToken;
+
+			} else {
+				return { cancelled: true };
+			}
+		} catch (e) {
+			return { error: true };
+		}
+	};
+
+	onGoogleSignIn = (googleUser) => {
 		console.log('Google Auth Response', googleUser);
 		// We need to register an Observer on Firebase Auth to make sure auth is initialized.
-		var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+		let unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
 			unsubscribe();
 			// Check if we are already signed-in Firebase with the correct user.
 			if (!this.isUserEqual(googleUser, firebaseUser)) {
 				// Build Firebase credential with the Google ID token.
-				var credential = firebase.auth.GoogleAuthProvider.credential(
+				let credential = firebase.auth.GoogleAuthProvider.credential(
 					googleUser.idToken,
 					googleUser.accessToken
-					);
+				);
 				// Sign in with credential from the Google user.
 				firebase.auth().signInWithCredential(credential).then(function(result) {
 					console.log('user signed in');
@@ -74,15 +99,15 @@ export default class SignInScreen extends React.Component {
 						})
 						.then(function(snapshot) {
 
-					});
+						});
 				}).catch(function(error) {
 					// Handle Errors here.
-					var errorCode = error.code;
-					var errorMessage = error.message;
+					let errorCode = error.code;
+					let errorMessage = error.message;
 					// The email of the user's account used.
-					var email = error.email;
+					let email = error.email;
 					// The firebase.auth.AuthCredential type that was used.
-					var credential = error.credential;
+					let credential = error.credential;
 					// ...
 				});
 			} else {
@@ -90,47 +115,7 @@ export default class SignInScreen extends React.Component {
 			}
 		}.bind(this));
 	}
-	componentDidMount(){
-		firebase.auth().onAuthStateChanged((user) => {
-			if(user != null)
-			{
-				console.log(user);
-			}
-		})
-	}
-   signInWithGoogleAsync = async() => {
-   		console.log("running");
-		try {
-			const result = await Google.logInAsync({
-				behavior:'web',
-				androidClientId: '200356083068-cmspe2kthe9gis90nj73odthv0lvai3a.apps.googleusercontent.com',
-				iosClientId: '200356083068-v599qf4gh4u4gdv97bel5fr18o1fpp86.apps.googleusercontent.com',
-				scopes: ['profile', 'email'],
-			});
-			console.log(result);
-			if (result.type === 'success') {
 
-				// const { idToken, accessToken } = result;
-				// const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
-				// firebase
-				// 	.auth()
-				// 	.signInAndRetrieveDataWithCredential(credential)
-				// 	.then(res => {
-				// 		// user res, create your user, do whatever you want
-				// 	})
-				// 	.catch(error => {
-				// 		console.log("firebase cred err:", error);
-				// 	});jjkl
-				this.onSignIn(result);
-
-				return result.accessToken;
-			} else {
-				return { cancelled: true };
-			}
-		} catch (e) {
-			return { error: true };
-		}
-	};
 	async loginWithFacebook() {
 		const {type, token} = await Facebook.logInWithReadPermissionsAsync('684604582290429', {permissions: ['public_profile']})
 		if (type == 'success') {
@@ -138,6 +123,7 @@ export default class SignInScreen extends React.Component {
 			firebase.auth().signInWithCredential(credential).catch((error) => {console.log(error)})
 		}
 	}
+
 	handleSignIn = () => {
       this.setState({errorMessage: null, loading: true})
       const { email, password } = this.state;
@@ -167,6 +153,7 @@ export default class SignInScreen extends React.Component {
 									value={this.state.email}
 								/>
 							</Item>
+
 							<Item floatingLabel style={styles.noLeftMargin}>
 								<Label style={styles.authLabelText}>Password</Label>
 								<Input
@@ -177,6 +164,7 @@ export default class SignInScreen extends React.Component {
 									value={this.state.password}
 								/>
 							</Item>
+
 							<Button
 								block
 								style={styles.authButton}
@@ -189,51 +177,34 @@ export default class SignInScreen extends React.Component {
 									<Text style={styles.authButtonText}>Sign In</Text>
 								)}
 							</Button>
-							<Button
-								block
-								style={styles.authButtonGoogle}
-								onPress={() => this.signInWithGoogleAsync()}
-								backgroundColor="blue"
-							>
-								<AntDesign
-									name="google"
-									size={26}
-									color="white"
-									verticalAlign="middle"
-								/>
-								{this.state.loading ? (
-									<Spinner color={colors.white} />
-								) : (
-									<Text style={styles.authButtonText}>Sign In With Google</Text>
-								)}
-							</Button>
-							<Button
-								block
-								style={styles.authButtonFacebook}
-								onPress={() => this.loginWithFacebook() }
-							>
-								<AntDesign
-									name="facebook-square"
-									size={26}
-									color="white"
-									verticalAlign="middle"/>
-								{this.state.loading ? (
-									<Spinner color={colors.white} />
-								) : (
-									<Text style={styles.authButtonText}>Sign In With Facebook</Text>
-								)}
-							</Button>
-							{/* <Button full style={styles.authButton}>
-								{this.state.loading ? (
-									<Spinner color="white" />
-								) : (
-									<TouchableOpacity onPress={this.handleSignInWithGoogle}>
-										<Text style={styles.authButtonText}>
-											Sign In with Google
-										</Text>
-									</TouchableOpacity>
-								)}
-							</Button> */}
+
+							<View style={styles.authButtonRow}>
+								<Button
+									block
+									style={styles.authButtonGoogle}
+									onPress={() => this.signInWithGoogleAsync()}
+								>
+									<AntDesign
+										name="google"
+										size={26}
+										color="white"
+										verticalAlign="middle"
+									/>
+								</Button>
+
+								<Button
+									block
+									style={styles.authButtonFacebook}
+									onPress={() => this.loginWithFacebook() }
+								>
+									<AntDesign
+										name="facebook-square"
+										size={26}
+										color="white"
+										verticalAlign="middle"/>
+								</Button>
+							</View>
+
 						</Form>
 
 						<View style={styles.errorContainer}>
@@ -301,15 +272,25 @@ const styles = StyleSheet.create({
 		borderRadius: 4,
 		marginTop: 30,
 	},
+	authButtonRow:{
+		flexDirection: "row",
+		alignContent: "center",
+		justifyContent: "center",
+		alignItems: "center"
+	},
 	authButtonGoogle: {
-		backgroundColor: "#0F9D58",
+		flex: .5,
+		backgroundColor: "#3283FC",
 		borderRadius: 4,
 		marginTop: 30,
+		marginRight: 5
 	},
 	authButtonFacebook: {
+		flex: .5,
 		backgroundColor: "#3b5998",
 		borderRadius: 4,
 		marginTop: 30,
+		marginLeft: 5
 	},
 	redirectText: {
 		color: colors.mediumText,

@@ -31,8 +31,6 @@ export default class JoinChapScreen extends React.Component {
 		chapterID:"",
 		errorMessage: null,
 		loading: false,
-
-
 	};
 
 	addFirebaseChapter = () =>{
@@ -77,14 +75,8 @@ export default class JoinChapScreen extends React.Component {
 					console.log("done");
 					this.props.navigation.navigate("App")
 				});
-
 			}
-
 		)
-
-
-
-
 	}
 
 	createChapter = () => {
@@ -97,13 +89,8 @@ export default class JoinChapScreen extends React.Component {
 						this.addFirebaseChapter();
 					}
 				}
-
 			)
-
-
 		}
-
-
 	};
 
 	render() {
@@ -127,7 +114,6 @@ export default class JoinChapScreen extends React.Component {
 									value={this.state.chapterName}
 								/>
 							</Item>
-
 
 							<View style={styles.inputRow}>
 								<View style={{marginLeft:185, width: 170, height:60}}>
@@ -154,16 +140,11 @@ export default class JoinChapScreen extends React.Component {
 											justifyContent: 'flex-start'
 										}}
 										onChangeItem={(stateSelected) => this.setState({ stateSelected })}
-
-
-
 										defaultNull
 										placeholder="Select State"
 									/>
 								</View>
 							</View>
-
-
 
 							<TouchableOpacity
 								block
@@ -178,10 +159,8 @@ export default class JoinChapScreen extends React.Component {
 							</TouchableOpacity>
 						</Form>
 
-
-
 						<TouchableOpacity
-							style={styles.createChapter}
+							style={styles.signOutButton}
 							onPress={() => {
 								userConverter.signOut();
 							}}
@@ -202,8 +181,6 @@ export default class JoinChapScreen extends React.Component {
 							</Text>
 						</Footer>
 					</TouchableWithoutFeedback>
-
-
 				</Container>
 			</TouchableWithoutFeedback>
 		);
@@ -253,6 +230,7 @@ const styles = StyleSheet.create({
 	},
 	codeInput: {
 		fontSize: 20,
+		paddingLeft: 0
 	},
 	codeButton: {
 		backgroundColor: colors.complementAccent,
@@ -260,9 +238,9 @@ const styles = StyleSheet.create({
 		marginTop: 40,
 		padding:12
 	},
-	createChapter: {
+	signOutButton: {
 		alignSelf: "center",
-		marginTop: 32,
+		marginTop: 20,
 	},
 	inputRow:{
 		width:100,
@@ -271,6 +249,7 @@ const styles = StyleSheet.create({
 		alignItems:'center',
 		justifyContent:'center',
 		marginTop: 40,
+		marginLeft: 0
 
 	},
 	redirectText: {
