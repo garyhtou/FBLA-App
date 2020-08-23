@@ -20,76 +20,95 @@ import {
 	Input,
 	Footer,
 } from "native-base";
-import DropDownPicker from 'react-native-dropdown-picker';
-import {userConverter} from '../config/user.js';
+import DropDownPicker from "react-native-dropdown-picker";
+import { userConverter } from "../config/user.js";
 
 export default class JoinChapScreen extends React.Component {
 	state = {
-		chapterName:"",
-		stateSelected:"",
-		chapterID:"",
+		chapterName: "",
+		stateSelected: "",
+		chapterID: "",
 		errorMessage: null,
 		loading: false,
 	};
 
-	addFirebaseChapter = () =>{
+	addFirebaseChapter = () => {
 		const { chapterName, stateSelected, chapterID } = this.state;
-		firebase.firestore().collection("DatabaseUser")
-			.doc(firebase.auth().currentUser.uid).set({
-			chapterID: chapterID,
-			inChapter: true,
-			isAdmin: true
-		}, { merge: true }).then(() => {
+		firebase
+			.firestore()
+			.collection("DatabaseUser")
+			.doc(firebase.auth().currentUser.uid)
+			.set(
+				{
+					chapterID: chapterID,
+					inChapter: true,
+					isAdmin: true,
+				},
+				{ merge: true }
+			)
+			.then(() => {});
 
-		});
+		let rand = Math.floor(Math.random() * 90000);
 
-		let rand = Math.floor(Math.random()*90000);
-
-		firebase.firestore().collection("Codes")
-			.doc("Codes").get().then((doc)=>{
+		firebase
+			.firestore()
+			.collection("Codes")
+			.doc("Codes")
+			.get()
+			.then((doc) => {
 				console.log(doc.data());
 				const codeList = doc.data().Codes;
-				while(codeList.includes(rand) ){
-					rand = ((rand+1)%90000);
+				while (codeList.includes(rand)) {
+					rand = (rand + 1) % 90000;
 				}
 
-				rand = rand+10000;
+				rand = rand + 10000;
 				codeList.push(rand);
 
-				firebase.firestore().collection("Codes")
-					.doc("Codes").set({
-					Codes:codeList
-				}, {merge:false})
+				firebase.firestore().collection("Codes").doc("Codes").set(
+					{
+						Codes: codeList,
+					},
+					{ merge: false }
+				);
 
-				firebase.firestore().collection("Chapter")
-					.doc(chapterID).set({
-					chapterName: chapterName,
-					code:rand,
-					state:stateSelected.label,
-					chapterID: chapterID,
-					compEventLink:"",
-					socMedia:{},
-					isState: false
-				}, { merge: false }).then(() => {
-					this.props.navigation.navigate("ChapCode", {
-						code: rand,
+				firebase
+					.firestore()
+					.collection("Chapter")
+					.doc(chapterID)
+					.set(
+						{
+							chapterName: chapterName,
+							code: rand,
+							state: stateSelected.label,
+							chapterID: chapterID,
+							compEventLink: "",
+							socMedia: {},
+							isState: false,
+						},
+						{ merge: false }
+					)
+					.then(() => {
+						this.props.navigation.navigate("ChapCode", {
+							code: rand,
+						});
 					});
-				});
-			}
-		)
-	}
+			});
+	};
 
 	createChapter = () => {
 		const { chapterID } = this.state;
-		if(chapterID!==""){
-			firebase.firestore().collection("Chapter")
-				.where("chapterID","==", chapterID).get()
+		if (chapterID !== "") {
+			firebase
+				.firestore()
+				.collection("Chapter")
+				.where("chapterID", "==", chapterID)
+				.get()
 				.then((queryDocSnapshots) => {
-					if(queryDocSnapshots.size===0) {
+					if (queryDocSnapshots.size === 0) {
 						this.addFirebaseChapter();
 					}
-				}
-			)
+				});
 		}
 	};
 
@@ -116,7 +135,7 @@ export default class JoinChapScreen extends React.Component {
 							</Item>
 
 							<View style={styles.inputRow}>
-								<View style={{marginLeft:185, width: 170, height:60}}>
+								<View style={{ marginLeft: 185, width: 170, height: 60 }}>
 									<Item floatingLabel>
 										<Label style={styles.codeLabelText}>Chapter ID</Label>
 										<Input
@@ -127,19 +146,20 @@ export default class JoinChapScreen extends React.Component {
 										/>
 									</Item>
 								</View>
-								<View style={{marginLeft:20, width: 100}}>
+								<View style={{ marginLeft: 20, width: 100 }}>
 									<DropDownPicker
 										items={[
-											{label: 'WA', value: 'WA'},
-											{label: 'IA', value: 'IA'}
-
+											{ label: "WA", value: "WA" },
+											{ label: "IA", value: "IA" },
 										]}
 										containerStyle={styles.dropDownStyle}
 										dropDownStyle={styles.dropDownOverflow}
 										itemStyle={{
-											justifyContent: 'flex-start'
+											justifyContent: "flex-start",
 										}}
-										onChangeItem={(stateSelected) => this.setState({ stateSelected })}
+										onChangeItem={(stateSelected) =>
+											this.setState({ stateSelected })
+										}
 										defaultNull
 										placeholder="Select State"
 									/>
@@ -174,7 +194,7 @@ export default class JoinChapScreen extends React.Component {
 					>
 						<Footer style={styles.footer}>
 							<Text style={styles.redirectText}>
-								Want to join a chapter? {" "}
+								Want to join a chapter?{" "}
 								<Text style={{ color: colors.complementAccent }}>
 									Enter the code here.
 								</Text>
@@ -207,15 +227,14 @@ const styles = StyleSheet.create({
 		fontSize: 13,
 		textAlign: "center",
 	},
-	dropDownStyle:{
+	dropDownStyle: {
 		height: 40,
-
 	},
-	dropDownItems:{
+	dropDownItems: {
 		alignItems: "center",
 	},
-	dropDownOverflow:{
-		marginTop:2,
+	dropDownOverflow: {
+		marginTop: 2,
 	},
 
 	codeLabelText: {
@@ -227,31 +246,30 @@ const styles = StyleSheet.create({
 		fontWeight: "700",
 		color: colors.white,
 		fontSize: 16,
-		textAlign: "center"
+		textAlign: "center",
 	},
 	codeInput: {
 		fontSize: 20,
-		paddingLeft: 0
+		paddingLeft: 0,
 	},
 	codeButton: {
 		backgroundColor: colors.complementAccent,
 		borderRadius: 4,
 		marginTop: 40,
-		padding:12
+		padding: 12,
 	},
 	signOutButton: {
 		alignSelf: "center",
 		marginTop: 20,
 	},
-	inputRow:{
-		width:100,
-		flex:1,
-		flexDirection:'row',
-		alignItems:'center',
-		justifyContent:'center',
+	inputRow: {
+		width: 100,
+		flex: 1,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
 		marginTop: 40,
-		marginLeft: 0
-
+		marginLeft: 0,
 	},
 	redirectText: {
 		color: colors.mediumText,

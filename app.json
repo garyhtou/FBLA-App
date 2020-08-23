@@ -1,36 +1,34 @@
 {
-  "expo": {
-    "name": "FBLA-App",
-    "slug": "fblaapp",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-	"privacy": "unlisted",
-	"primaryColor": "#00539D",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "bundleIdentifier": "com.garytou.fblaapp",
-      "buildNumber": "1.0.0",
-      "supportsTablet": true
-    },
-    "android": {
-      "package": "com.garytou.fblaapp",
-      "versionCode": 1
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-	"githubUrl": "https://github.com/garytou2/FBLA-App",
-	"scheme": "fblaapp"
-  }
+	"expo": {
+		"name": "FBLA-App",
+		"slug": "fblaapp",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"privacy": "unlisted",
+		"primaryColor": "#00539D",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"bundleIdentifier": "com.garytou.fblaapp",
+			"buildNumber": "1.0.0",
+			"supportsTablet": true
+		},
+		"android": {
+			"package": "com.garytou.fblaapp",
+			"versionCode": 1
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"githubUrl": "https://github.com/garytou2/FBLA-App",
+		"scheme": "fblaapp"
+	}
 }

@@ -21,7 +21,7 @@ import {
 	Input,
 	Footer,
 } from "native-base";
-import {userConverter} from "../config/user";
+import { userConverter } from "../config/user";
 
 export default class JoinChapScreen extends React.Component {
 	state = {
@@ -38,15 +38,15 @@ export default class JoinChapScreen extends React.Component {
 			.collection("Chapter")
 			.where("code", "==", parseInt(code))
 			.get()
-			.then((querySnapshot)=> {
+			.then((querySnapshot) => {
 				console.log(code);
 				console.log(querySnapshot.size);
 				if (querySnapshot.size === 0) {
 					this.setState({ errorMessage: "No chapter with code given" });
 				} else {
-
-					querySnapshot.forEach((doc)=>{
-						 firebase.firestore()
+					querySnapshot.forEach((doc) => {
+						firebase
+							.firestore()
 							.collection("DatabaseUser")
 							.doc(user.uid)
 							.set(
@@ -55,11 +55,11 @@ export default class JoinChapScreen extends React.Component {
 									inChapter: true,
 								},
 								{ merge: true }
-							).then(()=>{
-									this.props.navigation.navigate("App")
-								}
-							);
-					})
+							)
+							.then(() => {
+								this.props.navigation.navigate("App");
+							});
+					});
 				}
 			});
 	};
@@ -106,22 +106,20 @@ export default class JoinChapScreen extends React.Component {
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>
 						</TouchableOpacity>
-
 					</Content>
 
-                    <TouchableWithoutFeedback
-                        onPress={() => this.props.navigation.navigate("CreateChap")}
-                    >
-                        <Footer style={styles.footer}>
-                            <Text style={styles.redirectText}>
-                                Don't have a Chapter? {" "}
-                                <Text style={{ color: colors.complementAccent }}>
-                                    Create one.
-                                </Text>
-                            </Text>
-                        </Footer>
-                    </TouchableWithoutFeedback>
-
+					<TouchableWithoutFeedback
+						onPress={() => this.props.navigation.navigate("CreateChap")}
+					>
+						<Footer style={styles.footer}>
+							<Text style={styles.redirectText}>
+								Don't have a Chapter?{" "}
+								<Text style={{ color: colors.complementAccent }}>
+									Create one.
+								</Text>
+							</Text>
+						</Footer>
+					</TouchableWithoutFeedback>
 				</Container>
 			</TouchableWithoutFeedback>
 		);

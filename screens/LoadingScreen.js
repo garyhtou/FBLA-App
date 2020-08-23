@@ -4,74 +4,73 @@
 
 import React from "react";
 import firebase from "../config/firebase";
-import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
+import * as Font from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
 import { AppLoading } from "expo";
-import {curUser, userConverter, userInitialized} from "../config/user";
+import { curUser, userConverter, userInitialized } from "../config/user";
 
 export default class LoadingScreen extends React.Component {
+	async componentDidMount() {
+		await Font.loadAsync({
+			Roboto: require("native-base/Fonts/Roboto.ttf"),
+			Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+			...Ionicons.font,
+		});
 
-   async componentDidMount() {
-       await Font.loadAsync({
-           Roboto: require('native-base/Fonts/Roboto.ttf'),
-           Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
-           ...Ionicons.font,
-       });
+		let userListener = null;
+		// When firebase user loads
+		firebase.auth().onAuthStateChanged((user) => {
+			// If a user is signed in
+			if (user !== null) {
+				let curID = firebase.auth().currentUser.uid;
 
-       let userListener = null;
-      // When firebase user loads
-      firebase.auth().onAuthStateChanged((user) => {
+				console.log(curID);
+				console.log("Here");
 
-         // If a user is signed in
-         if (user !== null) {
+				userListener = firebase
+					.firestore()
+					.collection("DatabaseUser")
+					.doc(curID)
+					.onSnapshot(
+						(doc) => {
+							console.log(doc.data());
+							if (doc.data() != null) {
+								userConverter.setCurUser(doc);
 
-             let curID = firebase.auth().currentUser.uid;
+								if (userInitialized === false) {
+									userConverter.setInit(true);
+									userConverter.addListener(userListener);
 
-             console.log(curID);
-             console.log("Here");
+									// If the user is not in a chapter - go to chapter screens
+									if (curUser.inChapter === false) {
+										this.props.navigation.navigate("Chap");
+									}
+									// Else - go to the app
+									else {
+										this.props.navigation.navigate("App");
+									}
+								}
+							}
+						},
+						() => {
+							console.log("User Logged Out");
+						}
+					);
+			}
 
-             userListener = firebase.firestore().collection("DatabaseUser")
-                 .doc(curID)
-                 .onSnapshot((doc)=> {
-                     console.log(doc.data());
-                     if(doc.data()!=null){
-                         userConverter.setCurUser(doc);
+			// If the a user is not signed in - go to sign in screen
+			else {
+				console.log("Signed Out");
+				if (userListener !== null) {
+					userListener();
+				}
+				userConverter.setInit(false);
+				this.props.navigation.navigate("Auth");
+			}
+		});
+	}
 
-                         if (userInitialized === false) {
-                             userConverter.setInit(true);
-                             userConverter.addListener(userListener);
-
-                             // If the user is not in a chapter - go to chapter screens
-                             if (curUser.inChapter === false) {
-                                 this.props.navigation.navigate("Chap");
-                             }
-                             // Else - go to the app
-                             else {
-                                 this.props.navigation.navigate("App");
-                             }
-
-                         }
-                     }
-
-                 }, ()=>{
-                     console.log("User Logged Out");
-                 })
-
-         }
-
-         // If the a user is not signed in - go to sign in screen
-         else {
-             console.log("Signed Out");
-             if(userListener!==null){
-                 userListener();
-             }
-             userConverter.setInit(false);
-            this.props.navigation.navigate("Auth");
-         }
-      });
-   }
-
-   render() {
-       return <AppLoading />;
-   }
+	render() {
+		return <AppLoading />;
+	}
 }
