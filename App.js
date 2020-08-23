@@ -10,18 +10,31 @@ import SignUpScreen from "./screens/SignUpScreen";
 import MainScreen from "./screens/MainScreen";
 import JoinChapScreen from "./screens/JoinChapScreen";
 import CreateChapScreen from "./screens/CreateChapScreen";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import AnnouncementScreen from "./screens/AnnouncementScreen";
+import ChapterScreen from "./screens/ChapterScreen";
+import OppScreen from "./screens/ChapterScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import { NavigationContainer } from '@react-navigation/native';
+import React from "react";
 import ChapterCodeScreen from "./screens/ChapterCodeScreen";
 
-const AppStack = createStackNavigator(
-   {
-      Main: MainScreen,
-   },
-   {
-      defaultNavigationOptions: {
-         cardStyle: { backgroundColor: "white" },
-      },
-   }
-);
+const Tab = createBottomTabNavigator();
+
+function appTabs(){
+    return(
+        <NavigationContainer>
+            <Tab.Navigator>
+                <Tab.Screen name ="Announcements" component = {AnnouncementScreen}/>
+                <Tab.Screen name ="Chapter" component = {ChapterScreen}/>
+                <Tab.Screen name ="Opportuninty" component = {OppScreen}/>
+                <Tab.Screen name ="Profile" component = {ProfileScreen}/>
+            </Tab.Navigator>
+        </NavigationContainer>
+    );
+}
+
+
 
 const AuthSwitch = createSwitchNavigator(
    {
@@ -56,7 +69,8 @@ export default createAppContainer(
          Loading: LoadingScreen,
          Auth: AuthSwitch,
          Chap: ChapSwitch,
-         App: AppStack,
+         App: appTabs,
+
       },
       {
          initialRouteName: "Loading",
