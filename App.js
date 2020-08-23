@@ -10,6 +10,7 @@ import SignUpScreen from "./screens/SignUpScreen";
 import MainScreen from "./screens/MainScreen";
 import JoinChapScreen from "./screens/JoinChapScreen";
 import CreateChapScreen from "./screens/CreateChapScreen";
+import ChapterCodeScreen from "./screens/ChapterCodeScreen";
 
 const AppStack = createStackNavigator(
    {
@@ -39,6 +40,7 @@ const ChapSwitch = createSwitchNavigator(
     {
         JoinChap: JoinChapScreen,
         CreateChap: CreateChapScreen,
+        ChapCode: ChapterCodeScreen,
     },
     {
         initialRouteName: "JoinChap",

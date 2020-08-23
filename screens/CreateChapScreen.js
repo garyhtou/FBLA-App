@@ -5,7 +5,7 @@ import {
 	Keyboard,
 	StyleSheet,
 } from "react-native";
-import { colors, strings } from "../config/styles";
+import { colors } from "../config/styles";
 import * as firebase from "firebase";
 import {
 	Button,
@@ -20,9 +20,8 @@ import {
 	Input,
 	Footer,
 } from "native-base";
-let firestore = firebase.firestore();
 import DropDownPicker from 'react-native-dropdown-picker';
-import {curUser, userConverter} from '../config/user.js';
+import {userConverter} from '../config/user.js';
 
 export default class JoinChapScreen extends React.Component {
 	state = {
@@ -72,8 +71,9 @@ export default class JoinChapScreen extends React.Component {
 					socMedia:{},
 					isState: false
 				}, { merge: false }).then(() => {
-					console.log("done");
-					this.props.navigation.navigate("App")
+					this.props.navigation.navigate("ChapCode", {
+						code: rand,
+					});
 				});
 			}
 		)
@@ -224,6 +224,7 @@ const styles = StyleSheet.create({
 		textTransform: "uppercase",
 	},
 	codeButtonText: {
+		fontWeight: "700",
 		color: colors.white,
 		fontSize: 16,
 		textAlign: "center"
