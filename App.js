@@ -9,7 +9,6 @@ import OppScreen from "./screens/ChapterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
-import { Icon } from "native-base";
 import {createAppContainer, createSwitchNavigator} from "react-navigation";
 import JoinChapScreen from "./screens/CreateChapScreen";
 import CreateChapScreen from "./screens/CreateChapScreen";
@@ -17,6 +16,7 @@ import ChapterCodeScreen from "./screens/ChapterCodeScreen";
 import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import LoadingScreen from "./screens/LoadingScreen";
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -25,24 +25,35 @@ function appTabs() {
 		<NavigationContainer>
 			<Tab.Navigator
 				screenOptions={({ route }) => ({
-					tabBarIcon: () => {
+					tabBarIcon: ({ focused, color, size }) => {
 						let iconName;
 
 						if (route.name === 'Announcements') {
-							iconName = 'home';
+							iconName = focused ? 'home' : 'home-outline';
+							return <MaterialCommunityIcons name={iconName}
+														   color={color}
+														   size={size}/>;
 						} else if (route.name === 'Chapter') {
-							iconName = 'work'
+							iconName = focused ? 'briefcase' : 'briefcase-outline';
+							return <MaterialCommunityIcons name={iconName}
+														   color={color}
+														   size={size}/>;
 						} else if (route.name === 'Opportunity') {
-							iconName = 'search'
+							iconName = focused ? 'cloud-search' : 'cloud-search-outline';
+							return <MaterialCommunityIcons name={iconName}
+														   color={color}
+														   size={size}/>;
 						} else {
-							iconName = 'person'
+							iconName = focused ? 'person' : 'person-outline';
+							return <MaterialIcons name={iconName}
+														   color={color}
+														   size={size}/>;
 						}
-
-						// You can return any component that you like here!
-						return <Icon name={iconName} type={"MaterialIcons"}/>;
 					},
 				})}
-
+				tabBarOptions={{
+					showLabel: false
+				}}
 			>
 				<Tab.Screen name="Announcements" component={AnnouncementScreen} />
 				<Tab.Screen name="Chapter" component={ChapterScreen} />
