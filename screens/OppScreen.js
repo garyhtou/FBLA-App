@@ -3,7 +3,8 @@
  */
 
 import React from "react";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Container, Header, Content, Title, Body } from "native-base";
 import { userConverter, userInitialized } from "../config/user";
 import firebase from "../config/firebase";
 import { colors } from "../config/styles";
@@ -23,17 +24,24 @@ export default class OppScreen extends React.Component {
 		userConverter.signOut();
 	};
 
-	oppRender = () => {
+	render() {
 		return (
-			<View style={styles.container}>
-				<Text>Hello {this.state.displayName}!</Text>
+			<Container>
+				<Header>
+					<Body>
+						<Title>Opportunity</Title>
+					</Body>
+				</Header>
+				<Content contentContainerStyle={styles.container}>
+					<Text>Hello {this.state.displayName}!</Text>
 
-				<TouchableOpacity style={styles.button} onPress={this.signOutUser}>
-					<Text style={styles.redirectText}>SignOut</Text>
-				</TouchableOpacity>
-			</View>
+					<TouchableOpacity style={styles.button} onPress={this.signOutUser}>
+						<Text style={styles.redirectText}>SignOut</Text>
+					</TouchableOpacity>
+				</Content>
+			</Container>
 		);
-	};
+	}
 }
 
 const styles = StyleSheet.create({
@@ -41,6 +49,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
+		backgroundColor: "#f3f3f3",
 	},
 	button: {
 		marginTop: 32,
