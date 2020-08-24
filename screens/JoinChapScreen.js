@@ -31,6 +31,7 @@ export default class JoinChapScreen extends React.Component {
 	};
 
 	joinChapter = () => {
+		this.setState({ errorMessage: null, loading: true });
 		const user = firebase.auth().currentUser;
 		const { code } = this.state;
 		firebase
@@ -39,10 +40,9 @@ export default class JoinChapScreen extends React.Component {
 			.where("code", "==", parseInt(code))
 			.get()
 			.then((querySnapshot) => {
-				console.log(code);
-				console.log(querySnapshot.size);
+
 				if (querySnapshot.size === 0) {
-					this.setState({ errorMessage: "No chapter with code given" });
+					this.setState({ errorMessage: "No chapter with code given", loading:false });
 				} else {
 					querySnapshot.forEach((doc) => {
 						firebase
@@ -57,6 +57,7 @@ export default class JoinChapScreen extends React.Component {
 								{ merge: true }
 							)
 							.then(() => {
+								this.setState({ errorMessage: null, loading: false });
 								this.props.navigation.navigate("App");
 							});
 					});
@@ -71,9 +72,7 @@ export default class JoinChapScreen extends React.Component {
 					<Content contentContainerStyle={styles.content}>
 						<Text style={styles.heading}>Join a Chapter!</Text>
 
-						<View style={styles.errorContainer}>
-							<Text style={styles.errorText}>{this.state.errorMessage}</Text>
-						</View>
+
 
 						<Form>
 							<Item floatingLabel style={styles.noLeftMargin}>
@@ -106,6 +105,10 @@ export default class JoinChapScreen extends React.Component {
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>
 						</TouchableOpacity>
+
+						<View style={styles.errorContainer}>
+							<Text style={styles.errorText}>{this.state.errorMessage}</Text>
+						</View>
 					</Content>
 
 					<TouchableWithoutFeedback
@@ -120,6 +123,8 @@ export default class JoinChapScreen extends React.Component {
 							</Text>
 						</Footer>
 					</TouchableWithoutFeedback>
+
+
 				</Container>
 			</TouchableWithoutFeedback>
 		);
@@ -140,6 +145,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		marginHorizontal: 30,
+		marginTop: 15,
 	},
 	errorText: {
 		color: colors.complementAccent,

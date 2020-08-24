@@ -89,6 +89,7 @@ export default class JoinChapScreen extends React.Component {
 						{ merge: false }
 					)
 					.then(() => {
+						this.setState({ errorMessage: null, loading: false });
 						this.props.navigation.navigate("ChapCode", {
 							code: rand,
 						});
@@ -97,8 +98,9 @@ export default class JoinChapScreen extends React.Component {
 	};
 
 	createChapter = () => {
-		const { chapterID } = this.state;
-		if (chapterID !== "") {
+		this.setState({ errorMessage: null, loading: true });
+		const { chapterName, stateSelected, chapterID } = this.state;
+		if (chapterID !== "" && stateSelected!=="" && chapterName !="") {
 			firebase
 				.firestore()
 				.collection("Chapter")
@@ -107,9 +109,14 @@ export default class JoinChapScreen extends React.Component {
 				.then((queryDocSnapshots) => {
 					if (queryDocSnapshots.size === 0) {
 						this.addFirebaseChapter();
+					} else{
+						this.setState({ errorMessage: "Chapter ID Taken" , loading:false});
 					}
 				});
+		} else{
+			this.setState({ errorMessage: "Enter input for all fields" , loading:false});
 		}
+
 	};
 
 	render() {
@@ -119,9 +126,6 @@ export default class JoinChapScreen extends React.Component {
 					<Content contentContainerStyle={styles.content}>
 						<Text style={styles.heading}>Create a Chapter!</Text>
 
-						<View style={styles.errorContainer}>
-							<Text style={styles.errorText}>{this.state.errorMessage}</Text>
-						</View>
 
 						<Form>
 							<Item floatingLabel style={styles.noLeftMargin}>
@@ -187,6 +191,11 @@ export default class JoinChapScreen extends React.Component {
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>
 						</TouchableOpacity>
+
+
+						<View style={styles.errorContainer}>
+							<Text style={styles.errorText}>{this.state.errorMessage}</Text>
+						</View>
 					</Content>
 
 					<TouchableWithoutFeedback
@@ -221,6 +230,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		marginHorizontal: 30,
+		marginTop: 15,
 	},
 	errorText: {
 		color: colors.complementAccent,
