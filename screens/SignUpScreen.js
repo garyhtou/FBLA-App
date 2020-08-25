@@ -44,6 +44,17 @@ export default class SignUpScreen extends React.Component {
 					name: name,
 					chapterEvents: {},
 					compEvents: "",
+					notification:{
+						localChapter:{
+							announcements:true,
+							events:false
+						},
+						stateChapter:{
+							announcements: true,
+							events:false
+						}
+
+					}
 				},
 				{ merge: false }
 			)

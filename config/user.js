@@ -9,7 +9,8 @@ class User {
 		inChapter,
 		isAdmin,
 		chapterEvents,
-		competitiveEvents
+		competitiveEvents,
+		notification
 	) {
 		this.name = name;
 		this.chapterID = chapterID;
@@ -17,6 +18,7 @@ class User {
 		this.isAdmin = isAdmin;
 		this.chapterEvents = chapterEvents;
 		this.compEvents = competitiveEvents;
+		this.notification = notification;
 	}
 	toString() {
 		return (
@@ -30,7 +32,11 @@ class User {
 			", " +
 			this.chapterEvents +
 			", " +
-			this.compEvents
+			this.compEvents+
+			", " +
+			this.notification
+
+
 		);
 	}
 }
@@ -67,6 +73,7 @@ let userConverter = {
 
 			chapterEvents: user.chapterEvents,
 			compEvents: user.compEvents,
+			notification:user.notification
 		};
 	},
 	fromFirestore: function (snapshot) {
@@ -77,7 +84,8 @@ let userConverter = {
 			data.inChapter,
 			data.isAdmin,
 			data.chapterEvents,
-			data.compEvents
+			data.compEvents,
+			data.notification
 		);
 	},
 };
