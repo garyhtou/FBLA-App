@@ -68,7 +68,7 @@ export default class LoadingScreen extends React.Component {
 				if (userListener !== null) {
 					userListener();
 				}
-				userConverter.setInit(false);
+				getUserConverter().setInit(false);
 				this.props.navigation.navigate("Auth");
 			}
 		});

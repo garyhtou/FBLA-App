@@ -61,7 +61,7 @@ export default class ProfileScreen extends React.Component {
 	componentDidMount() {}
 
 	signOutUser = () => {
-		userConverter.signOut();
+		getUserConverter().signOut();
 	};
 
 	saveName = () => {

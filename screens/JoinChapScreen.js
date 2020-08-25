@@ -21,7 +21,7 @@ import {
 	Input,
 	Footer,
 } from "native-base";
-import { userConverter } from "../config/user";
+import { getUserConverter } from "../config/user";
 
 export default class JoinChapScreen extends React.Component {
 	state = {
@@ -40,9 +40,11 @@ export default class JoinChapScreen extends React.Component {
 			.where("code", "==", parseInt(code))
 			.get()
 			.then((querySnapshot) => {
-
 				if (querySnapshot.size === 0) {
-					this.setState({ errorMessage: "No chapter with code given", loading:false });
+					this.setState({
+						errorMessage: "No chapter with code given",
+						loading: false,
+					});
 				} else {
 					querySnapshot.forEach((doc) => {
 						firebase
@@ -72,8 +74,6 @@ export default class JoinChapScreen extends React.Component {
 					<Content contentContainerStyle={styles.content}>
 						<Text style={styles.heading}>Join a Chapter!</Text>
 
-
-
 						<Form>
 							<Item floatingLabel style={styles.noLeftMargin}>
 								<Label style={styles.codeLabelText}>Enter Chapter Code</Label>
@@ -100,7 +100,7 @@ export default class JoinChapScreen extends React.Component {
 						<TouchableOpacity
 							style={styles.signOutButton}
 							onPress={() => {
-								userConverter.signOut();
+								getUserConverter().signOut();
 							}}
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>
@@ -123,8 +123,6 @@ export default class JoinChapScreen extends React.Component {
 							</Text>
 						</Footer>
 					</TouchableWithoutFeedback>
-
-
 				</Container>
 			</TouchableWithoutFeedback>
 		);
