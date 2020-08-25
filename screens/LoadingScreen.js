@@ -7,6 +7,8 @@ import firebase from "../config/firebase";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { AppLoading } from "expo";
+import {chapterConverter, getChapterInitialized} from "../config/chapter";
+
 import {
 	getCurUser,
 	getUserConverter,
@@ -14,12 +16,41 @@ import {
 } from "../config/user";
 
 export default class LoadingScreen extends React.Component {
+	startChapter = (chapterID) =>{
+
+		let chapterListener = firebase
+			.firestore()
+			.collection("Chapter")
+			.doc(chapterID)
+			.onSnapshot(
+				(doc) => {
+					console.log(doc.data());
+					if (doc.data() != null) {
+						chapterConverter.setCurChapter(doc);
+
+						if (getChapterInitialized() === false) {
+							chapterConverter.setInit(true);
+							chapterConverter.addListener(chapterListener);
+
+							this.props.navigation.navigate("App");
+						}
+					}
+				},
+				() => {
+					console.log("User Logged Out");
+				}
+			);
+
+	}
 	async componentDidMount() {
 		await Font.loadAsync({
 			Roboto: require("native-base/Fonts/Roboto.ttf"),
 			Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
 			...Ionicons.font,
 		});
+		
+		
+		
 
 		let userListener = null;
 		// When firebase user loads
@@ -43,7 +74,7 @@ export default class LoadingScreen extends React.Component {
 
 								if (getUserInitialized() === false) {
 									getUserConverter().setInit(true);
-									getUserConverter().addListener(userListener);
+									getUserConverter().setListener(userListener);
 
 									// If the user is not in a chapter - go to chapter screens
 									if (getCurUser().inChapter === false) {
@@ -51,7 +82,7 @@ export default class LoadingScreen extends React.Component {
 									}
 									// Else - go to the app
 									else {
-										this.props.navigation.navigate("App");
+
 									}
 								}
 							}

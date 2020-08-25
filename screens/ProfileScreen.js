@@ -32,6 +32,7 @@ import { colors } from "../config/styles";
 import { withOrientation } from "react-navigation";
 import { preventAutoHide } from "expo/build/launch/SplashScreen";
 import ReactNativeModal from "react-native-modal";
+import {chapterConverter} from "../config/chapter";
 
 export default class ProfileScreen extends React.Component {
 	constructor() {
@@ -110,7 +111,23 @@ export default class ProfileScreen extends React.Component {
 	}
 
 	leaveChapter() {
-		//TODO: MAKE USER LEAVE CURRENT CHAPTER
+		firebase
+			.firestore()
+			.collection("DatabaseUser")
+			.doc(firebase.auth().currentUser.uid)
+			.set(
+				{
+					chapterID: "",
+					inChapter: false,
+					isAdmin: false,
+				},
+				{ merge: true }
+			)
+			.then(() => {
+				chapterConverter.endChapter()
+				this.props.navigation.navigate("JoinChap")
+			});
+
 	}
 
 	render() {

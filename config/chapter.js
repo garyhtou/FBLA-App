@@ -19,6 +19,25 @@ class Chapter {
 
 // Firestore data converter
 let chapterConverter = {
+
+    setCurChapter: function (snapshot) {
+        curChapter = this.fromFirestore(snapshot);
+    },
+    addListener: function (listener) {
+        activeListeners.push(listener);
+    },
+    endChapter: function () {
+        this.setInit(false);
+        let i = 0;
+        while (i < activeListeners.length) {
+            activeListeners[i]();
+            i++;
+        }
+
+    },
+    setInit: function (initialized) {
+        chapterInitialized = initialized;
+    },
     toFirestore: function(chapter) {
         return {
             chapterName: chapter.chapterName,
@@ -38,6 +57,18 @@ let chapterConverter = {
     }
 }
 
+let curChapter;
+let chapterInitialized = false;
+let activeListeners = [];
+
+function getCurChapter() {
+    return curChapter;
+}
+
+function getChapterInitialized() {
+    return chapterInitialized;
+}
+
 export {
-    chapterConverter
+    chapterConverter, getCurChapter, getChapterInitialized
 };

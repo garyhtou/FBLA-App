@@ -22,6 +22,7 @@ import {
 } from "native-base";
 import DropDownPicker from "react-native-dropdown-picker";
 import { getUserConverter } from "../config/user.js";
+import {chapterConverter, getChapterInitialized} from "../config/chapter";
 
 export default class CreateChapScreen extends React.Component {
 	state = {
@@ -31,6 +32,34 @@ export default class CreateChapScreen extends React.Component {
 		errorMessage: null,
 		loading: false,
 	};
+
+	startChapter = (chapterID, rand) =>{
+
+		let chapterListener = firebase
+			.firestore()
+			.collection("Chapter")
+			.doc(chapterID)
+			.onSnapshot(
+				(doc) => {
+					console.log(doc.data());
+					if (doc.data() != null) {
+						chapterConverter.setCurChapter(doc);
+
+						if (getChapterInitialized() === false) {
+							chapterConverter.setInit(true);
+							chapterConverter.addListener(chapterListener);
+						}
+						this.props.navigation.navigate("ChapCode", {
+							code: rand,
+						});
+					}
+				},
+				() => {
+					console.log("User Logged Out");
+				}
+			);
+
+	}
 
 	addFirebaseChapter = () => {
 		const { chapterName, stateSelected, chapterID } = this.state;
@@ -90,9 +119,7 @@ export default class CreateChapScreen extends React.Component {
 					)
 					.then(() => {
 						this.setState({ errorMessage: null, loading: false });
-						this.props.navigation.navigate("ChapCode", {
-							code: rand,
-						});
+						this.startChapter(chapterID, rand);
 					});
 			});
 	};
