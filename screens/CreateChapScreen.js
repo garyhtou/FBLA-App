@@ -21,7 +21,7 @@ import {
 	Footer,
 } from "native-base";
 import DropDownPicker from "react-native-dropdown-picker";
-import { userConverter } from "../config/user.js";
+import { getUserConverter } from "../config/user.js";
 
 export default class JoinChapScreen extends React.Component {
 	state = {
@@ -100,7 +100,7 @@ export default class JoinChapScreen extends React.Component {
 	createChapter = () => {
 		this.setState({ errorMessage: null, loading: true });
 		const { chapterName, stateSelected, chapterID } = this.state;
-		if (chapterID !== "" && stateSelected!=="" && chapterName !="") {
+		if (chapterID !== "" && stateSelected !== "" && chapterName != "") {
 			firebase
 				.firestore()
 				.collection("Chapter")
@@ -109,14 +109,16 @@ export default class JoinChapScreen extends React.Component {
 				.then((queryDocSnapshots) => {
 					if (queryDocSnapshots.size === 0) {
 						this.addFirebaseChapter();
-					} else{
-						this.setState({ errorMessage: "Chapter ID Taken" , loading:false});
+					} else {
+						this.setState({ errorMessage: "Chapter ID Taken", loading: false });
 					}
 				});
-		} else{
-			this.setState({ errorMessage: "Enter input for all fields" , loading:false});
+		} else {
+			this.setState({
+				errorMessage: "Enter input for all fields",
+				loading: false,
+			});
 		}
-
 	};
 
 	render() {
@@ -125,7 +127,6 @@ export default class JoinChapScreen extends React.Component {
 				<Container>
 					<Content contentContainerStyle={styles.content}>
 						<Text style={styles.heading}>Create a Chapter!</Text>
-
 
 						<Form>
 							<Item floatingLabel style={styles.noLeftMargin}>
@@ -186,12 +187,11 @@ export default class JoinChapScreen extends React.Component {
 						<TouchableOpacity
 							style={styles.signOutButton}
 							onPress={() => {
-								userConverter.signOut();
+								getUserConverter().signOut();
 							}}
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>
 						</TouchableOpacity>
-
 
 						<View style={styles.errorContainer}>
 							<Text style={styles.errorText}>{this.state.errorMessage}</Text>

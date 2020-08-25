@@ -7,7 +7,11 @@ import firebase from "../config/firebase";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { AppLoading } from "expo";
-import { curUser, userConverter, userInitialized } from "../config/user";
+import {
+	getCurUser,
+	getUserConverter,
+	getUserInitialized,
+} from "../config/user";
 
 export default class LoadingScreen extends React.Component {
 	async componentDidMount() {
@@ -35,14 +39,14 @@ export default class LoadingScreen extends React.Component {
 						(doc) => {
 							console.log(doc.data());
 							if (doc.data() != null) {
-								userConverter.setCurUser(doc);
+								getUserConverter().setCurUser(doc);
 
-								if (userInitialized === false) {
-									userConverter.setInit(true);
-									userConverter.addListener(userListener);
+								if (getUserInitialized() === false) {
+									getUserConverter().setInit(true);
+									getUserConverter().addListener(userListener);
 
 									// If the user is not in a chapter - go to chapter screens
-									if (curUser.inChapter === false) {
+									if (getCurUser().inChapter === false) {
 										this.props.navigation.navigate("Chap");
 									}
 									// Else - go to the app

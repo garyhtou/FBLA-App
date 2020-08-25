@@ -5,7 +5,7 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Container, Header, Content, Title, Body } from "native-base";
-import { userConverter, userInitialized } from "../config/user";
+import { getUserConverter, getUserInitialized } from "../config/user";
 import firebase from "../config/firebase";
 import { colors } from "../config/styles";
 
@@ -21,7 +21,7 @@ export default class AnnouncementScreen extends React.Component {
 	}
 
 	signOutUser = () => {
-		userConverter.signOut();
+		getUserConverter().signOut();
 	};
 
 	render() {
@@ -32,7 +32,7 @@ export default class AnnouncementScreen extends React.Component {
 						<Title>Announcements</Title>
 					</Body>
 				</Header>
-				<Content contentContainerStyle={styles.container}>
+				<Content contentContainerStyle={styles.container} padder>
 					<Text>Hello {this.state.displayName}!</Text>
 
 					<TouchableOpacity style={styles.button} onPress={this.signOutUser}>
@@ -46,7 +46,8 @@ export default class AnnouncementScreen extends React.Component {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
+		minHeight: "100%",
+		padding: 15,
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: "#f3f3f3",
