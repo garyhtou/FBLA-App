@@ -10,7 +10,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
-import JoinChapScreen from "./screens/CreateChapScreen";
+import JoinChapScreen from "./screens/JoinChapScreen";
 import CreateChapScreen from "./screens/CreateChapScreen";
 import ChapterCodeScreen from "./screens/ChapterCodeScreen";
 import SignInScreen from "./screens/SignInScreen";

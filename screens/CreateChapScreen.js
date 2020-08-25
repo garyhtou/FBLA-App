@@ -23,7 +23,7 @@ import {
 import DropDownPicker from "react-native-dropdown-picker";
 import { getUserConverter } from "../config/user.js";
 
-export default class JoinChapScreen extends React.Component {
+export default class CreateChapScreen extends React.Component {
 	state = {
 		chapterName: "",
 		stateSelected: "",
