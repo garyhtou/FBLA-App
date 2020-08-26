@@ -29,44 +29,36 @@ import { colors } from "../config/styles";
 import { withOrientation } from "react-navigation";
 import { preventAutoHide } from "expo/build/launch/SplashScreen";
 import ReactNativeModal from "react-native-modal";
-import {chapterConverter, getCurChapter} from "../config/chapter";
-import { StackActions } from '@react-navigation/native';
+import { chapterConverter, getCurChapter } from "../config/chapter";
+import { StackActions } from "@react-navigation/native";
 // any js module
 
 export default class ProfileScreen extends React.Component {
 	constructor() {
 		super();
 
-		var { email, displayName, photoURL } = firebase.auth().currentUser;
+		var { email, photoURL } = firebase.auth().currentUser;
 		if (photoURL === null) {
 			photoURL = "https://www.gravatar.com/avatar/?d=mp";
 		}
 
 		this.state = {
 			email: email,
-			displayName: displayName,
 			photoURL: photoURL,
 			editName: false,
 			updatePasswordModal: false,
-			chapterName: "fake chapter name!", //TODO: GET ACTUAL VALUE FROM curUser
-			chapterAnnouncements: true, //TODO: GET ACTUAL VALUE FROM FIRESTORE
-			chapterEvents: true, //TODO: GET ATUAL VALUE FROM FIRESTORE
-			stateAnnouncements: true, //TODO: GET ACTUAL VALUE FROM FIRESTORE
-			stateEvents: false, //TODO: GET ACTUAL VALUE FROM FIRESTORE
 		};
-
 	}
 
 	componentDidMount() {
-
 		this.setState({
-			chapterName: getCurChapter().chapterName,
-			chapterAnnouncements: getCurUser().notification.localChapter.announcements,
+			editedName: getCurUser().name,
+			chapterAnnouncements: getCurUser().notification.localChapter
+				.announcements,
 			chapterEvents: getCurUser().notification.localChapter.events,
 			stateAnnouncements: getCurUser().notification.stateChapter.announcements,
 			stateEvents: getCurUser().notification.stateChapter.events,
-
-		})
+		});
 	}
 
 	signOutUser = () => {
@@ -75,15 +67,16 @@ export default class ProfileScreen extends React.Component {
 
 	saveName = () => {
 		var name = this.state.editedName;
-		if (name === undefined || name == this.state.displayName) {
+		if (name === undefined || name === getCurUser().name) {
 			console.log("No edits were made to the display name");
 		} else {
-			firebase.firestore()
+			firebase
+				.firestore()
 				.collection("DatabaseUser")
-				.doc(user.uid)
+				.doc(firebase.auth().currentUser.uid)
 				.set(
 					{
-						name:name,
+						name: name,
 					},
 					{ merge: true }
 				)
@@ -93,58 +86,54 @@ export default class ProfileScreen extends React.Component {
 		this.setState({ editName: false });
 	};
 
-	updateNotifications(){
-		firebase.firestore()
+	updateNotifications() {
+		firebase
+			.firestore()
 			.collection("DatabaseUser")
 			.doc(firebase.auth().currentUser.uid)
 			.set(
 				{
-					notification:{
-						localChapter:{
-							announcements:this.state.chapterAnnouncements,
-							events:this.state.chapterEvents
+					notification: {
+						localChapter: {
+							announcements: this.state.chapterAnnouncements,
+							events: this.state.chapterEvents,
 						},
-						stateChapter:{
+						stateChapter: {
 							announcements: this.state.stateAnnouncements,
-							events:this.state.stateEvents
-						}
-
-					}
+							events: this.state.stateEvents,
+						},
+					},
 				},
-				{ merge: true}
+				{ merge: true }
 			)
 			.then(() => {
 				this.setState({ loading: false });
 			});
 	}
 
-	toggleSwitch(setting, value) {
-
+	updateSwitches(setting, value) {
 		switch (setting) {
 			case "chapterAnnouncements":
-				console.log(setting+" "+value);
-				this.setState({ chapterAnnouncements: value },
-					this.updateNotifications);
-
-
+				console.log(setting + " " + value);
+				this.setState(
+					{ chapterAnnouncements: value },
+					this.updateNotifications
+				);
 
 				break;
 			case "chapterEvents":
-				console.log(setting+value);
-				this.setState({ chapterEvents: value },
-					this.updateNotifications);
+				console.log(setting + value);
+				this.setState({ chapterEvents: value }, this.updateNotifications);
 
 				break;
 			case "stateAnnouncements":
-				console.log(setting+value);
-				this.setState({ stateAnnouncements: value },
-					this.updateNotifications);
+				console.log(setting + value);
+				this.setState({ stateAnnouncements: value }, this.updateNotifications);
 
 				break;
 			case "stateEvents":
-				console.log(setting+value);
-				this.setState({ stateEvents: value },
-					this.updateNotifications);
+				console.log(setting + value);
+				this.setState({ stateEvents: value }, this.updateNotifications);
 
 				break;
 		}
@@ -165,7 +154,9 @@ export default class ProfileScreen extends React.Component {
 			)
 			.then(() => {
 				chapterConverter.endChapter();
-				this.props.navigation.dispatch(StackActions.replace("Chap", {screen:"JoinChap"}));
+				this.props.navigation.dispatch(
+					StackActions.replace("Chap", { screen: "JoinChap" })
+				);
 			});
 	};
 
@@ -174,7 +165,7 @@ export default class ProfileScreen extends React.Component {
 			<Container>
 				<Header>
 					<Body>
-						<Title>{this.state.displayName}</Title>
+						<Title>{this.state.editedName}</Title>
 					</Body>
 				</Header>
 				<Content contentContainerStyle={styles.container}>
@@ -199,7 +190,7 @@ export default class ProfileScreen extends React.Component {
 								this.setState({ editedName: value });
 							}}
 						>
-							{this.state.displayName}
+							{getCurUser().name}
 						</Input>
 						{/* To change icon color, change color of button */}
 						{this.state.editName ? (
@@ -225,7 +216,7 @@ export default class ProfileScreen extends React.Component {
 
 					{/* STATIC INFORMATION (EMAIL, CHAPTER NAME, ETC.) */}
 					<Item style={[styles.item, styles.itemNoBorder]}>
-						<Text style={styles.staticInfo}>{this.state.chapterName}</Text>
+						<Text style={styles.staticInfo}>{getCurChapter().chapterName}</Text>
 					</Item>
 					<Item style={[styles.item, styles.itemNoBorder]}>
 						<Text style={styles.staticInfo}>{this.state.email}</Text>
@@ -243,9 +234,9 @@ export default class ProfileScreen extends React.Component {
 							</Body>
 							<Right>
 								<Switch
-									value={this.state.chapterAnnouncements}
+									value={getCurUser().notification.localChapter.announcements}
 									onValueChange={(value) => {
-										this.toggleSwitch("chapterAnnouncements", value);
+										this.updateSwitches("chapterAnnouncements", value);
 									}}
 								/>
 							</Right>
@@ -256,9 +247,9 @@ export default class ProfileScreen extends React.Component {
 							</Body>
 							<Right>
 								<Switch
-									value={this.state.chapterEvents}
+									value={getCurUser().notification.localChapter.events}
 									onValueChange={(value) => {
-										this.toggleSwitch("chapterEvents", value);
+										this.updateSwitches("chapterEvents", value);
 									}}
 								/>
 							</Right>
@@ -272,9 +263,9 @@ export default class ProfileScreen extends React.Component {
 							</Body>
 							<Right>
 								<Switch
-									value={this.state.stateAnnouncements}
+									value={getCurUser().notification.stateChapter.announcements}
 									onValueChange={(value) => {
-										this.toggleSwitch("stateAnnouncements", value);
+										this.updateSwitches("stateAnnouncements", value);
 									}}
 								/>
 							</Right>
@@ -285,9 +276,9 @@ export default class ProfileScreen extends React.Component {
 							</Body>
 							<Right>
 								<Switch
-									value={this.state.stateEvents}
+									value={getCurUser().notification.stateChapter.events}
 									onValueChange={(value) => {
-										this.toggleSwitch("stateEvents", value);
+										this.updateSwitches("stateEvents", value);
 									}}
 								/>
 							</Right>
