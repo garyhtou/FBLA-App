@@ -30,6 +30,7 @@ import { withOrientation } from "react-navigation";
 import { preventAutoHide } from "expo/build/launch/SplashScreen";
 import ReactNativeModal from "react-native-modal";
 import { chapterConverter } from "../config/chapter";
+import { StackActions } from '@react-navigation/native';
 // any js module
 
 export default class ProfileScreen extends React.Component {
@@ -123,7 +124,7 @@ export default class ProfileScreen extends React.Component {
 			)
 			.then(() => {
 				chapterConverter.endChapter();
-				this.props.navigation.navigate("Auth");
+				this.props.navigation.dispatch(StackActions.replace("Chap", {}));
 			});
 	};
 

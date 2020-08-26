@@ -9,12 +9,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { Container, Header, Content, Title, Body } from "native-base";
 import { AppLoading } from "expo";
 import {chapterConverter, getChapterInitialized} from "../config/chapter";
+import { StackActions } from '@react-navigation/native';
 
 import {
 	getCurUser,
 	userConverter,
 	getUserInitialized,
 } from "../config/user";
+import * as Alert from "react-native-web";
+import * as BackHandler from "react-native-web";
 
 export default class LoadingScreen extends React.Component {
 
@@ -34,7 +37,9 @@ export default class LoadingScreen extends React.Component {
 							chapterConverter.setInit(true);
 							chapterConverter.addListener(chapterListener);
 
-							this.props.navigation.navigate("Chap");
+
+
+							this.props.navigation.dispatch(StackActions.replace("App"));
 
 						}
 					}
@@ -45,14 +50,17 @@ export default class LoadingScreen extends React.Component {
 			);
 
 	}
+
+
+
 	async componentDidMount() {
 		await Font.loadAsync({
 			Roboto: require("native-base/Fonts/Roboto.ttf"),
 			Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
 			...Ionicons.font,
 		});
-		
-		
+
+
 		
 
 		let userListener = null;
@@ -78,8 +86,7 @@ export default class LoadingScreen extends React.Component {
 
 									// If the user is not in a chapter - go to chapter screens
 									if (getCurUser().inChapter === false) {
-										console.log("init");
-										this.props.navigation.navigate("Chap");
+										this.props.navigation.dispatch(StackActions.replace("Chap", {screen: "JoinChap"}));
 									}
 									// Else - go to the app
 									else {
