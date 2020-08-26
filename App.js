@@ -32,6 +32,7 @@ function AuthNav () {
 			initialRouteName ="SignIn"
 			headerMode="none"
 			screenOptions={{
+				animationEnabled: false,
 				headerShown: false,
 				cardStyle: {backgroundColor: 'white'},
 			}}>
@@ -48,6 +49,7 @@ function ChapNav (){
 			initialRouteName ="JoinChap"
 			headerMode="none"
 			screenOptions={{
+				animationEnabled: false,
 				headerShown: false,
 				cardStyle: {backgroundColor: 'white'},
 			}}>
