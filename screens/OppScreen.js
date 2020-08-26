@@ -5,7 +5,7 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Container, Header, Content, Title, Body } from "native-base";
-import { getUserConverter, getUserInitialized } from "../config/user";
+import { userConverter, getUserInitialized } from "../config/user";
 import firebase from "../config/firebase";
 import { colors } from "../config/styles";
 
@@ -21,7 +21,7 @@ export default class OppScreen extends React.Component {
 	}
 
 	signOutUser = () => {
-		getUserConverter().signOut();
+		userConverter.signOut();
 	};
 
 	render() {

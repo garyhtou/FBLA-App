@@ -99,8 +99,4 @@ function getUserInitialized() {
 	return userInitialized;
 }
 
-function getUserConverter() {
-	return userConverter;
-}
-
 export { getCurUser, getUserInitialized, userConverter };

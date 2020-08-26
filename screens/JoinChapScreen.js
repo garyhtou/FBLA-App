@@ -21,7 +21,7 @@ import {
 	Input,
 	Footer,
 } from "native-base";
-import { getUserConverter } from "../config/user";
+import { userConverter } from "../config/user";
 import {chapterConverter, getChapterInitialized} from "../config/chapter";
 
 export default class JoinChapScreen extends React.Component {
@@ -128,7 +128,7 @@ export default class JoinChapScreen extends React.Component {
 						<TouchableOpacity
 							style={styles.signOutButton}
 							onPress={() => {
-								getUserConverter().signOut();
+								userConverter.signOut();
 							}}
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>

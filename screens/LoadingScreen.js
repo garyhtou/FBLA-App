@@ -12,7 +12,7 @@ import {chapterConverter, getChapterInitialized} from "../config/chapter";
 
 import {
 	getCurUser,
-	getUserConverter,
+	userConverter,
 	getUserInitialized,
 } from "../config/user";
 
@@ -69,11 +69,11 @@ export default class LoadingScreen extends React.Component {
 					.onSnapshot(
 						(doc) => {
 							if (doc.data() != null) {
-								getUserConverter().setCurUser(doc);
+								userConverter.setCurUser(doc);
 
 								if (getUserInitialized() === false) {
-									getUserConverter().setInit(true);
-									getUserConverter().setListener(userListener);
+									userConverter.setInit(true);
+									userConverter.setListener(userListener);
 
 
 									// If the user is not in a chapter - go to chapter screens
@@ -100,7 +100,7 @@ export default class LoadingScreen extends React.Component {
 				if (userListener !== null) {
 					userListener();
 				}
-				getUserConverter().setInit(false);
+				userConverter.setInit(false);
 				this.props.navigation.navigate("Auth");
 			}
 		});
