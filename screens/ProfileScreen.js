@@ -5,6 +5,7 @@
 import React from "react";
 import { Text, StyleSheet, Dimensions } from "react-native";
 import Modal from "react-native-modal";
+import { SwitchActions } from "react-navigation";
 import {
 	Container,
 	Header,
@@ -33,6 +34,7 @@ import { withOrientation } from "react-navigation";
 import { preventAutoHide } from "expo/build/launch/SplashScreen";
 import ReactNativeModal from "react-native-modal";
 import {chapterConverter} from "../config/chapter";
+// any js module
 
 export default class ProfileScreen extends React.Component {
 	constructor() {
@@ -110,7 +112,7 @@ export default class ProfileScreen extends React.Component {
 		}
 	}
 
-	leaveChapter() {
+	leaveChapter=()=> {
 		firebase
 			.firestore()
 			.collection("DatabaseUser")
@@ -124,8 +126,8 @@ export default class ProfileScreen extends React.Component {
 				{ merge: true }
 			)
 			.then(() => {
-				chapterConverter.endChapter()
-				this.props.navigation.navigate("JoinChap")
+				chapterConverter.endChapter();
+				this.props.navigation.navigate("Auth")
 			});
 
 	}

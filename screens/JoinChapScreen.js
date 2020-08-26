@@ -87,7 +87,7 @@ export default class JoinChapScreen extends React.Component {
 							)
 							.then(() => {
 								this.setState({ errorMessage: null, loading: false });
-								this.startChapter(doc.data.chapterID());
+								this.startChapter(doc.data().chapterID);
 							});
 					});
 				}
@@ -95,6 +95,7 @@ export default class JoinChapScreen extends React.Component {
 	};
 
 	render() {
+		console.log("here");
 		return (
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 				<Container>

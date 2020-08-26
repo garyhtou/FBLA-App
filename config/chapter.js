@@ -34,6 +34,8 @@ let chapterConverter = {
             i++;
         }
 
+
+
     },
     setInit: function (initialized) {
         chapterInitialized = initialized;

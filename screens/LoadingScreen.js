@@ -16,23 +16,25 @@ import {
 } from "../config/user";
 
 export default class LoadingScreen extends React.Component {
-	startChapter = (chapterID) =>{
 
+	startChapter = (chapterID) =>{
+		console.log("init");
 		let chapterListener = firebase
 			.firestore()
 			.collection("Chapter")
 			.doc(chapterID)
 			.onSnapshot(
 				(doc) => {
-					console.log(doc.data());
 					if (doc.data() != null) {
 						chapterConverter.setCurChapter(doc);
+
 
 						if (getChapterInitialized() === false) {
 							chapterConverter.setInit(true);
 							chapterConverter.addListener(chapterListener);
 
-							this.props.navigation.navigate("App");
+							this.props.navigation.navigate("JoinChap");
+
 						}
 					}
 				},
@@ -59,16 +61,12 @@ export default class LoadingScreen extends React.Component {
 			if (user !== null) {
 				let curID = firebase.auth().currentUser.uid;
 
-				console.log(curID);
-				console.log("Here");
-
 				userListener = firebase
 					.firestore()
 					.collection("DatabaseUser")
 					.doc(curID)
 					.onSnapshot(
 						(doc) => {
-							console.log(doc.data());
 							if (doc.data() != null) {
 								getUserConverter().setCurUser(doc);
 
@@ -76,13 +74,15 @@ export default class LoadingScreen extends React.Component {
 									getUserConverter().setInit(true);
 									getUserConverter().setListener(userListener);
 
+
 									// If the user is not in a chapter - go to chapter screens
 									if (getCurUser().inChapter === false) {
+										console.log("init");
 										this.props.navigation.navigate("Chap");
 									}
 									// Else - go to the app
 									else {
-
+										this.startChapter(getCurUser().chapterID)
 									}
 								}
 							}
@@ -106,6 +106,7 @@ export default class LoadingScreen extends React.Component {
 	}
 
 	render() {
+		console.log("here");
 		return <AppLoading />;
 	}
 }
