@@ -6,14 +6,18 @@ import React from "react";
 import firebase from "../config/firebase";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
+import { Container, Header, Content, Title, Body } from "native-base";
 import { AppLoading } from "expo";
 import {chapterConverter, getChapterInitialized} from "../config/chapter";
+import { StackActions } from '@react-navigation/native';
 
 import {
 	getCurUser,
-	getUserConverter,
+	userConverter,
 	getUserInitialized,
 } from "../config/user";
+import * as Alert from "react-native-web";
+import * as BackHandler from "react-native-web";
 
 export default class LoadingScreen extends React.Component {
 
@@ -33,7 +37,9 @@ export default class LoadingScreen extends React.Component {
 							chapterConverter.setInit(true);
 							chapterConverter.addListener(chapterListener);
 
-							this.props.navigation.navigate("JoinChap");
+
+
+							this.props.navigation.dispatch(StackActions.replace("App"));
 
 						}
 					}
@@ -44,14 +50,17 @@ export default class LoadingScreen extends React.Component {
 			);
 
 	}
+
+
+
 	async componentDidMount() {
 		await Font.loadAsync({
 			Roboto: require("native-base/Fonts/Roboto.ttf"),
 			Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
 			...Ionicons.font,
 		});
-		
-		
+
+
 		
 
 		let userListener = null;
@@ -68,17 +77,16 @@ export default class LoadingScreen extends React.Component {
 					.onSnapshot(
 						(doc) => {
 							if (doc.data() != null) {
-								getUserConverter().setCurUser(doc);
+								userConverter.setCurUser(doc);
 
 								if (getUserInitialized() === false) {
-									getUserConverter().setInit(true);
-									getUserConverter().setListener(userListener);
+									userConverter.setInit(true);
+									userConverter.setListener(userListener);
 
 
 									// If the user is not in a chapter - go to chapter screens
 									if (getCurUser().inChapter === false) {
-										console.log("init");
-										this.props.navigation.navigate("Chap");
+										this.props.navigation.dispatch(StackActions.replace("Chap", {screen: "JoinChap"}));
 									}
 									// Else - go to the app
 									else {
@@ -99,7 +107,7 @@ export default class LoadingScreen extends React.Component {
 				if (userListener !== null) {
 					userListener();
 				}
-				getUserConverter().setInit(false);
+				userConverter.setInit(false);
 				this.props.navigation.navigate("Auth");
 			}
 		});
@@ -107,6 +115,6 @@ export default class LoadingScreen extends React.Component {
 
 	render() {
 		console.log("here");
-		return <AppLoading />;
+		return <Container></Container >;
 	}
 }

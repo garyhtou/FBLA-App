@@ -1,7 +1,7 @@
 import firebase from "../config/firebase";
 import "firebase/firestore";
 import { CurrentRenderContext } from "@react-navigation/native";
-import {chapterConverter} from "./chapter";
+import { chapterConverter } from "./chapter";
 
 class User {
 	constructor(
@@ -33,11 +33,9 @@ class User {
 			", " +
 			this.chapterEvents +
 			", " +
-			this.compEvents+
+			this.compEvents +
 			", " +
 			this.notification
-
-
 		);
 	}
 }
@@ -53,11 +51,10 @@ let userConverter = {
 	signOut: function () {
 		this.setInit(false);
 
-		if(curUser.inChapter ===true){
+		if (curUser.inChapter === true) {
 			chapterConverter.endChapter();
 		}
 		userListener();
-
 
 		firebase.auth().signOut().then();
 	},
@@ -73,7 +70,7 @@ let userConverter = {
 
 			chapterEvents: user.chapterEvents,
 			compEvents: user.compEvents,
-			notification:user.notification
+			notification: user.notification,
 		};
 	},
 	fromFirestore: function (snapshot) {
@@ -102,8 +99,4 @@ function getUserInitialized() {
 	return userInitialized;
 }
 
-function getUserConverter() {
-	return userConverter;
-}
-
-export { getCurUser, getUserInitialized, getUserConverter };
+export { getCurUser, getUserInitialized, userConverter };

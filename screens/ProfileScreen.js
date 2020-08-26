@@ -23,17 +23,14 @@ import {
 	List,
 	View,
 } from "native-base";
-import {
-	getUserConverter,
-	getUserInitialized,
-	getCurUser,
-} from "../config/user";
+import { userConverter, getUserInitialized, getCurUser } from "../config/user";
 import firebase from "../config/firebase";
 import { colors } from "../config/styles";
 import { withOrientation } from "react-navigation";
 import { preventAutoHide } from "expo/build/launch/SplashScreen";
 import ReactNativeModal from "react-native-modal";
-import {chapterConverter} from "../config/chapter";
+import { chapterConverter } from "../config/chapter";
+import { StackActions } from '@react-navigation/native';
 // any js module
 
 export default class ProfileScreen extends React.Component {
@@ -64,7 +61,7 @@ export default class ProfileScreen extends React.Component {
 	componentDidMount() {}
 
 	signOutUser = () => {
-		getUserConverter().signOut();
+		userConverter.signOut();
 	};
 
 	saveName = () => {
@@ -112,7 +109,7 @@ export default class ProfileScreen extends React.Component {
 		}
 	}
 
-	leaveChapter=()=> {
+	leaveChapter = () => {
 		firebase
 			.firestore()
 			.collection("DatabaseUser")
@@ -127,10 +124,9 @@ export default class ProfileScreen extends React.Component {
 			)
 			.then(() => {
 				chapterConverter.endChapter();
-				this.props.navigation.navigate("Auth")
+				this.props.navigation.dispatch(StackActions.replace("Chap", {}));
 			});
-
-	}
+	};
 
 	render() {
 		return (

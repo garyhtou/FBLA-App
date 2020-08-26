@@ -21,7 +21,7 @@ import {
 	Footer,
 } from "native-base";
 import DropDownPicker from "react-native-dropdown-picker";
-import { getUserConverter } from "../config/user.js";
+import { userConverter } from "../config/user.js";
 import {chapterConverter, getChapterInitialized} from "../config/chapter";
 
 export default class CreateChapScreen extends React.Component {
@@ -214,7 +214,7 @@ export default class CreateChapScreen extends React.Component {
 						<TouchableOpacity
 							style={styles.signOutButton}
 							onPress={() => {
-								getUserConverter().signOut();
+								userConverter.signOut();
 							}}
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>
