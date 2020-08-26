@@ -23,6 +23,7 @@ import {
 } from "native-base";
 import { userConverter } from "../config/user";
 import {chapterConverter, getChapterInitialized} from "../config/chapter";
+import {StackActions} from "@react-navigation/native";
 
 export default class JoinChapScreen extends React.Component {
 	state = {
@@ -47,7 +48,8 @@ export default class JoinChapScreen extends React.Component {
 							chapterConverter.setInit(true);
 							chapterConverter.addListener(chapterListener);
 						}
-						this.props.navigation.navigate("App");
+						this.setState({ errorMessage: null, loading: false });
+						this.props.navigation.dispatch(StackActions.replace("App"));
 					}
 				},
 				() => {
@@ -86,7 +88,6 @@ export default class JoinChapScreen extends React.Component {
 								{ merge: true }
 							)
 							.then(() => {
-								this.setState({ errorMessage: null, loading: false });
 								this.startChapter(doc.data().chapterID);
 							});
 					});
