@@ -1,6 +1,7 @@
 import firebase from "../config/firebase";
 import "firebase/firestore";
 import { CurrentRenderContext } from "@react-navigation/native";
+import {chapterConverter} from "./chapter";
 
 class User {
 	constructor(
@@ -46,18 +47,17 @@ let userConverter = {
 	setCurUser: function (snapshot) {
 		curUser = this.fromFirestore(snapshot);
 	},
-	addListener: function (listener) {
-		activeListeners.push(listener);
-		console.log("run");
-		console.log(activeListeners);
+	setListener: function (listener) {
+		userListener = listener;
 	},
 	signOut: function () {
 		this.setInit(false);
-		let i = 0;
-		while (i < activeListeners.length) {
-			activeListeners[i]();
-			i++;
+
+		if(curUser.inChapter ===true){
+			chapterConverter.endChapter();
 		}
+		userListener();
+
 
 		firebase.auth().signOut().then();
 	},
@@ -92,7 +92,7 @@ let userConverter = {
 
 let curUser;
 let userInitialized = false;
-let activeListeners = [];
+let userListener;
 
 function getCurUser() {
 	return curUser;

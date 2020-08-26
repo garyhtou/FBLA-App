@@ -7,6 +7,8 @@ import firebase from "../config/firebase";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { AppLoading } from "expo";
+import {chapterConverter, getChapterInitialized} from "../config/chapter";
+
 import {
 	getCurUser,
 	getUserConverter,
@@ -14,12 +16,43 @@ import {
 } from "../config/user";
 
 export default class LoadingScreen extends React.Component {
+
+	startChapter = (chapterID) =>{
+		console.log("init");
+		let chapterListener = firebase
+			.firestore()
+			.collection("Chapter")
+			.doc(chapterID)
+			.onSnapshot(
+				(doc) => {
+					if (doc.data() != null) {
+						chapterConverter.setCurChapter(doc);
+
+
+						if (getChapterInitialized() === false) {
+							chapterConverter.setInit(true);
+							chapterConverter.addListener(chapterListener);
+
+							this.props.navigation.navigate("JoinChap");
+
+						}
+					}
+				},
+				() => {
+					console.log("User Logged Out");
+				}
+			);
+
+	}
 	async componentDidMount() {
 		await Font.loadAsync({
 			Roboto: require("native-base/Fonts/Roboto.ttf"),
 			Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
 			...Ionicons.font,
 		});
+		
+		
+		
 
 		let userListener = null;
 		// When firebase user loads
@@ -28,30 +61,28 @@ export default class LoadingScreen extends React.Component {
 			if (user !== null) {
 				let curID = firebase.auth().currentUser.uid;
 
-				console.log(curID);
-				console.log("Here");
-
 				userListener = firebase
 					.firestore()
 					.collection("DatabaseUser")
 					.doc(curID)
 					.onSnapshot(
 						(doc) => {
-							console.log(doc.data());
 							if (doc.data() != null) {
 								getUserConverter().setCurUser(doc);
 
 								if (getUserInitialized() === false) {
 									getUserConverter().setInit(true);
-									getUserConverter().addListener(userListener);
+									getUserConverter().setListener(userListener);
+
 
 									// If the user is not in a chapter - go to chapter screens
 									if (getCurUser().inChapter === false) {
+										console.log("init");
 										this.props.navigation.navigate("Chap");
 									}
 									// Else - go to the app
 									else {
-										this.props.navigation.navigate("App");
+										this.startChapter(getCurUser().chapterID)
 									}
 								}
 							}
@@ -75,6 +106,7 @@ export default class LoadingScreen extends React.Component {
 	}
 
 	render() {
+		console.log("here");
 		return <AppLoading />;
 	}
 }

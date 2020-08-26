@@ -22,6 +22,7 @@ import {
 	Footer,
 } from "native-base";
 import { getUserConverter } from "../config/user";
+import {chapterConverter, getChapterInitialized} from "../config/chapter";
 
 export default class JoinChapScreen extends React.Component {
 	state = {
@@ -29,6 +30,32 @@ export default class JoinChapScreen extends React.Component {
 		errorMessage: null,
 		loading: false,
 	};
+
+	startChapter = (chapterID) =>{
+
+		let chapterListener = firebase
+			.firestore()
+			.collection("Chapter")
+			.doc(chapterID)
+			.onSnapshot(
+				(doc) => {
+					console.log(doc.data());
+					if (doc.data() != null) {
+						chapterConverter.setCurChapter(doc);
+
+						if (getChapterInitialized() === false) {
+							chapterConverter.setInit(true);
+							chapterConverter.addListener(chapterListener);
+						}
+						this.props.navigation.navigate("App");
+					}
+				},
+				() => {
+					console.log("User Logged Out");
+				}
+			);
+
+	}
 
 	joinChapter = () => {
 		this.setState({ errorMessage: null, loading: true });
@@ -60,7 +87,7 @@ export default class JoinChapScreen extends React.Component {
 							)
 							.then(() => {
 								this.setState({ errorMessage: null, loading: false });
-								this.props.navigation.navigate("App");
+								this.startChapter(doc.data().chapterID);
 							});
 					});
 				}
@@ -68,6 +95,7 @@ export default class JoinChapScreen extends React.Component {
 	};
 
 	render() {
+		console.log("here");
 		return (
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 				<Container>
