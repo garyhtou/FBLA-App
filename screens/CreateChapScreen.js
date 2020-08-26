@@ -19,15 +19,18 @@ import {
 	Label,
 	Input,
 	Footer,
+	Picker,
+	Icon
 } from "native-base";
 import DropDownPicker from "react-native-dropdown-picker";
 import { userConverter } from "../config/user.js";
 import {chapterConverter, getChapterInitialized} from "../config/chapter";
+import {StackActions} from "@react-navigation/native";
 
 export default class CreateChapScreen extends React.Component {
 	state = {
 		chapterName: "",
-		stateSelected: "",
+		stateSelected: "WA",
 		chapterID: "",
 		errorMessage: null,
 		loading: false,
@@ -49,9 +52,9 @@ export default class CreateChapScreen extends React.Component {
 							chapterConverter.setInit(true);
 							chapterConverter.addListener(chapterListener);
 						}
-						this.props.navigation.navigate("ChapCode", {
-							code: rand,
-						});
+						this.setState({ errorMessage: null, loading: false });
+						this.props.navigation.dispatch(StackActions.pop());
+						this.props.navigation.dispatch(StackActions.replace("ChapCode", {code: rand}));
 					}
 				},
 				() => {
@@ -109,7 +112,7 @@ export default class CreateChapScreen extends React.Component {
 						{
 							chapterName: chapterName,
 							code: rand,
-							state: stateSelected.label,
+							state: stateSelected,
 							chapterID: chapterID,
 							compEventLink: "",
 							socMedia: {},
@@ -118,7 +121,6 @@ export default class CreateChapScreen extends React.Component {
 						{ merge: false }
 					)
 					.then(() => {
-						this.setState({ errorMessage: null, loading: false });
 						this.startChapter(chapterID, rand);
 					});
 			});
@@ -179,26 +181,19 @@ export default class CreateChapScreen extends React.Component {
 									</Item>
 								</View>
 								<View style={{ marginLeft: 20, width: 100 }}>
-									<DropDownPicker
-										items={[
-											{ label: "WA", value: "WA" },
-											{ label: "IA", value: "IA" },
-										]}
-										containerStyle={styles.dropDownStyle}
-										dropDownStyle={styles.dropDownOverflow}
-										itemStyle={{
-											justifyContent: "flex-start",
-										}}
-										onChangeItem={(stateSelected) =>
-											this.setState({ stateSelected })
-										}
-										defaultNull
-										placeholder="Select State"
-									/>
+									<Picker
+										note
+										mode="dropdown"
+										selectedValue={this.state.stateSelected}
+										onValueChange={(value) => {this.setState({ stateSelected: value })}}
+									>
+										<Picker.Item label="WA" value="WA" />
+										<Picker.Item label="IA" value="IA" />
+									</Picker>
 								</View>
 							</View>
 
-							<TouchableOpacity
+							<Button
 								block
 								style={styles.codeButton}
 								onPress={this.createChapter}
@@ -208,7 +203,7 @@ export default class CreateChapScreen extends React.Component {
 								) : (
 									<Text style={styles.codeButtonText}>CREATE</Text>
 								)}
-							</TouchableOpacity>
+							</Button>
 						</Form>
 
 						<TouchableOpacity
@@ -280,7 +275,6 @@ const styles = StyleSheet.create({
 		textTransform: "uppercase",
 	},
 	codeButtonText: {
-		fontWeight: "700",
 		color: colors.white,
 		fontSize: 16,
 		textAlign: "center",
@@ -294,6 +288,8 @@ const styles = StyleSheet.create({
 		borderRadius: 4,
 		marginTop: 40,
 		padding: 12,
+		alignItems: "center",
+		justifyContent: "center"
 	},
 	signOutButton: {
 		alignSelf: "center",

@@ -8,6 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { View, Text, Button } from "native-base";
 import { StyleSheet } from "react-native";
 import { colors } from "../config/styles";
+import {StackActions} from "@react-navigation/native";
 
 export default class ChapterCodeScreen extends React.Component {
 	async componentDidMount() {
@@ -19,18 +20,17 @@ export default class ChapterCodeScreen extends React.Component {
 	}
 
 	render() {
-		console.log("PROPS");
 
 		return (
 			<View style={styles.content}>
 				<Text selectable style={styles.heading}>
-					Join Code: {this.props.navigation.state.params.code}
+					Join Code: {this.props.route.params.code}
 				</Text>
 				<Text>You can access this code in the app as well</Text>
 				<Button
 					block
 					style={styles.button}
-					onPress={() => this.props.navigation.navigate("App")}
+					onPress={() => this.props.navigation.dispatch(StackActions.replace("App"))}
 				>
 					<Text style={styles.buttonText}>Got It</Text>
 				</Button>

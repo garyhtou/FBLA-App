@@ -29,7 +29,7 @@ import { colors } from "../config/styles";
 import { withOrientation } from "react-navigation";
 import { preventAutoHide } from "expo/build/launch/SplashScreen";
 import ReactNativeModal from "react-native-modal";
-import { chapterConverter } from "../config/chapter";
+import {chapterConverter, getCurChapter} from "../config/chapter";
 import { StackActions } from '@react-navigation/native';
 // any js module
 
@@ -50,15 +50,24 @@ export default class ProfileScreen extends React.Component {
 			updatePasswordModal: false,
 			chapterName: "fake chapter name!", //TODO: GET ACTUAL VALUE FROM curUser
 			chapterAnnouncements: true, //TODO: GET ACTUAL VALUE FROM FIRESTORE
-			chapterEvents: true, //TODO: GET ACTUAL VALUE FROM FIRESTORE
+			chapterEvents: true, //TODO: GET ATUAL VALUE FROM FIRESTORE
 			stateAnnouncements: true, //TODO: GET ACTUAL VALUE FROM FIRESTORE
 			stateEvents: false, //TODO: GET ACTUAL VALUE FROM FIRESTORE
 		};
 
-		console.log("Chapter Name: " + getCurUser().chapterID);
 	}
 
-	componentDidMount() {}
+	componentDidMount() {
+
+		this.setState({
+			chapterName: getCurChapter().chapterName,
+			chapterAnnouncements: getCurUser().notification.localChapter.announcements,
+			chapterEvents: getCurUser().notification.localChapter.events,
+			stateAnnouncements: getCurUser().notification.stateChapter.announcements,
+			stateEvents: getCurUser().notification.stateChapter.events,
+
+		})
+	}
 
 	signOutUser = () => {
 		userConverter.signOut();
@@ -69,42 +78,74 @@ export default class ProfileScreen extends React.Component {
 		if (name === undefined || name == this.state.displayName) {
 			console.log("No edits were made to the display name");
 		} else {
-			console.log(name);
-			//TODO: SAVE TO FIREBASE
+			firebase.firestore()
+				.collection("DatabaseUser")
+				.doc(user.uid)
+				.set(
+					{
+						name:name,
+					},
+					{ merge: true }
+				)
+				.then(() => {});
 		}
 
 		this.setState({ editName: false });
 	};
 
-	toogleSwitch(setting) {
+	updateNotifications(){
+		firebase.firestore()
+			.collection("DatabaseUser")
+			.doc(firebase.auth().currentUser.uid)
+			.set(
+				{
+					notification:{
+						localChapter:{
+							announcements:this.state.chapterAnnouncements,
+							events:this.state.chapterEvents
+						},
+						stateChapter:{
+							announcements: this.state.stateAnnouncements,
+							events:this.state.stateEvents
+						}
+
+					}
+				},
+				{ merge: true}
+			)
+			.then(() => {
+				this.setState({ loading: false });
+			});
+	}
+
+	toggleSwitch(setting, value) {
+
 		switch (setting) {
 			case "chapterAnnouncements":
-				var value = !this.state.chapterAnnouncements;
-				console.log("Notifications chapterAnnouncements: " + value);
-				//TODO: UPDATE VALUE IN FIRESTORE
+				console.log(setting+" "+value);
+				this.setState({ chapterAnnouncements: value },
+					this.updateNotifications);
 
-				this.setState({ chapterAnnouncements: value });
+
+
 				break;
 			case "chapterEvents":
-				var value = !this.state.chapterEvents;
-				console.log("Notifications chapterEvents: " + value);
-				//TODO: UPDATE VALUE IN FIRESTORE
+				console.log(setting+value);
+				this.setState({ chapterEvents: value },
+					this.updateNotifications);
 
-				this.setState({ chapterEvents: value });
 				break;
 			case "stateAnnouncements":
-				var value = !this.state.stateAnnouncements;
-				console.log("Notifications stateAnnouncements: " + value);
-				//TODO: UPDATE VALUE IN FIRESTORE
+				console.log(setting+value);
+				this.setState({ stateAnnouncements: value },
+					this.updateNotifications);
 
-				this.setState({ stateAnnouncements: value });
 				break;
 			case "stateEvents":
-				var value = !this.state.stateEvents;
-				console.log("Notifications stateEvents: " + value);
-				//TODO: UPDATE VALUE IN FIRESTORE
+				console.log(setting+value);
+				this.setState({ stateEvents: value },
+					this.updateNotifications);
 
-				this.setState({ stateEvents: value });
 				break;
 		}
 	}
@@ -124,7 +165,7 @@ export default class ProfileScreen extends React.Component {
 			)
 			.then(() => {
 				chapterConverter.endChapter();
-				this.props.navigation.dispatch(StackActions.replace("Chap", {}));
+				this.props.navigation.dispatch(StackActions.replace("Chap", {screen:"JoinChap"}));
 			});
 	};
 
@@ -203,8 +244,8 @@ export default class ProfileScreen extends React.Component {
 							<Right>
 								<Switch
 									value={this.state.chapterAnnouncements}
-									onValueChange={() => {
-										this.toogleSwitch("chapterAnnouncements");
+									onValueChange={(value) => {
+										this.toggleSwitch("chapterAnnouncements", value);
 									}}
 								/>
 							</Right>
@@ -216,8 +257,8 @@ export default class ProfileScreen extends React.Component {
 							<Right>
 								<Switch
 									value={this.state.chapterEvents}
-									onValueChange={() => {
-										this.toogleSwitch("chapterEvents");
+									onValueChange={(value) => {
+										this.toggleSwitch("chapterEvents", value);
 									}}
 								/>
 							</Right>
@@ -232,8 +273,8 @@ export default class ProfileScreen extends React.Component {
 							<Right>
 								<Switch
 									value={this.state.stateAnnouncements}
-									onValueChange={() => {
-										this.toogleSwitch("stateAnnouncements");
+									onValueChange={(value) => {
+										this.toggleSwitch("stateAnnouncements", value);
 									}}
 								/>
 							</Right>
@@ -245,8 +286,8 @@ export default class ProfileScreen extends React.Component {
 							<Right>
 								<Switch
 									value={this.state.stateEvents}
-									onValueChange={() => {
-										this.toogleSwitch("stateEvents");
+									onValueChange={(value) => {
+										this.toggleSwitch("stateEvents", value);
 									}}
 								/>
 							</Right>

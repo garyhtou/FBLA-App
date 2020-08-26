@@ -6,8 +6,7 @@ import React from "react";
 import firebase from "../config/firebase";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import { Container, Header, Content, Title, Body } from "native-base";
-import { AppLoading } from "expo";
+import { Container, Spinner } from "native-base";
 import {chapterConverter, getChapterInitialized} from "../config/chapter";
 import { StackActions } from '@react-navigation/native';
 
@@ -32,12 +31,9 @@ export default class LoadingScreen extends React.Component {
 					if (doc.data() != null) {
 						chapterConverter.setCurChapter(doc);
 
-
 						if (getChapterInitialized() === false) {
 							chapterConverter.setInit(true);
 							chapterConverter.addListener(chapterListener);
-
-
 
 							this.props.navigation.dispatch(StackActions.replace("App"));
 
@@ -48,10 +44,7 @@ export default class LoadingScreen extends React.Component {
 					console.log("User Logged Out");
 				}
 			);
-
 	}
-
-
 
 	async componentDidMount() {
 		await Font.loadAsync({
@@ -59,9 +52,6 @@ export default class LoadingScreen extends React.Component {
 			Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
 			...Ionicons.font,
 		});
-
-
-		
 
 		let userListener = null;
 		// When firebase user loads
@@ -86,7 +76,7 @@ export default class LoadingScreen extends React.Component {
 
 									// If the user is not in a chapter - go to chapter screens
 									if (getCurUser().inChapter === false) {
-										this.props.navigation.dispatch(StackActions.replace("Chap", {screen: "JoinChap"}));
+										this.props.navigation.dispatch(StackActions.replace("Chap"));
 									}
 									// Else - go to the app
 									else {
@@ -108,13 +98,16 @@ export default class LoadingScreen extends React.Component {
 					userListener();
 				}
 				userConverter.setInit(false);
-				this.props.navigation.navigate("Auth");
+				this.props.navigation.dispatch(StackActions.replace("Auth"));
 			}
 		});
 	}
 
 	render() {
 		console.log("here");
-		return <Container></Container >;
+		return (
+			<Container style={{justifyContent: "center", alignItems: "center"}}>
+				<Spinner/>
+			</Container>);
 	}
 }
