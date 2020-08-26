@@ -18,18 +18,11 @@
 		"ios": {
 			"bundleIdentifier": "com.garytou.fblaapp",
 			"buildNumber": "1.0.0",
-			"supportsTablet": true,
-			"config": {
-				"googleSignIn": {
-					"reservedClientId": "com.googleusercontent.apps.200356083068-9tgqaegohlf9bb2etaom9li4nnolv41g"
-				}
-			},
-			"googleServicesFile": "./google_service/GoogleService-Info.plist"
+			"supportsTablet": true
 		},
 		"android": {
 			"package": "com.garytou.fblaapp",
-			"versionCode": 1,
-			"googleServicesFile": "./google_service/google-services.json"
+			"versionCode": 1
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"

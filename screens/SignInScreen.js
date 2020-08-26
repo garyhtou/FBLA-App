@@ -4,9 +4,7 @@
 
 import React from "react";
 import Expo from "expo";
-import * as AppAuth from 'expo-app-auth';
-import * as GoogleSignIn from 'expo-google-sign-in';
-
+import * as Google from "expo-google-app-auth";
 import * as Facebook from "expo-facebook";
 import { StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import {
@@ -35,40 +33,90 @@ export default class SignInScreen extends React.Component {
 		loading: false,
 	};
 
-	componentDidMount() {
-		this.initAsync();
-	}
-
-	initAsync = async () => {
-		await GoogleSignIn.initAsync();
-			// You may ommit the clientId when the firebase `googleServicesFile` is configured
-		this._syncUserWithStateAsync();
-	};
-
-	_syncUserWithStateAsync = async () => {
-		const user = await GoogleSignIn.signInSilentlyAsync();
-		this.setState({ user });
-	};
-
-	/*signOutAsync = async () => {
-		await GoogleSignIn.signOutAsync();
-		this.setState({ user: null });
-	};*/
-
-	signInAsync = async () => {
-		try {
-			await GoogleSignIn.askForPlayServicesAsync();
-			const { type, user } = await GoogleSignIn.signInAsync();
-			if (type === 'success') {
-				this._syncUserWithStateAsync();
+	isUserEqual = (googleUser, firebaseUser) => {
+		if (firebaseUser) {
+			let providerData = firebaseUser.providerData;
+			for (let i = 0; i < providerData.length; i++) {
+				if (
+					providerData[i].providerId ===
+						firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
+					providerData[i].uid === googleUser.getBasicProfile().getId()
+				) {
+					// We don't need to reauth the Firebase connection.
+					return true;
+				}
 			}
-		} catch ({ message }) {
-			alert('login: Error:' + message);
+		}
+		return false;
+	};
+
+	signInWithGoogleAsync = async () => {
+		console.log("running");
+		try {
+			const result = await Google.logInAsync({
+				behavior: "web",
+				androidClientId:
+					"200356083068-cmspe2kthe9gis90nj73odthv0lvai3a.apps.googleusercontent.com",
+				iosClientId:
+					"200356083068-v599qf4gh4u4gdv97bel5fr18o1fpp86.apps.googleusercontent.com",
+				scopes: ["profile", "email"],
+			});
+			console.log(result);
+			if (result.type === "success") {
+				this.onGoogleSignIn();
+				return result.accessToken;
+			} else {
+				return { cancelled: true };
+			}
+		} catch (e) {
+			return { error: true };
 		}
 	};
 
-	googleSignInPress = () => {
-		this.signInAsync();
+	onGoogleSignIn = (googleUser) => {
+		console.log("Google Auth Response", googleUser);
+		// We need to register an Observer on Firebase Auth to make sure auth is initialized.
+		let unsubscribe = firebase.auth().onAuthStateChanged(
+			function (firebaseUser) {
+				unsubscribe();
+				// Check if we are already signed-in Firebase with the correct user.
+				if (!this.isUserEqual(googleUser, firebaseUser)) {
+					// Build Firebase credential with the Google ID token.
+					let credential = firebase.auth.GoogleAuthProvider.credential(
+						googleUser.idToken,
+						googleUser.accessToken
+					);
+					// Sign in with credential from the Google user.
+					firebase
+						.auth()
+						.signInWithCredential(credential)
+						.then(function (result) {
+							console.log("user signed in");
+							firebase
+								.database()
+								.ref("/users" + result.user.uid)
+								.set({
+									gmail: result.user.email,
+									first_name: result.additionalUserInfo.profile.given_name,
+									last_name: result.additionalUserInfo.profile.family_name,
+								})
+								.then(function (snapshot) {});
+						})
+						.catch(function (error) {
+							// Handle Errors here.
+							let errorCode = error.code;
+							let errorMessage = error.message;
+							// The email of the user's account used.
+							let email = error.email;
+							// The firebase.auth.AuthCredential type that was used.
+							let credential = error.credential;
+							// ...
+						});
+				} else {
+					console.log("User already signed-in Firebase.");
+				}
+			}.bind(this)
+		);
 	};
 
 	async loginWithFacebook() {
@@ -148,7 +196,7 @@ export default class SignInScreen extends React.Component {
 								<Button
 									block
 									style={styles.authButtonGoogle}
-									onPress={this.googleSignInPress}
+									onPress={() => this.signInWithGoogleAsync()}
 								>
 									<AntDesign
 										name="google"
