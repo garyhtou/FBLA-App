@@ -6,6 +6,7 @@ import React from "react";
 import firebase from "../config/firebase";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
+import { Container, Header, Content, Title, Body } from "native-base";
 import { AppLoading } from "expo";
 import {chapterConverter, getChapterInitialized} from "../config/chapter";
 
@@ -33,7 +34,7 @@ export default class LoadingScreen extends React.Component {
 							chapterConverter.setInit(true);
 							chapterConverter.addListener(chapterListener);
 
-							this.props.navigation.navigate("JoinChap");
+							this.props.navigation.navigate("Chap");
 
 						}
 					}
@@ -107,6 +108,6 @@ export default class LoadingScreen extends React.Component {
 
 	render() {
 		console.log("here");
-		return <AppLoading />;
+		return <Container></Container >;
 	}
 }
