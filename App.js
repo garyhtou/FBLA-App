@@ -17,112 +17,109 @@ import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from "@react-navigation/stack";
 
 const Tab = createBottomTabNavigator();
-const AuthStack  = createStackNavigator();
+const AuthStack = createStackNavigator();
 const ChapStack = createStackNavigator();
 const AppStack = createStackNavigator();
 
-
-function AuthNav () {
+function AuthNav() {
 	return (
-
 		<AuthStack.Navigator
-			initialRouteName ="SignIn"
+			initialRouteName="SignIn"
 			headerMode="none"
 			screenOptions={{
 				animationEnabled: false,
 				headerShown: false,
-				cardStyle: {backgroundColor: 'white'},
-			}}>
+				cardStyle: { backgroundColor: "white" },
+			}}
+		>
 			<AuthStack.Screen name="SignIn" component={SignInScreen} />
 			<AuthStack.Screen name="SignUp" component={SignUpScreen} />
 		</AuthStack.Navigator>
-
 	);
 }
 
-function ChapNav (){
-	return(
+function ChapNav() {
+	return (
 		<ChapStack.Navigator
-			initialRouteName ="JoinChap"
+			initialRouteName="JoinChap"
 			headerMode="none"
 			screenOptions={{
 				animationEnabled: false,
 				headerShown: false,
-				cardStyle: {backgroundColor: 'white'},
-			}}>
+				cardStyle: { backgroundColor: "white" },
+			}}
+		>
 			<ChapStack.Screen name="JoinChap" component={JoinChapScreen} />
 			<ChapStack.Screen name="CreateChap" component={CreateChapScreen} />
 			<ChapStack.Screen name="ChapCode" component={ChapterCodeScreen} />
 		</ChapStack.Navigator>
-	)
+	);
 }
 
-function TabNav (){
+function TabNav() {
 	return (
 		<Tab.Navigator
-		screenOptions={({ route }) => ({
-			tabBarIcon: ({ focused, color, size }) => {
-				let iconName;
+			screenOptions={({ route }) => ({
+				tabBarIcon: ({ focused, color, size }) => {
+					let iconName;
 
-				if (route.name === "Announcements") {
-					iconName = focused ? "home" : "home-outline";
-					return (
-						<MaterialCommunityIcons
-							name={iconName}
-							color={color}
-							size={size}
-						/>
-					);
-				} else if (route.name === "Chapter") {
-					iconName = focused ? "briefcase" : "briefcase-outline";
-					return (
-						<MaterialCommunityIcons
-							name={iconName}
-							color={color}
-							size={size}
-						/>
-					);
-				} else if (route.name === "Opportunity") {
-					iconName = focused ? "cloud-search" : "cloud-search-outline";
-					return (
-						<MaterialCommunityIcons
-							name={iconName}
-							color={color}
-							size={size}
-						/>
-					);
-				} else {
-					iconName = focused ? "person" : "person-outline";
-					return (
-						<MaterialIcons name={iconName} color={color} size={size} />
-					);
-				}
-			},
-		})}
-		tabBarOptions={{
-			showLabel: false,
-		}}
-	>
-		<Tab.Screen name="Announcements" component={AnnouncementScreen} />
-		<Tab.Screen name="Chapter" component={ChapterScreen} />
-		<Tab.Screen name="Opportunity" component={OppScreen} />
-		<Tab.Screen name="Profile" component={ProfileScreen} />
-	</Tab.Navigator>
-	)
+					if (route.name === "Announcements") {
+						iconName = focused ? "home" : "home-outline";
+						return (
+							<MaterialCommunityIcons
+								name={iconName}
+								color={color}
+								size={size}
+							/>
+						);
+					} else if (route.name === "Chapter") {
+						iconName = focused ? "briefcase" : "briefcase-outline";
+						return (
+							<MaterialCommunityIcons
+								name={iconName}
+								color={color}
+								size={size}
+							/>
+						);
+					} else if (route.name === "Opportunity") {
+						iconName = focused ? "cloud-search" : "cloud-search-outline";
+						return (
+							<MaterialCommunityIcons
+								name={iconName}
+								color={color}
+								size={size}
+							/>
+						);
+					} else {
+						iconName = focused ? "person" : "person-outline";
+						return <MaterialIcons name={iconName} color={color} size={size} />;
+					}
+				},
+			})}
+			tabBarOptions={{
+				showLabel: false,
+			}}
+		>
+			<Tab.Screen name="Announcements" component={AnnouncementScreen} />
+			<Tab.Screen name="Chapter" component={ChapterScreen} />
+			<Tab.Screen name="Opportunity" component={OppScreen} />
+			<Tab.Screen name="Profile" component={ProfileScreen} />
+		</Tab.Navigator>
+	);
 }
 
 function App() {
 	return (
 		<NavigationContainer>
 			<AppStack.Navigator
-				initialRouteName ="Loading"
+				initialRouteName="Loading"
 				headerMode="none"
 				screenOptions={{
 					headerShown: false,
-					cardStyle: {backgroundColor: 'white'},
+					cardStyle: { backgroundColor: "white" },
 				}}
 			>
 				<AppStack.Screen name="Loading" component={LoadingScreen} />
@@ -130,12 +127,8 @@ function App() {
 				<AppStack.Screen name="Chap" component={ChapNav} />
 				<AppStack.Screen name="App" component={TabNav} />
 			</AppStack.Navigator>
-
-
 		</NavigationContainer>
 	);
 }
 
-
 export default App;
-

@@ -6,7 +6,7 @@ import {
 	StyleSheet,
 } from "react-native";
 import { colors, strings } from "../config/styles";
-import * as firebase from "firebase";
+import { firestore } from "../config/firebase";
 import "firebase/firestore";
 import {
 	Button,
@@ -21,9 +21,7 @@ import {
 	Input,
 	Footer,
 } from "native-base";
-import { userConverter } from "../config/user";
-import {chapterConverter, getChapterInitialized} from "../config/chapter";
-import {StackActions} from "@react-navigation/native";
+import { StackActions } from "@react-navigation/native";
 
 export default class JoinChapScreen extends React.Component {
 	state = {
@@ -32,66 +30,22 @@ export default class JoinChapScreen extends React.Component {
 		loading: false,
 	};
 
-	startChapter = (chapterID) =>{
-
-		let chapterListener = firebase
-			.firestore()
-			.collection("Chapter")
-			.doc(chapterID)
-			.onSnapshot(
-				(doc) => {
-					console.log(doc.data());
-					if (doc.data() != null) {
-						chapterConverter.setCurChapter(doc);
-
-						if (getChapterInitialized() === false) {
-							chapterConverter.setInit(true);
-							chapterConverter.addListener(chapterListener);
-						}
-						this.setState({ errorMessage: null, loading: false });
-						this.props.navigation.dispatch(StackActions.replace("App"));
-					}
-				},
-				() => {
-					console.log("User Logged Out");
-				}
-			);
-
-	}
-
 	joinChapter = () => {
 		this.setState({ errorMessage: null, loading: true });
-		const user = firebase.auth().currentUser;
 		const { code } = this.state;
-		firebase
-			.firestore()
-			.collection("Chapter")
-			.where("code", "==", parseInt(code))
-			.get()
-			.then((querySnapshot) => {
-				if (querySnapshot.size === 0) {
-					this.setState({
-						errorMessage: "No chapter with code given",
-						loading: false,
-					});
-				} else {
-					querySnapshot.forEach((doc) => {
-						firebase
-							.firestore()
-							.collection("DatabaseUser")
-							.doc(user.uid)
-							.set(
-								{
-									chapterID: doc.data().chapterID,
-									inChapter: true,
-								},
-								{ merge: true }
-							)
-							.then(() => {
-								this.startChapter(doc.data().chapterID);
-							});
-					});
-				}
+
+		firestore
+			.user()
+			.joinChapter(code)
+			.then(() => {
+				this.setState({ errorMessage: null, loading: false });
+				this.props.navigation.dispatch(StackActions.replace("App"));
+			})
+			.catch((errMessage) => {
+				this.setState({
+					errorMessage: errMessage,
+					loading: false,
+				});
 			});
 	};
 
@@ -129,7 +83,7 @@ export default class JoinChapScreen extends React.Component {
 						<TouchableOpacity
 							style={styles.signOutButton}
 							onPress={() => {
-								userConverter.signOut();
+								firestore.user().signOut();
 							}}
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>

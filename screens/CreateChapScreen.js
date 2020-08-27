@@ -6,7 +6,7 @@ import {
 	StyleSheet,
 } from "react-native";
 import { colors } from "../config/styles";
-import * as firebase from "firebase";
+import { firebase } from "firebase";
 import {
 	Button,
 	Content,
@@ -20,12 +20,11 @@ import {
 	Input,
 	Footer,
 	Picker,
-	Icon
+	Icon,
 } from "native-base";
 import DropDownPicker from "react-native-dropdown-picker";
-import { userConverter } from "../config/user.js";
-import {chapterConverter, getChapterInitialized} from "../config/chapter";
-import {StackActions} from "@react-navigation/native";
+import { StackActions } from "@react-navigation/native";
+import { firestore } from "../config/firebase";
 
 export default class CreateChapScreen extends React.Component {
 	state = {
@@ -36,111 +35,23 @@ export default class CreateChapScreen extends React.Component {
 		loading: false,
 	};
 
-	startChapter = (chapterID, rand) =>{
-
-		let chapterListener = firebase
-			.firestore()
-			.collection("Chapter")
-			.doc(chapterID)
-			.onSnapshot(
-				(doc) => {
-					console.log(doc.data());
-					if (doc.data() != null) {
-						chapterConverter.setCurChapter(doc);
-
-						if (getChapterInitialized() === false) {
-							chapterConverter.setInit(true);
-							chapterConverter.addListener(chapterListener);
-						}
-						this.setState({ errorMessage: null, loading: false });
-						this.props.navigation.dispatch(StackActions.pop());
-						this.props.navigation.dispatch(StackActions.replace("ChapCode", {code: rand}));
-					}
-				},
-				() => {
-					console.log("User Logged Out");
-				}
-			);
-
-	}
-
-	addFirebaseChapter = () => {
-		const { chapterName, stateSelected, chapterID } = this.state;
-		firebase
-			.firestore()
-			.collection("DatabaseUser")
-			.doc(firebase.auth().currentUser.uid)
-			.set(
-				{
-					chapterID: chapterID,
-					inChapter: true,
-					isAdmin: true,
-				},
-				{ merge: true }
-			)
-			.then(() => {});
-
-		let rand = Math.floor(Math.random() * 90000);
-
-		firebase
-			.firestore()
-			.collection("Codes")
-			.doc("Codes")
-			.get()
-			.then((doc) => {
-				console.log(doc.data());
-				const codeList = doc.data().Codes;
-				while (codeList.includes(rand)) {
-					rand = (rand + 1) % 90000;
-				}
-
-				rand = rand + 10000;
-				codeList.push(rand);
-
-				firebase.firestore().collection("Codes").doc("Codes").set(
-					{
-						Codes: codeList,
-					},
-					{ merge: false }
-				);
-
-				firebase
-					.firestore()
-					.collection("Chapter")
-					.doc(chapterID)
-					.set(
-						{
-							chapterName: chapterName,
-							code: rand,
-							state: stateSelected,
-							chapterID: chapterID,
-							compEventLink: "",
-							socMedia: {},
-							isState: false,
-						},
-						{ merge: false }
-					)
-					.then(() => {
-						this.startChapter(chapterID, rand);
-					});
-			});
-	};
-
 	createChapter = () => {
 		this.setState({ errorMessage: null, loading: true });
 		const { chapterName, stateSelected, chapterID } = this.state;
 		if (chapterID !== "" && stateSelected !== "" && chapterName != "") {
-			firebase
-				.firestore()
-				.collection("Chapter")
-				.where("chapterID", "==", chapterID)
-				.get()
-				.then((queryDocSnapshots) => {
-					if (queryDocSnapshots.size === 0) {
-						this.addFirebaseChapter();
-					} else {
-						this.setState({ errorMessage: "Chapter ID Taken", loading: false });
-					}
+			firestore
+				.chapter()
+				.createChapter(chapterName, stateSelected, chapterID)
+				.then(() => {
+					this.setState({
+						loading: false,
+					});
+				})
+				.catch((errMessage) => {
+					this.setState({
+						errorMessage: errMessage,
+						loading: false,
+					});
 				});
 		} else {
 			this.setState({
@@ -185,7 +96,9 @@ export default class CreateChapScreen extends React.Component {
 										note
 										mode="dropdown"
 										selectedValue={this.state.stateSelected}
-										onValueChange={(value) => {this.setState({ stateSelected: value })}}
+										onValueChange={(value) => {
+											this.setState({ stateSelected: value });
+										}}
 									>
 										<Picker.Item label="WA" value="WA" />
 										<Picker.Item label="IA" value="IA" />
@@ -209,7 +122,7 @@ export default class CreateChapScreen extends React.Component {
 						<TouchableOpacity
 							style={styles.signOutButton}
 							onPress={() => {
-								userConverter.signOut();
+								firestore.user().signOut();
 							}}
 						>
 							<Text style={styles.signOutText}>Sign Out</Text>
@@ -289,7 +202,7 @@ const styles = StyleSheet.create({
 		marginTop: 40,
 		padding: 12,
 		alignItems: "center",
-		justifyContent: "center"
+		justifyContent: "center",
 	},
 	signOutButton: {
 		alignSelf: "center",

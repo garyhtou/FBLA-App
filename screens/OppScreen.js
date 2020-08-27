@@ -5,8 +5,7 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Container, Header, Content, Title, Body } from "native-base";
-import { userConverter, getUserInitialized } from "../config/user";
-import firebase from "../config/firebase";
+import { firestore } from "../config/firebase";
 import { colors } from "../config/styles";
 
 export default class OppScreen extends React.Component {
@@ -16,12 +15,13 @@ export default class OppScreen extends React.Component {
 	};
 
 	componentDidMount() {
-		const { email, displayName } = firebase.auth().currentUser;
+		var displayName = firestore.user().get.name;
+		var email = firestore.user().get.email;
 		this.setState({ email, displayName });
 	}
 
 	signOutUser = () => {
-		userConverter.signOut();
+		firestore.user().signOut();
 	};
 
 	render() {

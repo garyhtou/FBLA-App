@@ -21,7 +21,7 @@ import {
 	Button,
 } from "native-base";
 import { colors, strings } from "../config/styles";
-import firebase from "../config/firebase";
+import { firebase, firestore } from "../config/firebase";
 import "firebase/firestore";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -120,12 +120,12 @@ export default class SignInScreen extends React.Component {
 	};
 
 	async loginWithFacebook() {
-		const {
-			type,
-			token,
-		} = await Facebook.logInWithReadPermissionsAsync("684604582290429", {
-			permissions: ["public_profile"],
-		});
+		const { type, token } = await Facebook.logInWithReadPermissionsAsync(
+			"684604582290429",
+			{
+				permissions: ["public_profile"],
+			}
+		);
 		if (type == "success") {
 			const credential = firebase.auth.FacebookAuthProvider.credential(token);
 			firebase
