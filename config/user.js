@@ -95,8 +95,15 @@ function getCurUser() {
 	return curUser;
 }
 
+function getInitials(){
+	let name = 'Foo Bar 1Name too Long';
+	let initials = name.match(/\b\w/g) || [];
+	initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+	return initials;
+}
+
 function getUserInitialized() {
 	return userInitialized;
 }
 
-export { getCurUser, getUserInitialized, userConverter };
+export { getCurUser, getUserInitialized, userConverter, getInitials };
