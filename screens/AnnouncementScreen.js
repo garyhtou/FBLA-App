@@ -11,7 +11,7 @@ import {colors, strings} from "../config/styles";
 import View, {FlatList} from "react-native-web";
 
 import {Announcement, Comments} from "./Announcement";
-import {getCurChapter} from "../config/chapter";
+import {chapterConverter, getCurChapter} from "../config/chapter";
 import TouchableHighlight from "react-native-web";
 
 const announcementRef = firebase.firestore
@@ -98,7 +98,7 @@ export default class AnnouncementScreen extends React.Component {
 		this.initAnnouncements().then(()=>{} );
 
 
-		announcementRef.onSnapshot(
+		let announcementListener = announcementRef.onSnapshot(
 				(snapshot)=>{
 					snapshot.docChanges().forEach((change) =>{
 						if (change.type === "added") {
@@ -111,6 +111,8 @@ export default class AnnouncementScreen extends React.Component {
 					});
 			}
 		)
+
+		chapterConverter.addListener(announcementListener);
 	}
 
 
@@ -124,7 +126,7 @@ export default class AnnouncementScreen extends React.Component {
 					onRefresh={this.initAnnouncements()}
 					renderItem = {({item}) =>
 						<Announcement
-							authorID ={item.authorID}
+							authorName ={item.authorName}
 							title = {item.title}
 							message = {item.message}
 							time = {item.time}
