@@ -28,6 +28,8 @@
 			"favicon": "./assets/favicon.png"
 		},
 		"githubUrl": "https://github.com/garytou2/FBLA-App",
-		"scheme": "fblaapp"
+		"scheme": "fblaapp",
+		"facebookScheme": "fb684604582290429",
+		"facebookAppId": "684604582290429"
 	}
 }
