@@ -5,40 +5,31 @@ import firebase from "../config/firebase";
 import {colors} from "../config/styles";
 import {Button, Container, Content, Footer, Switch} from "native-base";
 import React from "react";
-import Modal from "react-native-modal";
-import {FlatList} from "react-native-web";
 
 export default class Announcement extends React.Component {
     state = {
         comments: [],
         latestComment: null,
-        commentsEnabled: this.props.commentsEnabled,
-        commentModalView: false,
-        loading:false
+        commentsEnabled: this.props.commentsEnabled
     }
 
 
     updateComments(){
-        if(this.state.loading===false) {
-            this.setState({loading: true})
-            this.props.docRef.collection("comments")
-                .orderBy("time", "desc")
-                .get()
-                .then((snapshot) => {
-                    if (snapshot.size !== 0) {
-                        this.setState({latestComment: snapshot[0]});
-                    }
-                    snapshot.foreach((doc) => {
-                        let comments = [];
-                        comments.push(doc.data());
-                        this.setState({comments: comments});
+        this.props.docRef.collection("comments")
+            .orderBy("time", "desc")
+            .get()
+            .then((snapshot)=>{
+                if(snapshot.size!==0){
+                    this.setState({latestComment: snapshot[0]});
+                }
+                snapshot.foreach((doc)=>{
+                    let comments = [];
+                    comments.push(doc.data());
+                    this.setState({comments:comments});
 
 
-                    })
-
-                    this.setState({loading: false})
                 })
-        }
+            })
     }
 
     componentDidMount() {
@@ -81,28 +72,16 @@ export default class Announcement extends React.Component {
                         <Text style={styles.notificationsTitle}>{this.props.title}</Text>
                         <Text style={styles.notificationsTitle}>{this.props.message}</Text>
 
-                        {isAdmin &&
-                            < Switch
-                                value={this.state.commentsEnabled}
-                                onValueChange={(value) => {
+                        <Switch
+                            value={this.state.commentsEnabled}
+                            onValueChange={(value) => {
                                 this.updateCommentsEnabled(value);
-                            }}/>
-                        }
+                            }}
+                        />
 
-                        {this.state.commentsEnabled && this.state.lastComment!=null &&
-                            <TouchableWithoutFeedback
-                                onPress={() => {
-                                    this.setState({commentModalView: true})
-                                    this.updateComments();
-                                    }
-                                }
-                            >
-                                <Comment
-                                    authorName = {this.state.latestComment.authorName}
-                                    message = {this.state.latestComment.message}
-                                />
-                            </TouchableWithoutFeedback>
-                        }
+                        <Comment
+                            lastComment = {this.state.latestComment}
+                        />
 
                         <Button
                             block
@@ -111,33 +90,28 @@ export default class Announcement extends React.Component {
                         >
                             <Text style={styles.commentButtonText}>Write a comment...</Text>
                         </Button>
-
-
-                        <Modal
-                            isVisible = {this.state.commentModalView}
-                            onBackButtonPress={() => {
-                                this.setState({ commentModalView: false });
-                            }}
-                            onBackdropPress={() => {
-                                this.setState({ commentModalView: false });
-                            }}
-                        >
-                            <FlatList
-                                data = {this.state.comments}
-                                refreshing={this.state.loading}
-                                onRefresh={this.updateComments()}
-                                renderItem = {({item}) =>
-                                    <Comment
-                                        authorName ={item.authorName}
-                                        message = {item.message}
-                                    />}
-                            />
-
-                        </Modal>
                     </Content>
 
 
                 </Container>
+            )
+        } else if(isAdmin){
+            return (
+                <View>
+                    <Text></Text>
+                </View>
+            )
+        } else if(this.state.commentsEnabled){
+            return (
+                <View>
+                    <Text></Text>
+                </View>
+            )
+        } else{
+            return (
+                <View>
+                    <Text></Text>
+                </View>
             )
         }
     }
@@ -146,12 +120,17 @@ export default class Announcement extends React.Component {
 
 }
 
-const Comment=({authorName, message})=>(
+const Comment=({latestComment})=>(
     <View>
-        <Text style={styles.commentText}>
-            <Text style={{fontWeight: "bold"}}>{authorName}</Text>
-            {" "}{message}
-        </Text>
+        <TouchableWithoutFeedback
+            onPress={() => this.props.navigation.navigate("CreateChap")}
+        >
+
+            <Text style={styles.commentText}>
+                <Text style={{fontWeight: "bold"}}>{latestComment.authorName}</Text>
+                {" "}{latestComment.message}
+            </Text>
+        </TouchableWithoutFeedback>
     </View>
 );
 
