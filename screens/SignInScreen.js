@@ -49,18 +49,84 @@ export default class SignInScreen extends React.Component {
 		}
 		return false;
 	};
-	componentDidMount() {
-		Facebook.initializeAsync(684604582290429, "FBLA-App");
-	}
+
+	/*signInWithGoogleAsync = async () => {
+		console.log("running");
+		try {
+			const result = await Google.logInAsync({
+				behavior: "web",
+				androidClientId:
+					"200356083068-cmspe2kthe9gis90nj73odthv0lvai3a.apps.googleusercontent.com",
+				iosClientId:
+					"200356083068-v599qf4gh4u4gdv97bel5fr18o1fpp86.apps.googleusercontent.com",
+				scopes: ["profile", "email"],
+			});
+			console.log(result);
+			if (result.type === "success") {
+				this.onGoogleSignIn();
+				return result.accessToken;
+			} else {
+				return { cancelled: true };
+			}
+		} catch (e) {
+			return { error: true };
+		}
+	};
+
+	onGoogleSignIn = (googleUser) => {
+		console.log("Google Auth Response", googleUser);
+		// We need to register an Observer on Firebase Auth to make sure auth is initialized.
+		let unsubscribe = firebase.auth().onAuthStateChanged(
+			function (firebaseUser) {
+				unsubscribe();
+				// Check if we are already signed-in Firebase with the correct user.
+				if (!this.isUserEqual(googleUser, firebaseUser)) {
+					// Build Firebase credential with the Google ID token.
+					let credential = firebase.auth.GoogleAuthProvider.credential(
+						googleUser.idToken,
+						googleUser.accessToken
+					);
+					// Sign in with credential from the Google user.
+					firebase
+						.auth()
+						.signInWithCredential(credential)
+						.then(function (result) {
+							console.log("user signed in");
+							firebase
+								.database()
+								.ref("/users" + result.user.uid)
+								.set({
+									gmail: result.user.email,
+									first_name: result.additionalUserInfo.profile.given_name,
+									last_name: result.additionalUserInfo.profile.family_name,
+								})
+								.then(function (snapshot) {});
+						})
+						.catch(function (error) {
+							// Handle Errors here.
+							let errorCode = error.code;
+							let errorMessage = error.message;
+							// The email of the user's account used.
+							let email = error.email;
+							// The firebase.auth.AuthCredential type that was used.
+							let credential = error.credential;
+							// ...
+						});
+				} else {
+					console.log("User already signed-in Firebase.");
+				}
+			}.bind(this)
+		);
+	};
 
 	async loginWithFacebook() {
 		const {
 			type,
 			token,
-		} = await Facebook.logInWithReadPermissionsAsync( {
+		} = await Facebook.logInWithReadPermissionsAsync("684604582290429", {
 			permissions: ["public_profile"],
 		});
-		if (type === "success") {
+		if (type == "success") {
 			const credential = firebase.auth.FacebookAuthProvider.credential(token);
 			firebase
 				.auth()
@@ -69,11 +135,8 @@ export default class SignInScreen extends React.Component {
 					console.log(error);
 				});
 		}
-		else {
-			console.log("failure to login to facebook");
-		}
-	}
-	/*async function signInWithFacebook() {
+	}*/
+	async function signInWithFacebook() {
 		const appId = 684604582290429;
 		//const permissions = ['public_profile', 'email'];  // Permissions required, consult Facebook docs
 
@@ -99,7 +162,7 @@ export default class SignInScreen extends React.Component {
 				return Promise.reject({type: 'cancel'});
 			}
 		}
-	}*/
+	}
 	handleSignIn = () => {
 		this.setState({ errorMessage: null, loading: true });
 		const { email, password } = this.state;
