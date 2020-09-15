@@ -33,7 +33,7 @@ export default class SignInScreen extends React.Component {
 		loading: false,
 	};
 
-	isUserEqual = (googleUser, firebaseUser) => {
+	/*isUserEqual = (googleUser, firebaseUser) => {
 		if (firebaseUser) {
 			let providerData = firebaseUser.providerData;
 			for (let i = 0; i < providerData.length; i++) {
@@ -117,16 +117,18 @@ export default class SignInScreen extends React.Component {
 				}
 			}.bind(this)
 		);
-	};
-
+	};*/
+	componentDidMount() {
+		Facebook.initializeAsync(684604582290429, "FBLA-App");
+	}
 	async loginWithFacebook() {
 		const {
 			type,
 			token,
-		} = await Facebook.logInWithReadPermissionsAsync("684604582290429", {
+		} = await Facebook.logInWithReadPermissionsAsync( {
 			permissions: ["public_profile"],
 		});
-		if (type == "success") {
+		if (type === "success") {
 			const credential = firebase.auth.FacebookAuthProvider.credential(token);
 			firebase
 				.auth()
@@ -134,6 +136,9 @@ export default class SignInScreen extends React.Component {
 				.catch((error) => {
 					console.log(error);
 				});
+		}
+		else {
+			console.log("failure to login to facebook");
 		}
 	}
 
