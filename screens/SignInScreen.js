@@ -5,6 +5,8 @@
 import React from "react";
 import Expo from "expo";
 import * as Google from "expo-google-app-auth";
+import * as AppAuth from 'expo-app-auth';
+import * as GoogleSignIn from 'expo-google-sign-in';
 import * as Facebook from "expo-facebook";
 import { StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import {
@@ -124,6 +126,29 @@ export default class SignInScreen extends React.Component {
 	componentDidMount() {
 		Facebook.initializeAsync(684604582290429, "FBLA-App");
 	}
+	googleSignInPress = () => {
+		this.signInAsync();
+	};
+	_syncUserWithStateAsync = async () => {
+		const user = await GoogleSignIn.signInSilentlyAsync();
+		this.setState({ user });
+	};
+	initAsync = async () => {
+		await GoogleSignIn.initAsync();
+		// You may ommit the clientId when the firebase `googleServicesFile` is configured
+		this._syncUserWithStateAsync();
+	};
+	signInAsync = async () => {
+		try {
+			await GoogleSignIn.askForPlayServicesAsync();
+			const { type, user } = await GoogleSignIn.signInAsync();
+			if (type === 'success') {
+				this._syncUserWithStateAsync();
+			}
+		} catch ({ message }) {
+			alert('login: Error:' + message);
+		}
+	};
 	async loginWithFacebook() {
 		const {
 			type,
@@ -230,7 +255,7 @@ export default class SignInScreen extends React.Component {
 								<Button
 									block
 									style={styles.authButtonGoogle}
-									onPress={() => this.signInWithGoogleAsync()}
+									onPress={this.googleSignInPress}
 								>
 									<AntDesign
 										name="google"
