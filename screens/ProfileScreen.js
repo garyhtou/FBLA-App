@@ -65,6 +65,10 @@ export default class ProfileScreen extends React.Component {
 			chapterEvents: getCurUser().notification.localChapter.events,
 			stateAnnouncements: getCurUser().notification.stateChapter.announcements,
 			stateEvents: getCurUser().notification.stateChapter.events,
+			oldPassword:"",
+			newPassword:"",
+			confirmPassword:"",
+			errorMessage:""
 
 		})
 	}
@@ -338,14 +342,62 @@ export default class ProfileScreen extends React.Component {
 					>
 						<View style={styles.passwordModal}>
 							<Text style={styles.passwordModalTitle}>Update Password</Text>
-							<Text>asdf Password</Text>
+							<Input
+								secureTextEntry
+								style={styles.passwordText}
+								placeholder="New Password"
+								onChangeText={(value) => {
+									this.setState({ oldPassword: value });
+								}}
+							>
+								{this.state.oldPassword}
+							</Input>
+
+							<Input
+								secureTextEntry
+								style={styles.passwordText}
+								placeholder="Confirm Password"
+								onChangeText={(value) => {
+									this.setState({ confirmPassword: value });
+								}}
+							>
+								{this.state.confirmPassword}
+							</Input>
+
+							<Text style={{ color: "red" }}>{this.state.errorMessage}</Text>
+
+							<Button
+								block
+								style={styles.passwordButton}
+								onPress={() => {
+									if(this.state.confirmPassword===this.state.newPassword){
+										firebase.auth().currentUser.updatePassword(this.state.confirmPassword).then(
+											()=> {
+												this.setState({ updatePasswordModal: false ,
+													newPassword:"", confirmPassword:""});
+											});
+									} else if(this.state.confirmPassword===""||this.state.newPassword===""){
+										this.setState({ errorMessage:"Fill out all fields"});
+									}else{
+										this.setState({ errorMessage:"Messages did not match"});
+									}
+
+
+
+
+								}}
+							>
+								<Text style={{ color: "white" }}>Enter</Text>
+							</Button>
+
 							<Item style={styles.itemNoBorder}></Item>
 						</View>
 						<View style={{ textAlign: "right" }}>
 							<Button
 								transparent
 								onPress={() => {
-									this.setState({ updatePasswordModal: false });
+									this.setState({ updatePasswordModal: false,
+										newPassword:"", oldPassword:""});
 								}}
 							>
 								<Text style={{ color: "white" }}>Close</Text>
@@ -408,13 +460,18 @@ const styles = StyleSheet.create({
 	},
 	passwordModal: {
 		flex: 1,
-		height: "auto",
+		height: 500,
 		width: "auto",
-		maxHeight: Dimensions.get("window").height / 2,
+		maxHeight: Dimensions.get("window").height / 3,
 		display: "flex",
 		backgroundColor: "white",
 		borderRadius: 25,
 		padding: 25,
+	},
+	passwordText: {
+		fontSize: 15,
+		textAlign: "left",
+		marginBottom: 10,
 	},
 	passwordModalTitle: {
 		fontSize: 24,
@@ -422,4 +479,9 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		marginBottom: 20,
 	},
+	passwordButton: {
+		alignSelf: "flex-end",
+		borderRadius: 4,
+		padding:10
+	}
 });

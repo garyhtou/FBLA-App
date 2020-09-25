@@ -30,7 +30,7 @@ export default class LoadingScreen extends React.Component {
 				(doc) => {
 					if (doc.data() != null) {
 						chapterConverter.setCurChapter(doc);
-
+						console.log("done");
 						if (getChapterInitialized() === false) {
 							chapterConverter.setInit(true);
 							chapterConverter.addListener(chapterListener);
@@ -53,6 +53,7 @@ export default class LoadingScreen extends React.Component {
 			...Ionicons.font,
 		});
 
+
 		let userListener = null;
 		// When firebase user loads
 		firebase.auth().onAuthStateChanged((user) => {
@@ -72,6 +73,7 @@ export default class LoadingScreen extends React.Component {
 								if (getUserInitialized() === false) {
 									userConverter.setInit(true);
 									userConverter.setListener(userListener);
+
 
 
 									// If the user is not in a chapter - go to chapter screens

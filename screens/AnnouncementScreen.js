@@ -4,7 +4,7 @@
 
 import React from "react";
 import {Text, TouchableOpacity, StyleSheet, TouchableWithoutFeedback} from "react-native";
-import {Container, Header, Content, Title, Body, Footer} from "native-base";
+import {Container, Header, Content, Title, Body, Footer, Button} from "native-base";
 import { userConverter, getUserInitialized } from "../config/user";
 import firebase from "../config/firebase";
 import {colors, strings} from "../config/styles";
@@ -13,11 +13,10 @@ import View, {FlatList} from "react-native-web";
 import {Announcement, Comments} from "./Announcement";
 import {chapterConverter, getCurChapter} from "../config/chapter";
 import TouchableHighlight from "react-native-web";
+import {StackActions} from "@react-navigation/native";
 
-const announcementRef = firebase.firestore
-	.collection("Chapter")
-	.doc(getCurChapter().chapterID)
-	.collection("Announcements");;
+let announcementRef;
+
 
 export default class AnnouncementScreen extends React.Component {
 
@@ -33,10 +32,79 @@ export default class AnnouncementScreen extends React.Component {
 
 
 
+
+
+	async componentDidMount() {
+
+		announcementRef = firebase.firestore()
+			.collection("Chapter")
+			.doc(getCurChapter().chapterID)
+			.collection("Announcements");
+
+		const { email, displayName } = firebase.auth().currentUser;
+		this.setState({ email, displayName });
+		this.initAnnouncements().then(()=>{} );
+
+
+		let announcementListener = announcementRef.onSnapshot(
+				(snapshot)=>{
+					snapshot.docChanges().forEach((change) =>{
+						if (change.type === "added") {
+							let newAnnouncements = this.state.announcements;
+							newAnnouncements.unshift(change.doc.data());
+							this.setState({
+								announcements:newAnnouncements,
+							})
+						}
+					});
+			}
+		)
+
+		chapterConverter.addListener(announcementListener);
+
+		/*	<FlatList
+						data = {this.state.announcements}
+						refreshing={this.state.loading}
+						onRefresh={this.initAnnouncements()}
+						renderItem = {({item}) =>
+							<Announcement
+								authorName ={item.authorName}
+								title = {item.title}
+								message = {item.message}
+								time = {item.time}
+								commentsEnabled = {item.commentsEnabled}
+								docRef = {item.ref}
+							/>}
+					/>
+					<TouchableHighlight
+						underlayColor={'#eeeeee'}
+						onPress={this.getMoreAnnouncements()}
+						style={styles.touchable}
+					>
+						<Text style={styles.footerText}>Load More...</Text>
+					</TouchableHighlight>*/
+	}
+
+
+	render() {
+
+		return (
+			<Container>
+				<Header>
+					<Body>
+						<Title>{"Announcements"}</Title>
+					</Body>
+				</Header>
+			</Container>
+
+		);
+
+	}
+
 	async initAnnouncements(){
 		if(this.state.loading===false){
 			this.setState({loading:true})
-
+			console.log(announcementRef)
 			let query= announcementRef.orderBy("time", "desc")
 
 			if(this.state.last!=null){
@@ -48,25 +116,25 @@ export default class AnnouncementScreen extends React.Component {
 			let newAnnouncements = [];
 
 			query
-			.get()
-			.then((docs)=>{
-				docs.forEach((doc)=>{
-					newAnnouncements.push(doc.data());
-				})
-				this.setState({
-					announcements:newAnnouncements,
-					last: docs[docs.size-1].data().time,
-					loading: false
-				})
+				.get()
+				.then((docs)=>{
+					docs.forEach((doc)=>{
+						newAnnouncements.push(doc.data());
+					})
+					this.setState({
+						announcements:newAnnouncements,
+						last: docs[docs.size-1].data().time,
+						loading: false
+					})
 
-			})
+				})
 		}
 	}
 
 	async getMoreAnnouncements(){
 		if(this.state.loading===false){
 			this.setState({loading:true})
-
+			console.log(announcementRef)
 			let query= announcementRef.orderBy("time", "desc")
 
 			if(this.state.last!=null){
@@ -90,59 +158,6 @@ export default class AnnouncementScreen extends React.Component {
 				})
 		}
 
-	}
-
-	componentDidMount() {
-		const { email, displayName } = firebase.auth().currentUser;
-		this.setState({ email, displayName });
-		this.initAnnouncements().then(()=>{} );
-
-
-		let announcementListener = announcementRef.onSnapshot(
-				(snapshot)=>{
-					snapshot.docChanges().forEach((change) =>{
-						if (change.type === "added") {
-							let newAnnouncements = this.state.announcements;
-							newAnnouncements.unshift(change.doc.data());
-							this.setState({
-								announcements:newAnnouncements,
-							})
-						}
-					});
-			}
-		)
-
-		chapterConverter.addListener(announcementListener);
-	}
-
-
-	render() {
-
-		return (
-			<View style={styles.flexBox}>
-				<FlatList
-					data = {this.state.announcements}
-					refreshing={this.state.loading}
-					onRefresh={this.initAnnouncements()}
-					renderItem = {({item}) =>
-						<Announcement
-							authorName ={item.authorName}
-							title = {item.title}
-							message = {item.message}
-							time = {item.time}
-							commentsEnabled = {item.commentsEnabled}
-							docRef = {item.ref}
-						/>}
-					/>
-				<TouchableHighlight
-					underlayColor={'#eeeeee'}
-					onPress={this.getMoreAnnouncements()}
-					style={styles.touchable}
-				>
-					<Text style={styles.footerText}>Load More...</Text>
-				</TouchableHighlight>
-			</View>
-		);
 	}
 }
 

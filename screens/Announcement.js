@@ -54,7 +54,8 @@ export default class Announcement extends React.Component {
     }
 
     render(){
-        let isAdmin = getCurUser().isAdmin;
+        return(<View></View>)
+     /*   let isAdmin = getCurUser().isAdmin;
         let date = this.props.time.toDate();
 
         if(isAdmin && this.state.commentsEnabled) {
@@ -113,7 +114,7 @@ export default class Announcement extends React.Component {
                     <Text></Text>
                 </View>
             )
-        }
+        }*/
     }
 
 

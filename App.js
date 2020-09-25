@@ -114,7 +114,10 @@ function TabNav (){
 	)
 }
 
+
+
 function App() {
+	console.log("App started")
 	return (
 		<NavigationContainer>
 			<AppStack.Navigator
