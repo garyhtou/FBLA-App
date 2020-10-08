@@ -4,10 +4,22 @@
 
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
-import { Container, Header, Content, Title, Body } from "native-base";
+import {Container, Header, Content, Title, Body, Label, Spinner, Form} from "native-base";
 import { userConverter, getUserInitialized } from "../config/user";
 import firebase from "../config/firebase";
 import { colors } from "../config/styles";
+import {
+	Thumbnail,
+	Button,
+	Input,
+	Item,
+	Icon,
+	Switch,
+	ListItem,
+	Right,
+	List,
+	View,
+} from "native-base";
 import * as WebBrowser from 'expo-web-browser';
 
 export default class OppScreen extends React.Component {
@@ -41,14 +53,30 @@ export default class OppScreen extends React.Component {
 						<Title>Opportunity</Title>
 					</Body>
 				</Header>
-				<View>
-					<Button title="BAA" onPress={this._handlePressBAAButtonAsync} />
-					<Text>{this.state.result && JSON.stringify(this.state.result)}</Text>
-				</View>
-				<View>
-					<Button title="CSA" onPress={this._handlePressCSAButtonAsync} />
-					<Text>{this.state.result && JSON.stringify(this.state.result)}</Text>
-				</View>
+				<Form style={styles.form}>
+					<Button
+						block
+						style={styles.authButton}
+						onPress={this._handlePressBAAButtonAsync}
+					>
+						{this.state.loading ? (
+							<Spinner color={colors.white} />
+						) : (
+							<Text style={styles.authButtonText}>BAAs</Text>
+						)}
+					</Button>
+					<Button
+						block
+						style={styles.authButton}
+						onPress={this._handlePressCSAButtonAsync}
+					>
+						{this.state.loading ? (
+							<Spinner color={colors.white} />
+						) : (
+							<Text style={styles.authButtonText}>CSA</Text>
+						)}
+					</Button>
+				</Form>
 				<Content contentContainerStyle={styles.container} padder>
 					<Text>Hello {this.state.displayName}!</Text>
 
@@ -75,5 +103,43 @@ const styles = StyleSheet.create({
 	redirectText: {
 		color: colors.mediumText,
 		fontSize: 13,
+	},
+	form: {},
+	authLabelText: {
+		color: colors.lightText,
+		fontSize: 15,
+		textTransform: "uppercase",
+	},
+	authButtonText: {
+		color: colors.white,
+		fontSize: 16,
+	},
+	authInput: {
+		fontSize: 20,
+	},
+	authButton: {
+		backgroundColor: colors.complementAccent,
+		borderRadius: 4,
+		marginTop: 30,
+	},
+	authButtonRow: {
+		flexDirection: "row",
+		alignContent: "center",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	authButtonGoogle: {
+		flex: 0.5,
+		backgroundColor: "#3283FC",
+		borderRadius: 4,
+		marginTop: 30,
+		marginRight: 5,
+	},
+	authButtonFacebook: {
+		flex: 0.5,
+		backgroundColor: "#3b5998",
+		borderRadius: 4,
+		marginTop: 30,
+		marginLeft: 5,
 	},
 });
