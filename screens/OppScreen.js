@@ -23,6 +23,14 @@ export default class OppScreen extends React.Component {
 	signOutUser = () => {
 		userConverter.signOut();
 	};
+	_handlePressBAAButtonAsync = async () => {
+		let result = await WebBrowser.openBrowserAsync('https://www.fbla-pbl.org/fbla/programs/education/baa/');
+		this.setState({ result });
+	};
+	_handlePressCSAButtonAsync = async () => {
+		let result = await WebBrowser.openBrowserAsync('https://www.fbla-pbl.org/fbla/programs/recognition-awards/csa/');
+		this.setState({ result });
+	};
 
 	render() {
 		return (
@@ -32,6 +40,14 @@ export default class OppScreen extends React.Component {
 						<Title>Opportunity</Title>
 					</Body>
 				</Header>
+				<View>
+					<Button title="BAA" onPress={this._handlePressBAAButtonAsync} />
+					<Text>{this.state.result && JSON.stringify(this.state.result)}</Text>
+				</View>
+				<View>
+					<Button title="CSA" onPress={this._handlePressCSAButtonAsync} />
+					<Text>{this.state.result && JSON.stringify(this.state.result)}</Text>
+				</View>
 				<Content contentContainerStyle={styles.container} padder>
 					<Text>Hello {this.state.displayName}!</Text>
 
