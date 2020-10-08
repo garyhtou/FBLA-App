@@ -8,6 +8,7 @@ import { Container, Header, Content, Title, Body } from "native-base";
 import { userConverter, getUserInitialized } from "../config/user";
 import firebase from "../config/firebase";
 import { colors } from "../config/styles";
+import * as WebBrowser from 'expo-web-browser';
 
 export default class OppScreen extends React.Component {
 	state = {
