@@ -34,7 +34,7 @@
 		"web": {
 			"favicon": "./assets/favicon.png"
 		},
-		"githubUrl": "https://github.com/garytou2/FBLA-App",
+		"githubUrl": "https://github.com/garyhtou/FBLA-App",
 		"scheme": "fblaapp",
 		"facebookScheme": "fb684604582290429",
 		"facebookAppId": "684604582290429"
