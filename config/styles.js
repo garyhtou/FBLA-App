@@ -3,7 +3,7 @@
 */
 
 const strings = {
-    appName: "MyChapter"
+    appName: "MyFBLA"
 };
 
 const colors = {

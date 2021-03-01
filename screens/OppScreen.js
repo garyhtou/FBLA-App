@@ -44,7 +44,14 @@ export default class OppScreen extends React.Component {
 		let result = await WebBrowser.openBrowserAsync('https://www.fbla-pbl.org/fbla/programs/recognition-awards/csa/');
 		this.setState({ result });
 	};
-
+	_handlePressCompButtonAsync = async () => {
+		let result = await WebBrowser.openBrowserAsync('https://www.fbla-pbl.org/fbla/competitive-events/');
+		this.setState({ result });
+	};
+	_handlePressWAButtonAsync = async () => {
+		let result = await WebBrowser.openBrowserAsync('https://wafbla.org/');
+		this.setState({ result });
+	};
 	render() {
 		return (
 			<Container>
@@ -76,14 +83,29 @@ export default class OppScreen extends React.Component {
 							<Text style={styles.authButtonText}>CSA</Text>
 						)}
 					</Button>
+					<Button
+						block
+						style={styles.authButton}
+						onPress={this._handlePressCompButtonAsync}
+					>
+						{this.state.loading ? (
+							<Spinner color={colors.white} />
+						) : (
+							<Text style={styles.authButtonText}>Competitive Events</Text>
+						)}
+					</Button>
+					<Button
+						block
+						style={styles.authButton}
+						onPress={this._handlePressWAButtonAsync}
+					>
+						{this.state.loading ? (
+							<Spinner color={colors.white} />
+						) : (
+							<Text style={styles.authButtonText}>Washington FBLA Website</Text>
+						)}
+					</Button>
 				</Form>
-				<Content contentContainerStyle={styles.container} padder>
-					<Text>Hello {this.state.displayName}!</Text>
-
-					<TouchableOpacity style={styles.button} onPress={this.signOutUser}>
-						<Text style={styles.redirectText}>SignOut</Text>
-					</TouchableOpacity>
-				</Content>
 			</Container>
 		);
 	}
